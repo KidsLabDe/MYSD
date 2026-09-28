@@ -6,7 +6,7 @@
  * properties in `index.css` — keep the two in sync.
  */
 
-import type { ProjectStatus } from "../types";
+import type { AgendaKind } from "../types";
 
 export const BRAND = {
   name: "KidsLab",
@@ -14,37 +14,33 @@ export const BRAND = {
   primaryHue: 204,
 } as const;
 
-/** Human-readable German labels for each project status. */
-export const STATUS_LABELS: Readonly<Record<ProjectStatus, string>> = {
-  idea: "Idee",
-  building: "In Arbeit",
-  testing: "Testphase",
-  done: "Fertig",
-};
+export type HeroTitleSize = "xl" | "lg" | "md";
 
 /**
- * Palette index (0–4) per status, mapped to `--cat-*` CSS variables so status
- * chips stay consistent with the categorical palette used elsewhere.
+ * Size tier for the hero title (112 / 92 / 76px on the board), picked by
+ * length so a title always fits in at most two lines of Pixelify Sans.
  */
-export const STATUS_TONE: Readonly<Record<ProjectStatus, string>> = {
-  idea: "slate",
-  building: "amber",
-  testing: "blue",
-  done: "green",
-};
-
-/** Deterministic categorical palette keys for project categories. */
-const CATEGORY_TONES = ["blue", "purple", "orange", "green", "pink"] as const;
-
-/**
- * Assigns a stable palette tone to a category string so the same category
- * always renders in the same color without hard-coding a mapping.
- */
-export function toneForCategory(category: string): string {
-  let hash = 0;
-  for (let i = 0; i < category.length; i += 1) {
-    hash = (hash * 31 + category.charCodeAt(i)) >>> 0;
-  }
-  const tone = CATEGORY_TONES[hash % CATEGORY_TONES.length];
-  return tone ?? "blue";
+export function heroTitleSize(title: string): HeroTitleSize {
+  if (title.length <= 22) return "xl";
+  if (title.length <= 28) return "lg";
+  return "md";
 }
+
+/** Human-readable German labels for each agenda kind. */
+export const KIND_LABELS: Readonly<Record<AgendaKind, string>> = {
+  phase: "Arbeitsphase",
+  meal: "Essen",
+  break: "Pause",
+  talk: "Programm",
+};
+
+/**
+ * Palette tone per agenda kind, mapped to the `--tone-*` / `--cat-*` CSS
+ * variables so an item's color is consistent everywhere it appears.
+ */
+export const KIND_TONE: Readonly<Record<AgendaKind, string>> = {
+  phase: "blue",
+  meal: "orange",
+  break: "green",
+  talk: "purple",
+};

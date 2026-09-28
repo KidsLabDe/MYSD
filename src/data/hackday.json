@@ -1,0 +1,86 @@
+{
+  "title": "Hackday Berlin 2026",
+  "date": "2026-09-28",
+  "schedule": [
+    {
+      "id": "s-01",
+      "start": "09:00",
+      "end": "09:30",
+      "title": "Ankommen & Begrüßung",
+      "kind": "talk",
+      "location": "Aula",
+      "note": "Anmeldung, Namensschilder und ein kurzer Überblick über den Tag."
+    },
+    {
+      "id": "s-02",
+      "start": "09:30",
+      "end": "10:15",
+      "title": "Ideenfindung",
+      "kind": "phase",
+      "location": "Workshopraum",
+      "note": "In Kleingruppen Probleme sammeln und eine Projektidee wählen."
+    },
+    {
+      "id": "s-03",
+      "start": "10:15",
+      "end": "10:30",
+      "title": "Vormittagspause",
+      "kind": "break",
+      "location": "Foyer"
+    },
+    {
+      "id": "s-04",
+      "start": "10:30",
+      "end": "12:30",
+      "title": "Phase 1 · Prototyp bauen",
+      "kind": "phase",
+      "location": "Makerspace",
+      "note": "Erste Version zusammenstecken, löten und programmieren."
+    },
+    {
+      "id": "s-05",
+      "start": "12:30",
+      "end": "13:30",
+      "title": "Mittagessen",
+      "kind": "meal",
+      "location": "Mensa",
+      "note": "Warmes Buffet – vegetarisch und vegan verfügbar."
+    },
+    {
+      "id": "s-06",
+      "start": "13:30",
+      "end": "15:15",
+      "title": "Phase 2 · Weiterbauen & Testen",
+      "kind": "phase",
+      "location": "Makerspace",
+      "note": "Prototyp verbessern und mit echten Nutzer:innen testen."
+    },
+    {
+      "id": "s-07",
+      "start": "15:15",
+      "end": "15:30",
+      "title": "Snack-Pause",
+      "kind": "break",
+      "location": "Foyer",
+      "note": "Obst, Kuchen und Getränke zum Durchatmen."
+    },
+    {
+      "id": "s-08",
+      "start": "15:30",
+      "end": "16:15",
+      "title": "Präsentation vorbereiten",
+      "kind": "phase",
+      "location": "Workshopraum",
+      "note": "Pitch üben und die Projektvorstellung fertig machen."
+    },
+    {
+      "id": "s-09",
+      "start": "16:15",
+      "end": "17:00",
+      "title": "Abschlusspräsentationen",
+      "kind": "talk",
+      "location": "Aula",
+      "note": "Jede Gruppe zeigt ihren Prototyp der ganzen Runde."
+    }
+  ]
+}

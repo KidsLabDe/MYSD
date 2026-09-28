@@ -1,5 +1,6 @@
 /** Minimal inline icon set (stroke icons, inherit `currentColor`). */
 import type { SVGProps } from "react";
+import type { AgendaKind } from "../types";
 
 type IconProps = SVGProps<SVGSVGElement> & { size?: number };
 
@@ -22,13 +23,6 @@ function Base({ size = 18, children, ...rest }: IconProps & { children: React.Re
   );
 }
 
-export const SearchIcon = (p: IconProps) => (
-  <Base {...p}>
-    <circle cx="11" cy="11" r="7" />
-    <path d="m21 21-4.3-4.3" />
-  </Base>
-);
-
 export const SunIcon = (p: IconProps) => (
   <Base {...p}>
     <circle cx="12" cy="12" r="4" />
@@ -42,46 +36,10 @@ export const MoonIcon = (p: IconProps) => (
   </Base>
 );
 
-export const UsersIcon = (p: IconProps) => (
+export const ClockIcon = (p: IconProps) => (
   <Base {...p}>
-    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-    <circle cx="9" cy="7" r="4" />
-    <path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8" />
-  </Base>
-);
-
-export const SchoolIcon = (p: IconProps) => (
-  <Base {...p}>
-    <path d="m4 10 8-4 8 4-8 4-8-4z" />
-    <path d="M4 10v6M20 10v6M8 12v5c0 1 1.8 2 4 2s4-1 4-2v-5" />
-  </Base>
-);
-
-export const CalendarIcon = (p: IconProps) => (
-  <Base {...p}>
-    <rect x="3" y="4" width="18" height="18" rx="2" />
-    <path d="M16 2v4M8 2v4M3 10h18" />
-  </Base>
-);
-
-export const RocketIcon = (p: IconProps) => (
-  <Base {...p}>
-    <path d="M4.5 16.5c-1.5 1.3-2 5-2 5s3.7-.5 5-2c.7-.8.7-2 0-2.8a2 2 0 0 0-3 0z" />
-    <path d="M12 15 9 12a15 15 0 0 1 8-9c1.7-.4 3.4-.4 5 0 .4 1.6.4 3.3 0 5a15 15 0 0 1-9 8z" />
-    <path d="M9 12H4s.5-2.8 2-4c1.7-1.3 5 0 5 0M12 15v5s2.8-.5 4-2c1.3-1.7 0-5 0-5" />
-  </Base>
-);
-
-export const CloseIcon = (p: IconProps) => (
-  <Base {...p}>
-    <path d="M18 6 6 18M6 6l12 12" />
-  </Base>
-);
-
-export const PersonIcon = (p: IconProps) => (
-  <Base {...p}>
-    <circle cx="12" cy="8" r="4" />
-    <path d="M4 21c0-4 3.6-7 8-7s8 3 8 7" />
+    <circle cx="12" cy="12" r="9" />
+    <path d="M12 7v5l3 2" />
   </Base>
 );
 
@@ -91,3 +49,53 @@ export const PinIcon = (p: IconProps) => (
     <circle cx="12" cy="10" r="3" />
   </Base>
 );
+
+export const ArrowRightIcon = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M5 12h14M13 6l6 6-6 6" />
+  </Base>
+);
+
+/** Agenda kind: work phase (a wrench). */
+export const WrenchIcon = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M14.7 6.3a4 4 0 0 0-5.2 5.2L4 17l3 3 5.5-5.5a4 4 0 0 0 5.2-5.2l-2.6 2.6-2.8-.4-.4-2.8 2.6-2.6z" />
+  </Base>
+);
+
+/** Agenda kind: meal (a fork & knife). */
+export const MealIcon = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M6 2v7a2 2 0 0 0 2 2v11M8 2v6M4 2v6M18 2c-1.5 0-3 2-3 6 0 2 1 3 2 3v11" />
+  </Base>
+);
+
+/** Agenda kind: break (a coffee cup). */
+export const CoffeeIcon = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z" />
+    <path d="M17 10h1.5a2.5 2.5 0 0 1 0 5H17M7 2v2M11 2v2" />
+  </Base>
+);
+
+/** Agenda kind: talk / program (a microphone). */
+export const MicIcon = (p: IconProps) => (
+  <Base {...p}>
+    <rect x="9" y="2" width="6" height="12" rx="3" />
+    <path d="M5 11a7 7 0 0 0 14 0M12 18v3" />
+  </Base>
+);
+
+/** Picks the icon component matching an agenda kind. */
+export function kindIcon(kind: AgendaKind): (p: IconProps) => JSX.Element {
+  switch (kind) {
+    case "meal":
+      return MealIcon;
+    case "break":
+      return CoffeeIcon;
+    case "talk":
+      return MicIcon;
+    case "phase":
+      return WrenchIcon;
+  }
+}

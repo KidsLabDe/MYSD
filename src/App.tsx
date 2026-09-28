@@ -1,103 +1,34 @@
-import { useMemo, useState } from "react";
-import rawData from "./data/groups.json";
-import type { DashboardData, Group } from "./types";
-import { BRAND } from "./lib/brand";
-import { applyFilters, EMPTY_FILTERS, hasActiveFilters, type Filters } from "./lib/filter";
-import { statusBreakdown, summarize, uniqueValues } from "./lib/stats";
+import { useMemo } from "react";
+import type { CSSProperties } from "react";
+import rawData from "./data/hackday.json";
+import type { HackdayData } from "./types";
+import { buildTimeline, secondsOfDay } from "./lib/schedule";
+import { useBoardScale } from "./hooks/useBoardScale";
+import { useClock } from "./hooks/useClock";
 import { useTheme } from "./hooks/useTheme";
 import { Header } from "./components/Header";
-import { StatTiles } from "./components/StatTiles";
-import { StatusBar } from "./components/StatusBar";
-import { FiltersBar } from "./components/Filters";
-import { GroupCard } from "./components/GroupCard";
-import { GroupDrawer } from "./components/GroupDrawer";
-import { EmptyState } from "./components/EmptyState";
+import { NowPanel } from "./components/NowPanel";
+import { Timeline } from "./components/Timeline";
 
-const data = rawData as DashboardData;
+const data = rawData as HackdayData;
 
 export default function App() {
   const { theme, toggleTheme } = useTheme();
-  const [filters, setFilters] = useState<Filters>(EMPTY_FILTERS);
-  const [selected, setSelected] = useState<Group | null>(null);
+  const now = useClock();
+  const scale = useBoardScale();
+  const nowSeconds = secondsOfDay(now);
 
-  const groups = data.groups;
-
-  // Facet option lists are derived once from the full dataset.
-  const facets = useMemo(
-    () => ({
-      hackdays: uniqueValues(groups, (g) => g.hackday),
-      schools: uniqueValues(groups, (g) => g.school),
-      categories: uniqueValues(groups, (g) => g.project.category),
-    }),
-    [groups],
-  );
-
-  const visible = useMemo(() => applyFilters(groups, filters), [groups, filters]);
-  const summary = useMemo(() => summarize(visible), [visible]);
-  const breakdown = useMemo(() => statusBreakdown(visible), [visible]);
-
-  const resetFilters = () => setFilters(EMPTY_FILTERS);
+  // Recomputed each tick; cheap for a single day's worth of items.
+  const timeline = useMemo(() => buildTimeline(data.schedule, nowSeconds), [nowSeconds]);
 
   return (
-    <>
-      <Header theme={theme} onToggleTheme={toggleTheme} />
+    <div className="board" style={{ "--board-scale": scale } as CSSProperties}>
+      <Header now={now} theme={theme} onToggleTheme={toggleTheme} />
 
-      <main className="shell">
-        <section className="hero">
-          <h1>
-            Gruppen & Projekte der <em>Hackdays</em>
-          </h1>
-          <p>
-            Überblick über alle Teams von Make Your School – ihre Schulen, Projekte und
-            der aktuelle Stand ihrer Prototypen. {BRAND.tagline}.
-          </p>
-        </section>
-
-        <StatTiles summary={summary} />
-        <StatusBar breakdown={breakdown} total={summary.groups} />
-
-        <h2 className="section-title">Alle Gruppen</h2>
-        <FiltersBar
-          filters={filters}
-          onChange={setFilters}
-          onReset={resetFilters}
-          hackdays={facets.hackdays}
-          schools={facets.schools}
-          categories={facets.categories}
-        />
-
-        <p className="result-count">
-          <strong>{visible.length}</strong>{" "}
-          {visible.length === 1 ? "Gruppe" : "Gruppen"}
-          {hasActiveFilters(filters) ? ` von ${groups.length}` : ""} angezeigt
-        </p>
-
-        {visible.length === 0 ? (
-          <EmptyState onReset={resetFilters} />
-        ) : (
-          <div className="grid">
-            {visible.map((group) => (
-              <GroupCard key={group.id} group={group} onSelect={setSelected} />
-            ))}
-          </div>
-        )}
+      <main className="board__main">
+        <NowPanel timeline={timeline} nowSeconds={nowSeconds} />
+        <Timeline entries={timeline.entries} remainingSeconds={timeline.remainingSeconds} />
       </main>
-
-      <footer className="footer">
-        <span>
-          MYS Dashboard · Design im {BRAND.name}-Branding ·{" "}
-          <a href="https://kidslab.de" target="_blank" rel="noreferrer">
-            kidslab.de
-          </a>
-        </span>
-        <span>
-          <a href="https://www.makeyourschool.de" target="_blank" rel="noreferrer">
-            makeyourschool.de
-          </a>
-        </span>
-      </footer>
-
-      <GroupDrawer group={selected} onClose={() => setSelected(null)} />
-    </>
+    </div>
   );
 }

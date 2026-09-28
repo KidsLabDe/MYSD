@@ -1,41 +1,40 @@
+import kidslabLogo from "../assets/kidslab-logo.png";
 import type { Theme } from "../hooks/useTheme";
-import { BRAND } from "../lib/brand";
 import { MoonIcon, SunIcon } from "./icons";
 
 interface HeaderProps {
+  now: Date;
   theme: Theme;
   onToggleTheme: () => void;
 }
 
-/** Sticky top bar with the KidsLab-styled logo and the light/dark toggle. */
-export function Header({ theme, onToggleTheme }: HeaderProps) {
+const pad = (n: number) => String(n).padStart(2, "0");
+
+/** Top bar: MYS logo, a large live clock, and the light/dark toggle. */
+export function Header({ now, theme, onToggleTheme }: HeaderProps) {
   return (
     <header className="header">
-      <div className="header__inner">
-        <a className="logo" href="/" aria-label="MYS Dashboard Startseite">
-          <span className="logo__mark">K</span>
-          <span className="logo__text">
-            <span className="logo__title">
-              MYS <span>Dashboard</span>
-            </span>
-            <span className="logo__sub">powered by {BRAND.name}</span>
-          </span>
-        </a>
-
-        <span className="header__spacer" />
-
-        <span className="header__badge">Make Your School · Hackdays 2026</span>
-
-        <button
-          type="button"
-          className="icon-btn"
-          onClick={onToggleTheme}
-          aria-label={theme === "dark" ? "Zu hellem Design wechseln" : "Zu dunklem Design wechseln"}
-          title={theme === "dark" ? "Helles Design" : "Dunkles Design"}
-        >
-          {theme === "dark" ? <SunIcon /> : <MoonIcon />}
-        </button>
+      <div className="logo">
+        <img className="logo__img" src={kidslabLogo} alt="KidsLab" />
+        <span className="logo__title">MYS Hackday</span>
       </div>
+
+      <span className="header__spacer" />
+
+      <time className="clock" dateTime={now.toISOString()} aria-label="Aktuelle Uhrzeit">
+        {pad(now.getHours())}:{pad(now.getMinutes())}
+        <span className="clock__sec">:{pad(now.getSeconds())}</span>
+      </time>
+
+      <button
+        type="button"
+        className="icon-btn"
+        onClick={onToggleTheme}
+        aria-label="Farbschema wechseln"
+        title="Farbschema wechseln"
+      >
+        {theme === "dark" ? <SunIcon size={22} /> : <MoonIcon size={22} />}
+      </button>
     </header>
   );
 }
