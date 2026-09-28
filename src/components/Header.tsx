@@ -4,6 +4,8 @@ import { MoonIcon, SunIcon } from "./icons";
 
 interface HeaderProps {
   now: Date;
+  /** True when the clock runs from the `?date=&time=` debug params. */
+  testTime: boolean;
   theme: Theme;
   onToggleTheme: () => void;
 }
@@ -11,7 +13,7 @@ interface HeaderProps {
 const pad = (n: number) => String(n).padStart(2, "0");
 
 /** Top bar: MYS logo, a large live clock, and the light/dark toggle. */
-export function Header({ now, theme, onToggleTheme }: HeaderProps) {
+export function Header({ now, testTime, theme, onToggleTheme }: HeaderProps) {
   return (
     <header className="header">
       <div className="logo">
@@ -20,6 +22,12 @@ export function Header({ now, theme, onToggleTheme }: HeaderProps) {
       </div>
 
       <span className="header__spacer" />
+
+      {testTime && (
+        <span className="test-badge" title="Uhrzeit aus den URL-Parametern ?date= / ?time=">
+          Testzeit
+        </span>
+      )}
 
       <time className="clock" dateTime={now.toISOString()} aria-label="Aktuelle Uhrzeit">
         {pad(now.getHours())}:{pad(now.getMinutes())}

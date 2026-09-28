@@ -53,8 +53,6 @@
   --track: hsl(var(--brand-hue) 30% 92%);
   --on-brand: #ffffff;
   --halo: hsl(var(--brand-hue) 85% 45% / 0.35);
-  --logo-plate: transparent;
-  --logo-plate-pad: 0;
 
   --radius-sm: 8px;
   --radius: 14px;
@@ -101,8 +99,6 @@
   --track: hsl(var(--brand-hue) 20% 18%);
   --on-brand: hsl(var(--brand-hue) 40% 8%);
   --halo: hsl(var(--brand-hue) 90% 62% / 0.35);
-  --logo-plate: hsl(var(--brand-hue) 30% 95%);
-  --logo-plate-pad: 6px 12px;
 }
 
 * {
@@ -141,8 +137,7 @@ button {
 .tl,
 .tl__tile,
 .badge,
-.icon-btn,
-.logo__img {
+.icon-btn {
   transition: background-color 0.6s ease, color 0.6s ease, border-color 0.6s ease,
     box-shadow 0.6s ease;
 }
@@ -223,15 +218,12 @@ button {
   min-width: 0;
 }
 
-/* KidsLab wordmark (2206×503). Its black outlines need a light plate in dark. */
+/* KidsLab wordmark (2206×503), shown as-is in both themes. */
 .logo__img {
   display: block;
   flex: none;
   height: var(--logo-h);
   width: auto;
-  padding: var(--logo-plate-pad);
-  border-radius: 14px;
-  background: var(--logo-plate);
 }
 
 .logo__title {
@@ -256,6 +248,19 @@ button {
   .logo__title {
     display: none;
   }
+}
+
+/* Shown while the clock runs from ?date= / ?time=, so a debug board is obvious. */
+.test-badge {
+  flex: none;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--tone-orange-bg);
+  color: var(--tone-orange);
+  font-size: var(--plan-count);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .clock {

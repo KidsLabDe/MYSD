@@ -93,6 +93,37 @@ describe("App", () => {
     expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
   });
 
+  it("should not flag real time as a test time", () => {
+    render(<App />);
+    expect(screen.queryByText("Testzeit")).not.toBeInTheDocument();
+  });
+
+  it("should run from the date and time given in the URL, flagged as a test time", () => {
+    window.history.pushState({}, "", "/?date=2026-09-29&time=14:50");
+    try {
+      render(<App />);
+      expect(screen.getByLabelText("Aktuelle Uhrzeit")).toHaveTextContent("14:50");
+      expect(screen.getByText("Testzeit")).toBeInTheDocument();
+      expect(screen.getByText("Tag 2 von 3")).toBeInTheDocument();
+    } finally {
+      window.history.pushState({}, "", "/");
+    }
+  });
+
+  it("should start the next day fresh in the morning instead of showing Geschafft", () => {
+    window.history.pushState({}, "", "/?date=2026-09-29&time=7:00");
+    try {
+      render(<App />);
+      const panel = screen.getByRole("region", { name: /Aktueller Programmpunkt/i });
+      expect(within(panel).getByText("Gleich geht’s los")).toBeInTheDocument();
+      expect(within(panel).getByRole("heading", { level: 1 })).toHaveTextContent("Arbeitsphase");
+      expect(within(panel).queryByText("Geschafft!")).not.toBeInTheDocument();
+      expect(screen.getByText("0 von 4 erledigt")).toBeInTheDocument();
+    } finally {
+      window.history.pushState({}, "", "/");
+    }
+  });
+
   it("should say goodbye after the last day", () => {
     vi.setSystemTime(new Date(2026, 8, 30, 15, 0, 0));
     render(<App />);

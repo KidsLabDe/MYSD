@@ -1,9 +1,10 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import type { CSSProperties } from "react";
 import rawData from "./data/hackday.json";
 import type { HackdayData } from "./types";
 import { buildTimeline } from "./lib/schedule";
 import { effectiveSeconds, resumeLead, selectDay } from "./lib/days";
+import { parseDebugTime } from "./lib/debugTime";
 import { useBoardScale } from "./hooks/useBoardScale";
 import { useClock } from "./hooks/useClock";
 import { useTheme } from "./hooks/useTheme";
@@ -13,9 +14,21 @@ import { Timeline } from "./components/Timeline";
 
 const data = rawData as HackdayData;
 
+/** Reads the `?date=&time=` debug params once; invalid values fall back to real time. */
+function initialDebugOffset(): number | null {
+  const debug = parseDebugTime(window.location.search, new Date());
+  if (debug === null) return null;
+  if ("error" in debug) {
+    console.warn(`Testzeit ignoriert: ${debug.error}`);
+    return null;
+  }
+  return debug.offsetMs;
+}
+
 export default function App() {
   const { theme, toggleTheme } = useTheme();
-  const now = useClock();
+  const [debugOffset] = useState(initialDebugOffset);
+  const now = useClock(debugOffset ?? 0);
   const scale = useBoardScale();
 
   // Everything below is recomputed each tick; cheap for a few days of items.
@@ -30,7 +43,7 @@ export default function App() {
 
   return (
     <div className="board" style={{ "--board-scale": scale } as CSSProperties}>
-      <Header now={now} theme={theme} onToggleTheme={toggleTheme} />
+      <Header now={now} testTime={debugOffset !== null} theme={theme} onToggleTheme={toggleTheme} />
 
       <main className="board__main">
         <NowPanel
