@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+
+# Build artifacts
+dist/
+build/
+*.local
+*.tsbuildinfo
+
+# Emitted from tsc build of config files (kept out of the repo root)
+/vite.config.js
+/vite.config.d.ts
+
+# Secrets
+.env
+.env.*
+.dev.vars
+credentials.json
+service-account.json
+*.pem
+*.key
+
+# Editor / OS
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+coverage/
