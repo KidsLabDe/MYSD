@@ -7,6 +7,8 @@ interface TimelineProps {
   entries: readonly TimelineEntry[];
   /** Seconds left in the running item (for its "noch 43 Min" line). */
   remainingSeconds: number | null;
+  /** On a multi-day event, e.g. "Tag 1 von 3". */
+  dayLabel?: string | null;
 }
 
 function metaLine({ item, state }: TimelineEntry, remainingSeconds: number | null): string {
@@ -20,12 +22,13 @@ function metaLine({ item, state }: TimelineEntry, remainingSeconds: number | nul
 }
 
 /** The full plan for the day on a vertical rail; the running row is lifted. */
-export function Timeline({ entries, remainingSeconds }: TimelineProps) {
+export function Timeline({ entries, remainingSeconds, dayLabel = null }: TimelineProps) {
   return (
     <section className="plan" aria-labelledby="plan-heading">
       <div className="plan__head">
         <h2 id="plan-heading" className="plan__title">
           Tagesplan
+          {dayLabel && <span className="plan__day">{dayLabel}</span>}
         </h2>
         <span className="plan__count">
           {doneCount(entries)} von {entries.length} erledigt

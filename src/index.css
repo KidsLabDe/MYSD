@@ -677,6 +677,20 @@ button {
   font-size: var(--plan-title);
 }
 
+.plan__day {
+  margin-left: 14px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: var(--plan-count);
+  font-weight: 600;
+  vertical-align: middle;
+  white-space: nowrap;
+  transition: background-color 0.6s ease, color 0.6s ease;
+}
+
 .plan__count {
   font-size: var(--plan-count);
   color: var(--text-muted);
@@ -935,11 +949,18 @@ button {
     gap: 16px;
   }
 
+  /* Slightly tighter rows so a 10-item day still fits the board. */
+  .tl {
+    padding-top: 9px;
+    padding-bottom: 9px;
+  }
+
   .tl__head {
     gap: 14px;
   }
 
   .tl__title {
+    line-height: 1.2;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

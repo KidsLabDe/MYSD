@@ -1,86 +1,165 @@
 {
-  "title": "Hackday Berlin 2026",
-  "date": "2026-09-28",
-  "schedule": [
+  "title": "Make Your School · St. Ursula",
+  "days": [
     {
-      "id": "s-01",
-      "start": "09:00",
-      "end": "09:30",
-      "title": "Ankommen & Begrüßung",
-      "kind": "talk",
-      "location": "Aula",
-      "note": "Anmeldung, Namensschilder und ein kurzer Überblick über den Tag."
+      "date": "2026-09-28",
+      "schedule": [
+        {
+          "id": "d1-01",
+          "start": "08:00",
+          "end": "08:10",
+          "title": "Begrüßung & Einführung",
+          "kind": "talk",
+          "note": "Mit Daniel."
+        },
+        {
+          "id": "d1-02",
+          "start": "08:10",
+          "end": "09:00",
+          "title": "Auftaktpräsentation",
+          "kind": "talk",
+          "note": "Mit Daniel und den Mentor*innen."
+        },
+        {
+          "id": "d1-03",
+          "start": "09:00",
+          "end": "09:30",
+          "title": "Ideenfindung (1/2)",
+          "kind": "phase",
+          "note": "Problemorientiert."
+        },
+        {
+          "id": "d1-04",
+          "start": "09:30",
+          "end": "09:45",
+          "title": "Pause",
+          "kind": "break"
+        },
+        {
+          "id": "d1-05",
+          "start": "09:45",
+          "end": "10:15",
+          "title": "Materialkoffer",
+          "kind": "talk",
+          "note": "Arduino programmieren – interaktiv vorgestellt."
+        },
+        {
+          "id": "d1-06",
+          "start": "10:15",
+          "end": "11:15",
+          "title": "Ideenfindung (2/2)",
+          "kind": "phase",
+          "note": "Lösungsorientiert."
+        },
+        {
+          "id": "d1-07",
+          "start": "11:15",
+          "end": "11:30",
+          "title": "Teamfindung",
+          "kind": "phase",
+          "note": "Maximal 4 Teilnehmerinnen pro Gruppe."
+        },
+        {
+          "id": "d1-08",
+          "start": "11:30",
+          "end": "12:30",
+          "title": "Mittagspause",
+          "kind": "meal"
+        },
+        {
+          "id": "d1-09",
+          "start": "12:30",
+          "end": "14:45",
+          "title": "Arbeitsphase inkl. Projektplanung",
+          "kind": "phase"
+        },
+        {
+          "id": "d1-10",
+          "start": "14:45",
+          "end": "15:00",
+          "title": "Zwischenpräsentation",
+          "kind": "talk",
+          "note": "Daily Scrum & Materialbestellung."
+        }
+      ]
     },
     {
-      "id": "s-02",
-      "start": "09:30",
-      "end": "10:15",
-      "title": "Ideenfindung",
-      "kind": "phase",
-      "location": "Workshopraum",
-      "note": "In Kleingruppen Probleme sammeln und eine Projektidee wählen."
+      "date": "2026-09-29",
+      "schedule": [
+        {
+          "id": "d2-01",
+          "start": "08:00",
+          "end": "11:30",
+          "title": "Arbeitsphase",
+          "kind": "phase"
+        },
+        {
+          "id": "d2-02",
+          "start": "11:30",
+          "end": "12:30",
+          "title": "Mittagspause",
+          "kind": "meal"
+        },
+        {
+          "id": "d2-03",
+          "start": "12:30",
+          "end": "14:45",
+          "title": "Arbeitsphase",
+          "kind": "phase"
+        },
+        {
+          "id": "d2-04",
+          "start": "14:45",
+          "end": "15:00",
+          "title": "Zwischenpräsentation",
+          "kind": "talk",
+          "note": "Daily Scrum & Materialbestellung."
+        }
+      ]
     },
     {
-      "id": "s-03",
-      "start": "10:15",
-      "end": "10:30",
-      "title": "Vormittagspause",
-      "kind": "break",
-      "location": "Foyer"
-    },
-    {
-      "id": "s-04",
-      "start": "10:30",
-      "end": "12:30",
-      "title": "Phase 1 · Prototyp bauen",
-      "kind": "phase",
-      "location": "Makerspace",
-      "note": "Erste Version zusammenstecken, löten und programmieren."
-    },
-    {
-      "id": "s-05",
-      "start": "12:30",
-      "end": "13:30",
-      "title": "Mittagessen",
-      "kind": "meal",
-      "location": "Mensa",
-      "note": "Warmes Buffet – vegetarisch und vegan verfügbar."
-    },
-    {
-      "id": "s-06",
-      "start": "13:30",
-      "end": "15:15",
-      "title": "Phase 2 · Weiterbauen & Testen",
-      "kind": "phase",
-      "location": "Makerspace",
-      "note": "Prototyp verbessern und mit echten Nutzer:innen testen."
-    },
-    {
-      "id": "s-07",
-      "start": "15:15",
-      "end": "15:30",
-      "title": "Snack-Pause",
-      "kind": "break",
-      "location": "Foyer",
-      "note": "Obst, Kuchen und Getränke zum Durchatmen."
-    },
-    {
-      "id": "s-08",
-      "start": "15:30",
-      "end": "16:15",
-      "title": "Präsentation vorbereiten",
-      "kind": "phase",
-      "location": "Workshopraum",
-      "note": "Pitch üben und die Projektvorstellung fertig machen."
-    },
-    {
-      "id": "s-09",
-      "start": "16:15",
-      "end": "17:00",
-      "title": "Abschlusspräsentationen",
-      "kind": "talk",
-      "location": "Aula",
-      "note": "Jede Gruppe zeigt ihren Prototyp der ganzen Runde."
+      "date": "2026-09-30",
+      "schedule": [
+        {
+          "id": "d3-01",
+          "start": "08:45",
+          "end": "12:00",
+          "title": "Impulsvortrag",
+          "kind": "talk",
+          "note": "Mit Hinweisen zur Vorbereitung der Präsentation."
+        },
+        {
+          "id": "d3-02",
+          "start": "12:00",
+          "end": "12:40",
+          "title": "Aufräumen & Mittagessen",
+          "kind": "meal",
+          "note": "Butterbrezen als Snack."
+        },
+        {
+          "id": "d3-03",
+          "start": "12:40",
+          "end": "13:10",
+          "title": "Interne Abschlusspräsentation",
+          "kind": "talk",
+          "note": "Mit Ausblick."
+        },
+        {
+          "id": "d3-04",
+          "start": "13:10",
+          "end": "13:20",
+          "title": "Aufbau Marktplatz",
+          "kind": "phase"
+        },
+        {
+          "id": "d3-05",
+          "start": "13:20",
+          "end": "14:00",
+          "title": "Abschlusspräsentation extern",
+          "kind": "talk",
+          "note": "Vor Schulleitung, Eltern und Presse."
+        }
+      ]
     }
   ]
 }

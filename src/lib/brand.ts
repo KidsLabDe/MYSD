@@ -17,12 +17,14 @@ export const BRAND = {
 export type HeroTitleSize = "xl" | "lg" | "md";
 
 /**
- * Size tier for the hero title (112 / 92 / 76px on the board), picked by
- * length so a title always fits in at most two lines of Pixelify Sans.
+ * Size tier for the hero title (112 / 92 / 76px on the board), picked so a
+ * title fits in at most two lines of Pixelify Sans: by total length, and by
+ * its longest word, which must fit on one line on its own.
  */
 export function heroTitleSize(title: string): HeroTitleSize {
-  if (title.length <= 22) return "xl";
-  if (title.length <= 28) return "lg";
+  const longestWord = Math.max(0, ...title.split(/\s+/).map((w) => w.length));
+  if (title.length <= 22 && longestWord <= 14) return "xl";
+  if (title.length <= 28 && longestWord <= 17) return "lg";
   return "md";
 }
 

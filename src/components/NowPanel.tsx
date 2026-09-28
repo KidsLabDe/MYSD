@@ -58,7 +58,7 @@ function NextCard({ item, label, when }: { item: AgendaItem; label: string; when
   );
 }
 
-function DoneStats({ timeline }: { timeline: TimelineState }) {
+function DoneStats({ timeline, label }: { timeline: TimelineState; label: string }) {
   const first = timeline.entries[0]?.item;
   const last = timeline.entries[timeline.entries.length - 1]?.item;
   return (
@@ -72,7 +72,7 @@ function DoneStats({ timeline }: { timeline: TimelineState }) {
           <span className="stat__value">
             {first.start}–{last.end}
           </span>
-          <span className="stat__label">Hackday</span>
+          <span className="stat__label">{label}</span>
         </div>
       )}
     </div>
@@ -83,17 +83,23 @@ interface NowPanelProps {
   timeline: TimelineState;
   /** Seconds since midnight, the same instant `timeline` was built for. */
   nowSeconds: number;
+  /** On a multi-day event, e.g. "Morgen geht’s um 08:00 weiter." (null on the last day). */
+  resumeLead?: string | null;
+  /** On a multi-day event, e.g. "Tag 1" (null for a single day). */
+  dayName?: string | null;
 }
 
 /**
  * The hero card: what is happening right now, a draining ring countdown and
  * what comes next. Adapts to before / running (+ urgent) / gap / after.
  */
-export function NowPanel({ timeline, nowSeconds }: NowPanelProps) {
+export function NowPanel({ timeline, nowSeconds, resumeLead = null, dayName = null }: NowPanelProps) {
   const { current, next, dayState, remainingSeconds, untilNextSeconds } = timeline;
   const urgent = isUrgent(timeline, nowSeconds);
   const hero = dayState === "running" ? current : next;
-  const eyebrow = urgent ? "Endspurt" : EYEBROW[dayState];
+  // Between two event days, "after" means this day is over, not the Hackday.
+  const dayOver = dayState === "after" && resumeLead !== null && dayName !== null;
+  const eyebrow = urgent ? "Endspurt" : dayOver ? `${dayName} beendet` : EYEBROW[dayState];
 
   const stateClass = `hero hero--${dayState}${urgent ? " hero--urgent" : ""}`;
   // Remount on each new item so the entrance animation plays again.
@@ -117,7 +123,9 @@ export function NowPanel({ timeline, nowSeconds }: NowPanelProps) {
         {dayState === "after" || hero === null ? (
           <>
             <HeroTitle text="Geschafft!" />
-            <p className="hero__lead">Der Hackday ist zu Ende. Danke fürs Mitmachen!</p>
+            <p className="hero__lead">
+              {dayOver ? resumeLead : "Der Hackday ist zu Ende. Danke fürs Mitmachen!"}
+            </p>
           </>
         ) : (
           <>
@@ -131,7 +139,7 @@ export function NowPanel({ timeline, nowSeconds }: NowPanelProps) {
 
       <div className="hero__bottom">
         {dayState === "after" || hero === null ? (
-          <DoneStats timeline={timeline} />
+          <DoneStats timeline={timeline} label={dayName ?? "Hackday"} />
         ) : (
           <>
             <RingTimer

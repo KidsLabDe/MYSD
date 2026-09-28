@@ -19,15 +19,21 @@ describe("agenda kind metadata", () => {
 describe("heroTitleSize", () => {
   it("should use the largest size for short titles", () => {
     expect(heroTitleSize("Mittagessen")).toBe("xl");
-    expect(heroTitleSize("a".repeat(22))).toBe("xl");
+    expect(heroTitleSize("abcdefghij abcdefghijk")).toBe("xl");
   });
 
   it("should step down for longer titles", () => {
     expect(heroTitleSize("Phase 1 · Prototyp bauen")).toBe("lg");
-    expect(heroTitleSize("a".repeat(28))).toBe("lg");
+    expect(heroTitleSize("abcdefghijklm abcdefghijklmn")).toBe("lg");
   });
 
   it("should step down again so very long titles keep to two lines", () => {
     expect(heroTitleSize("Phase 2 · Weiterbauen & Testen")).toBe("md");
+  });
+
+  it("should step down when a single word is too wide for the line", () => {
+    // Short overall, but "Abschlusspräsentation" alone overflows 112/92px.
+    expect(heroTitleSize("Abschlusspräsentation")).toBe("md");
+    expect(heroTitleSize("Zwischenpräsentation")).toBe("md");
   });
 });

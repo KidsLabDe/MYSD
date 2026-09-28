@@ -31,11 +31,17 @@ export interface AgendaItem {
   readonly note?: string;
 }
 
-/** Shape of the seed data file (`src/data/hackday.json`). */
-export interface HackdayData {
-  /** Event name, e.g. "Hackday Berlin 2026". */
-  readonly title: string;
-  /** Event date as an ISO `YYYY-MM-DD` string. */
+/** One event day and its plan. */
+export interface HackdayDay {
+  /** Calendar date as an ISO `YYYY-MM-DD` string (local to the venue). */
   readonly date: string;
   readonly schedule: readonly AgendaItem[];
+}
+
+/** Shape of the seed data file (`src/data/hackday.json`). */
+export interface HackdayData {
+  /** Event name, e.g. "Make Your School · St. Ursula". */
+  readonly title: string;
+  /** The event's days; the board shows today's (see `lib/days.ts`). */
+  readonly days: readonly HackdayDay[];
 }

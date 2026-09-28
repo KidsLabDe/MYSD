@@ -5,14 +5,14 @@ import { NowPanel } from "./components/NowPanel";
 import { buildTimeline, parseTime } from "./lib/schedule";
 import type { AgendaItem } from "./types";
 
-// A fixed moment inside "Phase 1 · Prototyp bauen" (10:30–12:30), so the live
-// clock, current item and next item are all deterministic.
-const NOON_ISH = new Date(2026, 8, 28, 10, 45, 0);
+// Day 1 (Mon 28 Sep 2026), inside "Ideenfindung (2/2)" (10:15–11:15), so the
+// live clock, current item and next item are all deterministic.
+const DAY1_MORNING = new Date(2026, 8, 28, 10, 45, 0);
 
 describe("App", () => {
   beforeEach(() => {
     vi.useFakeTimers();
-    vi.setSystemTime(NOON_ISH);
+    vi.setSystemTime(DAY1_MORNING);
   });
 
   afterEach(() => {
@@ -29,19 +29,19 @@ describe("App", () => {
     render(<App />);
     const panel = screen.getByRole("region", { name: /Aktueller Programmpunkt/i });
     expect(within(panel).getByText(/Jetzt läuft/i)).toBeInTheDocument();
-    expect(within(panel).getByText("Phase 1 · Prototyp bauen")).toBeInTheDocument();
+    expect(within(panel).getByText("Ideenfindung (2/2)")).toBeInTheDocument();
   });
 
   it("should preview the next item", () => {
     render(<App />);
     const panel = screen.getByRole("region", { name: /Aktueller Programmpunkt/i });
     expect(within(panel).getByText(/Als Nächstes/i)).toBeInTheDocument();
-    expect(within(panel).getByText("Mittagessen")).toBeInTheDocument();
+    expect(within(panel).getByText("Teamfindung")).toBeInTheDocument();
   });
 
-  it("should list every scheduled item in the timeline", () => {
+  it("should list every item of today's plan in the timeline", () => {
     render(<App />);
-    for (const title of ["Ankommen & Begrüßung", "Mittagessen", "Abschlusspräsentationen"]) {
+    for (const title of ["Begrüßung & Einführung", "Mittagspause", "Zwischenpräsentation"]) {
       expect(screen.getAllByText(title).length).toBeGreaterThanOrEqual(1);
     }
   });
@@ -49,35 +49,55 @@ describe("App", () => {
   it("should mark the running timeline row as the current step", () => {
     render(<App />);
     const current = screen.getByRole("listitem", { current: "step" });
-    expect(current).toHaveTextContent("Phase 1 · Prototyp bauen");
+    expect(current).toHaveTextContent("Ideenfindung (2/2)");
   });
 
   it("should count finished items in the timeline heading", () => {
     render(<App />);
-    expect(screen.getByText("3 von 9 erledigt")).toBeInTheDocument();
+    expect(screen.getByText("5 von 10 erledigt")).toBeInTheDocument();
+  });
+
+  it("should say which event day it is", () => {
+    render(<App />);
+    expect(screen.getByText("Tag 1 von 3")).toBeInTheDocument();
+  });
+
+  it("should show the next day's plan on the next day", () => {
+    vi.setSystemTime(new Date(2026, 8, 29, 9, 0, 0));
+    render(<App />);
+    expect(screen.getByText("Tag 2 von 3")).toBeInTheDocument();
+    expect(screen.getByRole("listitem", { current: "step" })).toHaveTextContent("Arbeitsphase");
   });
 
   it("should expose the remaining time as a progressbar", () => {
     render(<App />);
     const ring = screen.getByRole("progressbar", { name: "Verbleibende Zeit" });
-    // 15 of 120 min elapsed → 13 %.
-    expect(ring).toHaveAttribute("aria-valuenow", "13");
+    // 30 of 60 min elapsed → 50 %.
+    expect(ring).toHaveAttribute("aria-valuenow", "50");
   });
 
   it("should switch to Endspurt in the last five minutes", () => {
-    vi.setSystemTime(new Date(2026, 8, 28, 12, 26, 0));
+    vi.setSystemTime(new Date(2026, 8, 28, 11, 12, 0));
     render(<App />);
     const panel = screen.getByRole("region", { name: /Aktueller Programmpunkt/i });
     expect(within(panel).getByText("Endspurt")).toBeInTheDocument();
     expect(within(panel).queryByText(/Jetzt läuft/i)).not.toBeInTheDocument();
   });
 
-  it("should celebrate once the day is over, without a progressbar", () => {
+  it("should celebrate the end of a day and announce tomorrow, without a progressbar", () => {
     vi.setSystemTime(new Date(2026, 8, 28, 17, 30, 0));
     render(<App />);
     const panel = screen.getByRole("region", { name: /Aktueller Programmpunkt/i });
     expect(within(panel).getByText("Geschafft!")).toBeInTheDocument();
+    expect(within(panel).getByText("Morgen geht’s um 08:00 weiter.")).toBeInTheDocument();
     expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
+  });
+
+  it("should say goodbye after the last day", () => {
+    vi.setSystemTime(new Date(2026, 8, 30, 15, 0, 0));
+    render(<App />);
+    const panel = screen.getByRole("region", { name: /Aktueller Programmpunkt/i });
+    expect(within(panel).getByText(/Der Hackday ist zu Ende/)).toBeInTheDocument();
   });
 });
 
