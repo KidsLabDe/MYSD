@@ -125,13 +125,20 @@
       "schedule": [
         {
           "id": "d3-01",
+          "start": "07:45",
+          "end": "08:00",
+          "title": "Ansprache",
+          "kind": "talk"
+        },
+        {
+          "id": "d3-02",
           "start": "08:00",
           "end": "12:00",
           "title": "Arbeitsphase",
           "kind": "phase"
         },
         {
-          "id": "d3-02",
+          "id": "d3-03",
           "start": "12:00",
           "end": "13:00",
           "title": "Mittagessen",
@@ -139,28 +146,28 @@
           "note": "Butterbrezen als Snack."
         },
         {
-          "id": "d3-03",
+          "id": "d3-04",
           "start": "13:00",
           "end": "15:15",
           "title": "Arbeits- & Aufräumphase",
           "kind": "phase"
         },
         {
-          "id": "d3-04",
+          "id": "d3-05",
           "start": "15:15",
           "end": "17:00",
           "title": "Pause",
           "kind": "break"
         },
         {
-          "id": "d3-05",
+          "id": "d3-06",
           "start": "17:00",
           "end": "17:30",
           "title": "Aufbau Marktplatz",
           "kind": "phase"
         },
         {
-          "id": "d3-06",
+          "id": "d3-07",
           "start": "17:30",
           "end": "19:00",
           "title": "Marktplatz & Präsentationen",
