@@ -3,7 +3,7 @@ import type { CSSProperties } from "react";
 import rawData from "./data/hackday.json";
 import type { HackdayData } from "./types";
 import { buildTimeline } from "./lib/schedule";
-import { effectiveSeconds, resumeLead, selectDay } from "./lib/days";
+import { dayWhen, effectiveSeconds, followingDay, resumeLead, selectDay } from "./lib/days";
 import { parseDebugTime } from "./lib/debugTime";
 import type { Adjustment } from "./lib/presenter";
 import { applyAdjustments, dueClick, pendingAdjustment, planStep } from "./lib/presenter";
@@ -67,6 +67,22 @@ export default function App() {
   const multiDay = selected !== null && selected.count > 1;
   const dayNumber = selected === null ? 0 : selected.index + 1;
   const resume = selected === null ? null : resumeLead(data.days, selected.index, now);
+  // Once the day is over, the Tagesplan previews the next event day.
+  const upcoming =
+    selected !== null && timeline.dayState === "after"
+      ? followingDay(data.days, selected.index)
+      : null;
+  const plan =
+    upcoming === null
+      ? {
+          timeline,
+          label: multiDay ? `Tag ${dayNumber} von ${selected.count}` : null,
+        }
+      : {
+          timeline: buildTimeline(upcoming.day.schedule, effectiveSeconds(upcoming.day.date, now)),
+          label: `${dayWhen(upcoming.day.date, now)} · Tag ${upcoming.index + 1} von ${upcoming.count}`,
+        };
+
   const [click, clearClick] = useUpcomingClick(
     dueClick(timeline, pendingAdjustment(dayAdjustments, nowSeconds), nowSeconds),
   );
@@ -83,9 +99,10 @@ export default function App() {
           dayName={multiDay ? `Tag ${dayNumber}` : null}
         />
         <Timeline
-          entries={timeline.entries}
-          remainingSeconds={timeline.remainingSeconds}
-          dayLabel={multiDay ? `Tag ${dayNumber} von ${selected.count}` : null}
+          entries={plan.timeline.entries}
+          remainingSeconds={plan.timeline.remainingSeconds}
+          dayLabel={plan.label}
+          preview={upcoming !== null}
         />
       </main>
 

@@ -1,6 +1,14 @@
 import { describe, expect, it } from "vitest";
 import type { HackdayDay } from "../types";
-import { dayOffset, effectiveSeconds, resumeLead, selectDay, toIsoDate } from "./days";
+import {
+  dayOffset,
+  dayWhen,
+  effectiveSeconds,
+  followingDay,
+  resumeLead,
+  selectDay,
+  toIsoDate,
+} from "./days";
 
 const day = (date: string, start = "08:00", end = "15:00"): HackdayDay => ({
   date,
@@ -45,6 +53,29 @@ describe("selectDay", () => {
 
   it("should return null without any days", () => {
     expect(selectDay([], at(28))).toBeNull();
+  });
+});
+
+describe("followingDay", () => {
+  it("should return the date-sorted day after the given index", () => {
+    const next = followingDay(days, 0);
+    expect(next?.day.date).toBe("2026-09-29");
+    expect(next?.index).toBe(1);
+    expect(next?.count).toBe(3);
+  });
+
+  it("should return null on the last day", () => {
+    expect(followingDay(days, 2)).toBeNull();
+  });
+});
+
+describe("dayWhen", () => {
+  it("should say Morgen for tomorrow", () => {
+    expect(dayWhen("2026-09-29", at(28, 16))).toBe("Morgen");
+  });
+
+  it("should name the weekday when the day is further away", () => {
+    expect(dayWhen("2026-10-01", at(28, 16))).toBe("Donnerstag");
   });
 });
 

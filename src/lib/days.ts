@@ -63,13 +63,24 @@ export function effectiveSeconds(iso: string, now: Date): number {
   return secondsOfDay(now) - dayOffset(iso, now) * DAY_SECONDS;
 }
 
+/** The day after `index` among the date-sorted days, or null on the last day. */
+export function followingDay(days: readonly HackdayDay[], index: number): SelectedDay | null {
+  const sorted = sortedDays(days);
+  const day = sorted[index + 1];
+  return day === undefined ? null : { day, index: index + 1, count: sorted.length };
+}
+
+/** "Morgen" when `iso` is tomorrow, else its weekday, e.g. "Donnerstag". */
+export function dayWhen(iso: string, now: Date): string {
+  return dayOffset(iso, now) === 1 ? "Morgen" : weekdayFmt.format(parseIsoDate(iso));
+}
+
 /** "Morgen geht’s um 08:00 weiter." for the day after `index`, or null on the last day. */
 export function resumeLead(days: readonly HackdayDay[], index: number, now: Date): string | null {
-  const next = sortedDays(days)[index + 1];
+  const next = followingDay(days, index)?.day;
   if (next === undefined) return null;
   const first = [...next.schedule].sort((a, b) => parseTime(a.start) - parseTime(b.start))[0];
   if (first === undefined) return null;
-  const when =
-    dayOffset(next.date, now) === 1 ? "Morgen" : `Am ${weekdayFmt.format(parseIsoDate(next.date))}`;
+  const when = dayOffset(next.date, now) === 1 ? "Morgen" : `Am ${dayWhen(next.date, now)}`;
   return `${when} geht’s um ${first.start} weiter.`;
 }

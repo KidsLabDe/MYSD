@@ -9,6 +9,8 @@ interface TimelineProps {
   remainingSeconds: number | null;
   /** On a multi-day event, e.g. "Tag 1 von 3". */
   dayLabel?: string | null;
+  /** True when showing an upcoming day's plan (nothing to count as done yet). */
+  preview?: boolean;
 }
 
 function metaLine({ item, state }: TimelineEntry, remainingSeconds: number | null): string {
@@ -22,7 +24,12 @@ function metaLine({ item, state }: TimelineEntry, remainingSeconds: number | nul
 }
 
 /** The full plan for the day on a vertical rail; the running row is lifted. */
-export function Timeline({ entries, remainingSeconds, dayLabel = null }: TimelineProps) {
+export function Timeline({
+  entries,
+  remainingSeconds,
+  dayLabel = null,
+  preview = false,
+}: TimelineProps) {
   return (
     <section className="plan" aria-labelledby="plan-heading">
       <div className="plan__head">
@@ -31,7 +38,9 @@ export function Timeline({ entries, remainingSeconds, dayLabel = null }: Timelin
           {dayLabel && <span className="plan__day">{dayLabel}</span>}
         </h2>
         <span className="plan__count">
-          {doneCount(entries)} von {entries.length} erledigt
+          {preview
+            ? `${entries.length} Programmpunkte`
+            : `${doneCount(entries)} von ${entries.length} erledigt`}
         </span>
       </div>
 
