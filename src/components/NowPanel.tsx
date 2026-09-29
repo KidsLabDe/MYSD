@@ -138,7 +138,7 @@ export function NowPanel({ timeline, nowSeconds, resumeLead = null, dayName = nu
       <div className="hero__spacer" />
 
       <div className="hero__bottom">
-        {dayState === "after" || hero === null ? (
+        {dayOver ? null : dayState === "after" || hero === null ? (
           <DoneStats timeline={timeline} label={dayName ?? "Hackday"} />
         ) : (
           <>
