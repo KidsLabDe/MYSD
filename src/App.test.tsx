@@ -1,22 +1,33 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import App from "./App";
+import rawData from "./data/hackday.json";
 import { NowPanel } from "./components/NowPanel";
 import { buildTimeline, parseTime } from "./lib/schedule";
-import type { AgendaItem } from "./types";
+import type { UiVariant } from "./lib/uiChoice";
+import { makeChoice } from "./lib/uiChoice";
+import type { AgendaItem, HackdayData } from "./types";
 
 // Day 1 (Mon 28 Sep 2026), inside "Ideenfindung (2/2)" (10:15–11:15), so the
 // live clock, current item and next item are all deterministic.
 const DAY1_MORNING = new Date(2026, 8, 28, 10, 45, 0);
+const { days } = rawData as HackdayData;
+
+/** Stores a UI choice as if picked on `at`, so the board skips the picker. */
+function storeChoice(ui: UiVariant, at: Date = DAY1_MORNING) {
+  window.localStorage.setItem("mys-ui", JSON.stringify(makeChoice(ui, days, at)));
+}
 
 describe("App", () => {
   beforeEach(() => {
     vi.useFakeTimers();
     vi.setSystemTime(DAY1_MORNING);
+    storeChoice("modern");
   });
 
   afterEach(() => {
     vi.useRealTimers();
+    window.localStorage.clear();
   });
 
   it("should show the current time in the header", () => {
@@ -199,6 +210,79 @@ describe("App", () => {
     render(<App />);
     const panel = screen.getByRole("region", { name: /Aktueller Programmpunkt/i });
     expect(within(panel).getByText(/Der Hackday ist zu Ende/)).toBeInTheDocument();
+  });
+});
+
+describe("UI choice", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(DAY1_MORNING);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    window.localStorage.clear();
+  });
+
+  it("should ask for a UI on the first visit", () => {
+    render(<App />);
+    expect(screen.getByText("Wie soll das Board aussehen?")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Modern/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Pixel/ })).toBeInTheDocument();
+    expect(screen.queryByLabelText("Aktuelle Uhrzeit")).not.toBeInTheDocument();
+  });
+
+  it("should show the Modern board once Modern is picked, and keep it on reload", () => {
+    const { unmount } = render(<App />);
+    fireEvent.click(screen.getByRole("button", { name: /Modern/ }));
+    expect(screen.getByRole("region", { name: /Aktueller Programmpunkt/i })).toBeInTheDocument();
+
+    unmount();
+    render(<App />);
+    expect(screen.queryByText("Wie soll das Board aussehen?")).not.toBeInTheDocument();
+    expect(screen.getByRole("region", { name: /Aktueller Programmpunkt/i })).toBeInTheDocument();
+  });
+
+  it("should show the Pixel board once Pixel is picked", () => {
+    render(<App />);
+    fireEvent.click(screen.getByRole("button", { name: /Pixel/ }));
+    expect(screen.queryByText("Wie soll das Board aussehen?")).not.toBeInTheDocument();
+    expect(screen.queryByRole("region", { name: /Aktueller Programmpunkt/i })).not.toBeInTheDocument();
+    expect(screen.getByText("Ideenfindung (2/2)")).toBeInTheDocument();
+  });
+
+  it("should ask again once the event the choice was made for is over", () => {
+    storeChoice("pixel");
+    vi.setSystemTime(new Date(2026, 9, 1, 8, 0, 0));
+    render(<App />);
+    expect(screen.getByText("Wie soll das Board aussehen?")).toBeInTheDocument();
+  });
+
+  it("should ask again when the choice was made for another event", () => {
+    window.localStorage.setItem(
+      "mys-ui",
+      JSON.stringify({ ui: "pixel", event: "2026-06-01/2026-06-03", until: "2026-12-31" }),
+    );
+    render(<App />);
+    expect(screen.getByText("Wie soll das Board aussehen?")).toBeInTheDocument();
+  });
+
+  it("should ignore presenter clicks while the picker is shown", () => {
+    render(<App />);
+    fireEvent.keyDown(window, { key: "PageDown" });
+    fireEvent.click(screen.getByRole("button", { name: /Modern/ }));
+    expect(screen.getByRole("listitem", { current: "step" })).toHaveTextContent("Ideenfindung (2/2)");
+  });
+
+  it("should use the UI given as ?ui= without asking or storing it", () => {
+    window.history.pushState({}, "", "/?ui=modern");
+    try {
+      render(<App />);
+      expect(screen.getByRole("region", { name: /Aktueller Programmpunkt/i })).toBeInTheDocument();
+      expect(window.localStorage.getItem("mys-ui")).toBeNull();
+    } finally {
+      window.history.pushState({}, "", "/");
+    }
   });
 });
 

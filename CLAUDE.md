@@ -52,14 +52,23 @@ Data flows one direction: **`hackday.json` + clock → pure functions → React 
   - `presenter.ts`: clicker steps (`→`/`PageDown` next, `←`/`PageUp` back) as `Adjustment`s that
     move only the switch between two items, in memory only. They never touch `hackday.json`.
   - `cursor.ts`: the pixel-art mouse that "clicks" the next item as it starts (timing, bitmap, path).
+  - `uiChoice.ts`: which board UI (`modern` | `pixel`) to show. The choice is stored for one
+    event only (`eventKey` = first/last day) and resets after its last day or when the plan is
+    for another event. `?ui=modern|pixel` forces a UI without storing it.
   - `ticker.ts`, `debugTime.ts` (`?date=&time=` test clock), `board.ts` (1920×1080 stage scale),
     `clock.ts`, `brand.ts` (brand constants, German `KIND_LABELS`, `KIND_TONE`).
-- **`src/App.tsx`** owns the state (clock, debug offset, presenter adjustments per day) and composes
-  components. The timeline is recomputed every second from the plan, the adjustments and now.
+- **`src/App.tsx`** owns the clock, debug offset and theme, and renders one of three screens: the
+  `UiPicker` (first visit / choice expired), `ModernBoard` or `PixelBoard`.
+- **Two UIs, one data logic:** `useBoardModel` (presenter adjustments per day, timeline, day
+  selection, pixel-mouse click) returns a `BoardModel` that both UIs render. It is recomputed
+  every second from the plan, the adjustments and now. UIs never compute schedule state themselves.
 - **`src/hooks/`**: `useClock` (ticks on the full second, the single time source), `useTheme`,
-  `useBoardScale`, `usePresenterKeys`, `useUpcomingClick`.
-- **`src/components/`** are presentational and controlled by props (`Header`, `NowPanel`,
-  `Timeline`, `Ticker`, `PixelCursor`, `Confetti`, …). `icons.tsx` is a small inline-SVG set.
+  `useBoardScale`, `useBoardModel`, `useUiChoice` (persists the choice to `localStorage` key
+  `mys-ui`), `usePresenterKeys`, `useUpcomingClick`.
+- **`src/components/`** are presentational and controlled by props. `modern/ModernBoard.tsx`
+  composes the Modern UI from the shared components (`Header`, `NowPanel`, `Timeline`, `Ticker`,
+  `PixelCursor`, `Confetti`, …; `icons.tsx` is a small inline-SVG set). `pixel/` holds the Pixel
+  UI (placeholder until its design handoff) with its own `pixel.css`; `UiPicker` has `picker.css`.
 
 **Board mode:** at ≥1280×720 the CSS renders a fixed 1920×1080 stage scaled by `--board-scale`, so the
 4K whiteboard shows exactly the design. Smaller screens get a responsive layout.
