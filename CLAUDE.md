@@ -4,9 +4,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-A **read-only overview dashboard** for Make Your School (MYS) Hackdays: it displays student
-**groups** and their **projects**, with filters and a detail view. There is **no backend and no
-mutation** — all content is a static JSON seed. Styled in [KidsLab](https://kidslab.de) branding.
+A **live agenda board** for Make Your School (MYS) Hackdays, shown on the classroom whiteboard:
+the running item with a countdown, the day's timeline, what's next, and a ticker of notes. There is
+**no backend**: the plan is the static JSON file `src/data/hackday.json`, and the only runtime
+state is the clock plus in-memory presenter steps. Styled in [KidsLab](https://kidslab.de)
+branding. Deployed to GitHub Pages (https://kidslabde.github.io/MYSD/) by
+`.github/workflows/deploy.yml` on every push to `main`.
 
 ## Commands
 
@@ -17,8 +20,8 @@ npm run preview          # serve the production build → http://localhost:4173
 npm test                 # run all tests once (vitest run)
 npm run test:watch       # vitest in watch mode
 npm run test:coverage    # coverage report
-npx vitest run src/lib/filter.test.ts        # run a single test file
-npx vitest run -t "should filter by hackday" # run tests matching a name
+npx vitest run src/lib/schedule.test.ts                    # run a single test file
+npx vitest run -t "should report a gap between two items"  # run tests matching a name
 ```
 
 `npm run build` is also the type-check gate — there is no separate lint step; TypeScript runs in
@@ -26,22 +29,35 @@ npx vitest run -t "should filter by hackday" # run tests matching a name
 
 ## Architecture
 
-Data flows one direction: **JSON seed → pure functions → React → UI**.
+Data flows one direction: **`hackday.json` + clock → pure functions → React → UI**.
 
-- **`src/data/groups.json`** is the single source of content. To add/change groups or projects,
-  edit only this file — no code changes needed. Its shape is enforced by **`src/types.ts`**
-  (`Group`, `Project`, `ProjectStatus`); `App.tsx` casts the import to `DashboardData`.
-- **`src/lib/`** holds all business logic as **pure, side-effect-free functions**, kept out of React
-  so they are unit-tested directly (`*.test.ts` sit next to their source):
-  - `filter.ts` — `applyFilters` / `matchesFilters` over a `Filters` object (search is AND across
-    whitespace-separated terms; facets are exact-match; `null` means "no filter").
-  - `stats.ts` — `summarize`, `statusBreakdown`, `uniqueValues` (the stat tiles and facet options).
-  - `brand.ts` — brand constants, German status labels, and `toneForCategory` (a stable hash → one
-    of five palette tones, so a category always renders the same color).
-- **`src/App.tsx`** owns all state (`filters`, `selected` group) and composes components. Derived
-  values (`visible`, `summary`, `breakdown`, facet lists) are `useMemo`'d over the raw data + filters.
-- **`src/components/`** are presentational and controlled by props; `App` passes state down and
-  callbacks up. `icons.tsx` is a small inline-SVG set.
+- **`src/data/hackday.json`** is the single source of content: `title`, exactly 3 `days` (each a
+  `date` and a `schedule` of `AgendaItem`s), and optional ticker `messages`. Its shape is in
+  **`src/types.ts`** (`HackdayData`, `HackdayDay`, `AgendaItem`, `AgendaKind`). Organizers change it
+  through the **new-hackday skill** (`.agents/skills/new-hackday/SKILL.md`, symlinked from
+  `.claude/skills/`), not by hand. The skill archives replaced plans in `src/data/history/` (created on first use).
+- **`src/lib/validate.ts`** holds the plan rules (3 days, ≤10 items/day, title ≤36 chars, no word
+  >21 chars, no overlaps). They are measured against what fits the board. `src/data/hackday.test.ts`
+  runs them, so `npm test` guards every data edit.
+- **`src/lib/`** holds all logic as **pure, clock-free functions** ("now" is always passed in), with
+  `*.test.ts` next to their source:
+  - `schedule.ts`: `buildTimeline` (current/next/remaining, day state `before|running|gap|after`),
+    countdown formatting, ring fraction, urgency.
+  - `days.ts`: which day to show (`selectDay`), seconds on that day's clock, "tomorrow at …".
+  - `presenter.ts`: clicker steps (`→`/`PageDown` next, `←`/`PageUp` back) as `Adjustment`s that
+    move only the switch between two items, in memory only. They never touch `hackday.json`.
+  - `cursor.ts`: the pixel-art mouse that "clicks" the next item as it starts (timing, bitmap, path).
+  - `ticker.ts`, `debugTime.ts` (`?date=&time=` test clock), `board.ts` (1920×1080 stage scale),
+    `clock.ts`, `brand.ts` (brand constants, German `KIND_LABELS`, `KIND_TONE`).
+- **`src/App.tsx`** owns the state (clock, debug offset, presenter adjustments per day) and composes
+  components. The timeline is recomputed every second from the plan, the adjustments and now.
+- **`src/hooks/`**: `useClock` (ticks on the full second, the single time source), `useTheme`,
+  `useBoardScale`, `usePresenterKeys`, `useUpcomingClick`.
+- **`src/components/`** are presentational and controlled by props (`Header`, `NowPanel`,
+  `Timeline`, `Ticker`, `PixelCursor`, `Confetti`, …). `icons.tsx` is a small inline-SVG set.
+
+**Board mode:** at ≥1280×720 the CSS renders a fixed 1920×1080 stage scaled by `--board-scale`, so the
+4K whiteboard shows exactly the design. Smaller screens get a responsive layout.
 
 ## Theming (the important convention)
 
@@ -49,20 +65,24 @@ The entire color system is driven by **one CSS variable, `--brand-hue`** (curren
 `src/index.css`. Change that single value to re-tint the whole app. Semantic tokens (`--bg`,
 `--surface`, `--text`, tone colors…) are defined for light theme on `:root` and overridden under
 `:root[data-theme="dark"]`. `useTheme.ts` stamps `data-theme` on `<html>` and persists the choice to
-`localStorage`; never hard-code colors in components — reference the CSS variables / `tone-*` classes.
+`localStorage`. Never hard-code colors in components; use the CSS variables and `tone-*` classes.
 
 Fonts (Pixelify Sans display, Inter body) load from Google Fonts in `index.html`; `--font-display`
 is used for headings/logo, `--font-body` for everything else.
 
-## Build gotcha — don't "fix" this
+## Build gotchas (don't "fix" these)
 
 `tsconfig.node.json` deliberately sets `outDir` and `tsBuildInfoFile` under `node_modules/.tmp/`.
 With TypeScript 5.5, `tsc -b` emits from the referenced config; without that redirect it would drop
 `vite.config.js`, `vite.config.d.ts`, and `*.tsbuildinfo` into the repo root. Leave the redirect in
 place (and the matching `.gitignore` entries) so builds stay clean.
 
+`vite.config.ts` has no `base`. The Pages workflow passes `--base=/<repo>/` on the CLI, so local dev
+stays at `/` and no `@types/node` is needed for `process.env`.
+
 ## Conventions
 
-Text is **German** (labels, seed content, UI copy). Follow the user's global rules in
-`~/.claude/rules/` — notably TDD (add/extend tests in `src/lib/*.test.ts` for logic changes) and
-immutable updates (spread into new objects; never mutate `filters` or data in place).
+Text is **German** (labels, seed content, UI copy). The board is public in the classroom, so no
+internal or team-only notes go into the plan. Follow the user's global rules in `~/.claude/rules/`,
+notably TDD (add or extend tests in `src/lib/*.test.ts` for logic changes) and immutable updates
+(spread into new objects; never mutate the plan, adjustments or state in place).

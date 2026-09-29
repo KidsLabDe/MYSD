@@ -1,8 +1,8 @@
 # MYS Dashboard
 
-A read-only overview dashboard for **[Make Your School](https://www.makeyourschool.de) (MYS)**
-Hackdays — see every student **group** and their **project** at a glance, filter by Hackday,
-school, theme or status, and drill into any team's details.
+A live **agenda board** for **[Make Your School](https://www.makeyourschool.de) (MYS)** Hackdays,
+shown on the classroom whiteboard: what's running right now, how long it has left, what comes
+next, and a ticker with important notes. **Live:** https://kidslabde.github.io/MYSD/
 
 Styled in the **[KidsLab](https://kidslab.de)** branding: vivid blue (`hsl(204 100% 50%)`),
 *Pixelify Sans* display type, *Inter* body text, rounded corners, and a light/dark theme toggle.
@@ -10,14 +10,20 @@ UI copy is in German.
 
 ## Features
 
-- **Live stat tiles** — groups, students, schools and Hackdays, recomputed as you filter.
-- **Status distribution bar** — how many projects are *Idee · In Arbeit · Testphase · Fertig*.
-- **Search + facet filters** — full-text search (group, project, tech, mentor…) plus dropdowns for
-  Hackday, school, theme and status, with a one-click reset.
-- **Detail drawer** — click any card for the full project description, tech tags and group info
-  (close with `Esc` or click-away).
-- **Light / dark theme** — remembers your choice and respects your OS preference.
-- **Fully static** — no backend, no database; deploy the `dist/` folder anywhere.
+- **Now panel**: the running item with a ring countdown, plus what's next. Gaps, "before the
+  day starts" and "tomorrow we continue at …" are handled, and confetti marks the end of the day.
+- **Timeline**: the whole day's plan with past, current and upcoming items, colored by kind
+  (work phase, meal, break, talk).
+- **Multi-day Hackdays**: the board picks today's day from the plan (`Tag 2 von 3`).
+- **Live ticker**: a marquee of notes at the bottom, at a constant reading speed.
+- **Pixel mouse**: a pixel-art cursor flies over and "clicks" the next item the second it starts.
+- **Presenter clicker**: `→`/`PageDown` start the next item now, `←`/`PageUp` go back. Only the
+  switch between two items moves, and only in memory. A reload returns to the plan.
+- **Whiteboard mode**: on screens of at least 1280×720, a fixed 1920×1080 stage scales to fit
+  (e.g. a 4K board). Smaller screens get a responsive layout.
+- **Test clock**: `?date=YYYY-MM-DD&time=HH:MM` previews any moment.
+- **Light / dark theme**: remembers your choice and respects your OS preference.
+- **Fully static**: no backend, no database. The plan is one JSON file.
 
 ## Tech stack
 
@@ -46,8 +52,8 @@ npm run dev        # dev server with hot reload → http://localhost:5173
 Run a single test file or test by name:
 
 ```bash
-npx vitest run src/lib/filter.test.ts
-npx vitest run -t "should filter by hackday"
+npx vitest run src/lib/schedule.test.ts
+npx vitest run -t "should report a gap between two items"
 ```
 
 There is no separate lint step — `npm run build` is the type-check gate.
@@ -98,6 +104,10 @@ einem Git-Commit.
 Sag einfach, was sich ändert. Der Assistent passt nur diesen Punkt an (und die Nachbarzeiten,
 damit keine Lücken entstehen), zeigt dir den Tag zur Kontrolle, prüft und committet.
 
+Geht es nur spontan früher oder später weiter, reicht ein Presenter: `→` bzw. `PageDown` startet
+den nächsten Punkt sofort, `←` bzw. `PageUp` springt zurück. Das gilt nur bis zum Neuladen der Seite,
+der Plan selbst bleibt unverändert.
+
 ### Vorschau: einen anderen Tag oder eine andere Uhrzeit ansehen
 
 Hänge Datum und/oder Uhrzeit an die Adresse des Boards an:
@@ -142,19 +152,27 @@ variables and `tone-*` classes rather than hard-coded colors.
 .agents/skills/new-hackday/  # AI wizard for creating/changing the plan (see above)
 src/
   data/hackday.json     # ← the live Hackday plan (3 days + ticker messages)
-  data/history/         # archived plans of past Hackdays
-  types.ts              # domain model (Group, Project, ProjectStatus)
-  lib/                  # pure logic (brand, filtering, stats) + colocated tests
-  hooks/useTheme.ts     # light/dark theme with persistence
-  components/           # presentational UI components
+  data/history/         # archived past plans (created by the skill on first use)
+  types.ts              # domain model (HackdayData, HackdayDay, AgendaItem)
+  lib/                  # pure logic + colocated tests:
+                        #   schedule (now/next/remaining), days (multi-day), presenter,
+                        #   cursor (pixel mouse), ticker, validate (plan rules),
+                        #   debugTime, board (stage scale), clock, brand
+  hooks/                # clock, theme, board scale, presenter keys, pixel-mouse click
+  components/           # Header, NowPanel, Timeline, Ticker, PixelCursor, Confetti, …
   App.tsx               # state + composition
   index.css             # design system (brand tokens, light/dark)
 ```
 
-Data flows one direction: **JSON seed → pure functions in `lib/` → React → UI**. Business logic is
+Data flows one direction: **`hackday.json` + clock → pure functions in `lib/` → React → UI**. Business logic is
 kept out of components so it can be unit-tested directly.
 
 ## Deployment
 
-`npm run build` outputs a static site to `dist/`. Serve it from any static host (Netlify, Vercel,
-GitHub Pages, S3, nginx…) — no server-side runtime required.
+Every push to `main` runs [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml). It
+runs the tests, builds with the repo name as base path, and publishes to GitHub Pages at
+https://kidslabde.github.io/MYSD/. Nothing is published if a test fails. This needs
+**Settings → Pages → Source: GitHub Actions** (one-time setup).
+
+`npm run build` outputs a static site to `dist/` that any static host can serve. For hosting
+under a subpath, pass it through: `npm run build -- --base=/sub/path/`.
