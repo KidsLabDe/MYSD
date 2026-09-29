@@ -52,32 +52,81 @@ npx vitest run -t "should filter by hackday"
 
 There is no separate lint step — `npm run build` is the type-check gate.
 
-## Editing the data
+## Hackday-Plan pflegen (für Organisator:innen)
 
-All content lives in **[`src/data/groups.json`](src/data/groups.json)**. Add or edit entries there —
-no code changes needed. Each group looks like:
+Der Plan auf dem Board steht in [`src/data/hackday.json`](src/data/hackday.json). Du musst die
+Datei nicht selbst bearbeiten: Ein KI-Assistent führt dich im Gespräch durch alles – auf dem
+Notebook, das das Board anzeigt.
 
-```json
-{
-  "id": "g-001",
-  "name": "Team Grünpause",
-  "school": "Albert-Einstein-Gymnasium",
-  "city": "Berlin",
-  "hackday": "Hackday Berlin 2026",
-  "memberCount": 5,
-  "mentor": "Lena Fischer",
-  "project": {
-    "title": "SmartBeet",
-    "description": "…",
-    "category": "Umwelt",
-    "tech": ["Arduino", "Sensorik", "3D-Druck"],
-    "status": "building"
-  }
-}
+### Starten
+
+Voraussetzung: [Claude Code](https://claude.com/claude-code) oder
+[Codex](https://developers.openai.com/codex) ist auf dem Notebook installiert und angemeldet.
+
+1. Terminal öffnen und in den Projektordner wechseln, z. B. `cd ~/MYSDashboard`.
+2. Assistenten starten und den Assistenten „new-hackday“ aufrufen:
+
+   | Claude Code | Codex |
+   |---|---|
+   | `claude`, dann `/new-hackday` | `codex`, dann `$new-hackday` |
+
+   Du kannst auch einfach schreiben, was du möchtest – der Assistent erkennt es selbst:
+
+   - „Neuer Hackday“
+   - „Mittagspause heute 12–13, danach Arbeitsphase bis 15 Uhr“
+   - „Zwischenpräsentation morgen von 15 bis 15:15“
+   - „Neuer Hinweis im Ticker: Präsentation in Raum 204!“
+
+### Neuen Hackday anlegen
+
+Der Assistent fragt Schritt für Schritt:
+
+1. **Schule und erster Tag** – Tag 2 und 3 schlägt er selbst vor.
+2. **Vorlage** – standardmäßig der letzte Plan. Alternativ kannst du einen neuen Plan einfügen
+   (z. B. Zellen aus Excel kopieren oder eine CSV-Datei nennen).
+3. **Tag für Tag** – er zeigt jeden Tag als Tabelle und fragt „Passt das, oder was ändert
+   sich?“. Antworte ganz normal, z. B. „Mittag erst um 12:30“.
+4. **Hinweise im Ticker** – behalten, ändern oder neue dazu.
+5. **Zusammenfassung** – erst nach deinem „Ja“ wird der Plan übernommen.
+
+Danach legt er den alten Plan im Archiv `src/data/history/` ab, speichert
+den neuen, prüft ihn, startet das Board (falls es nicht läuft) und speichert die Änderung mit
+einem Git-Commit.
+
+### Plan ändern
+
+Sag einfach, was sich ändert. Der Assistent passt nur diesen Punkt an (und die Nachbarzeiten,
+damit keine Lücken entstehen), zeigt dir den Tag zur Kontrolle, prüft und committet.
+
+### Vorschau: einen anderen Tag oder eine andere Uhrzeit ansehen
+
+Hänge Datum und/oder Uhrzeit an die Adresse des Boards an:
+
+```
+http://localhost:5173/?date=2026-10-05&time=09:00
 ```
 
-`status` is one of `idea` · `building` · `testing` · `done`. The shape is enforced by the types in
-[`src/types.ts`](src/types.ts), so an invalid entry fails the type-check.
+Oben rechts erscheint dann „Testzeit“. Ohne die Angaben zeigt das Board wieder die echte Zeit.
+
+### Was das Board verträgt
+
+Der Assistent achtet darauf, und `npm test` prüft es bei jeder Änderung:
+
+- **genau 3 Tage** pro Hackday
+- **höchstens 10 Programmpunkte pro Tag**
+- **Titel höchstens 36 Zeichen**, kein Wort länger als 21 Zeichen – Details kommen in den Hinweis
+  des Programmpunkts
+- keine Überschneidungen; jeder Punkt endet nach seinem Beginn
+- das Board ist im Klassenraum öffentlich: interne Notizen und Punkte nur fürs Team
+  (z. B. Feedbackrunde der Mentor:innen) gehören nicht hinein
+
+### Für Entwickler:innen
+
+Der Assistent ist ein Skill nach dem offenen [Agent-Skills](https://agentskills.io)-Format:
+[`.agents/skills/new-hackday/SKILL.md`](.agents/skills/new-hackday/SKILL.md) (dort sucht Codex),
+`.claude/skills/new-hackday` ist ein Symlink darauf (für Claude Code) – es gibt also nur eine
+Anleitung. Die Prüfregeln stehen in [`src/lib/validate.ts`](src/lib/validate.ts). Die Datei von Hand
+zu bearbeiten geht natürlich auch; danach `npm test` ausführen.
 
 ## Theming
 
@@ -90,8 +139,10 @@ variables and `tone-*` classes rather than hard-coded colors.
 ## Project structure
 
 ```
+.agents/skills/new-hackday/  # AI wizard for creating/changing the plan (see above)
 src/
-  data/groups.json      # ← edit your groups & projects here
+  data/hackday.json     # ← the live Hackday plan (3 days + ticker messages)
+  data/history/         # archived plans of past Hackdays
   types.ts              # domain model (Group, Project, ProjectStatus)
   lib/                  # pure logic (brand, filtering, stats) + colocated tests
   hooks/useTheme.ts     # light/dark theme with persistence
