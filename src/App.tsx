@@ -8,8 +8,10 @@ import { parseDebugTime } from "./lib/debugTime";
 import { useBoardScale } from "./hooks/useBoardScale";
 import { useClock } from "./hooks/useClock";
 import { useTheme } from "./hooks/useTheme";
+import { useUpcomingClick } from "./hooks/useUpcomingClick";
 import { Header } from "./components/Header";
 import { NowPanel } from "./components/NowPanel";
+import { PixelCursor } from "./components/PixelCursor";
 import { Ticker } from "./components/Ticker";
 import { Timeline } from "./components/Timeline";
 
@@ -41,6 +43,10 @@ export default function App() {
   const multiDay = selected !== null && selected.count > 1;
   const dayNumber = selected === null ? 0 : selected.index + 1;
   const resume = selected === null ? null : resumeLead(data.days, selected.index, now);
+  const [click, clearClick] = useUpcomingClick(
+    timeline.next?.id ?? null,
+    timeline.untilNextSeconds,
+  );
 
   return (
     <div className="board" style={{ "--board-scale": scale } as CSSProperties}>
@@ -61,6 +67,15 @@ export default function App() {
       </main>
 
       <Ticker messages={data.messages ?? []} />
+
+      {click !== null && (
+        <PixelCursor
+          key={click.id}
+          targetId={click.id}
+          lateMs={click.lateMs}
+          onDone={clearClick}
+        />
+      )}
     </div>
   );
 }

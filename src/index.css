@@ -54,6 +54,11 @@
   --on-brand: #ffffff;
   --halo: hsl(var(--brand-hue) 85% 45% / 0.35);
 
+  /* Pixel mouse: a classic light arrow with a dark outline in both themes. */
+  --cursor-body: #ffffff;
+  --cursor-outline: hsl(var(--brand-hue) 45% 11%);
+  --cursor-shadow: hsl(var(--brand-hue) 45% 11% / 0.3);
+
   --radius-sm: 8px;
   --radius: 14px;
   --radius-lg: 20px;
@@ -189,6 +194,7 @@ button {
   --ticker-size: 16px;
   --ticker-label: 13px;
 
+  position: relative;
   max-width: var(--maxw);
   margin: 0 auto;
   padding: 0 16px 48px;
@@ -662,7 +668,42 @@ button {
 .confetti__piece--orange { background: var(--tone-orange); }
 .confetti__piece--green { background: var(--tone-green); }
 
-/* --------------------------------------------------------------- timeline */
+/* ---------------------------------------------- phase change: pixel mouse */
+.pixel-cursor-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.pixel-cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+  filter: drop-shadow(4px 4px 0 var(--cursor-shadow));
+  animation: cursorTrip var(--cursor-ms) var(--cursor-late) both;
+}
+
+.pixel-cursor__outline { fill: var(--cursor-outline); }
+.pixel-cursor__body { fill: var(--cursor-body); }
+
+/* Pixel "click" burst around the tip, timed to the press in cursorTrip. */
+.pixel-cursor__click {
+  position: absolute;
+  top: var(--click-y);
+  left: var(--click-x);
+  width: 24px;
+  height: 24px;
+  margin: -12px 0 0 -12px;
+  border: 5px solid var(--brand);
+  border-radius: 2px;
+  opacity: 0;
+  animation: cursorClick var(--cursor-ms) linear var(--cursor-late) both;
+}
+
+
 .plan {
   display: flex;
   flex-direction: column;
@@ -1120,6 +1161,30 @@ button {
   100% { transform: translateY(900px) rotate(450deg); opacity: 0; }
 }
 
+/* 4.8s trip (CURSOR_DURATION_MS): glide in → press bottoms out at 2s = 41.667%
+   (CURSOR_CLICK_MS, the moment the next item starts) → release → pause → leave. */
+@keyframes cursorTrip {
+  0% {
+    transform: translate(var(--enter-x), var(--enter-y));
+    animation-timing-function: cubic-bezier(0.45, 0, 0.25, 1);
+  }
+  36% { transform: translate(var(--click-x), var(--click-y)) scale(1); }
+  41.667% { transform: translate(var(--click-x), var(--click-y)) scale(0.82); }
+  47% { transform: translate(var(--click-x), var(--click-y)) scale(1); }
+  60% {
+    transform: translate(var(--click-x), var(--click-y));
+    animation-timing-function: cubic-bezier(0.5, 0, 0.9, 0.5);
+  }
+  100% { transform: translate(var(--exit-x), var(--exit-y)); }
+}
+
+@keyframes cursorClick {
+  0%, 41.6% { opacity: 0; transform: scale(0.4); }
+  41.667% { opacity: 1; transform: scale(0.6); }
+  60% { opacity: 0; transform: scale(3); }
+  100% { opacity: 0; transform: scale(3); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -1128,7 +1193,8 @@ button {
     transition: none !important;
   }
 
-  .confetti {
+  .confetti,
+  .pixel-cursor-layer {
     display: none;
   }
 

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { render, screen, within } from "@testing-library/react";
+import { act, render, screen, within } from "@testing-library/react";
 import App from "./App";
 import { NowPanel } from "./components/NowPanel";
 import { buildTimeline, parseTime } from "./lib/schedule";
@@ -131,6 +131,35 @@ describe("App", () => {
     const items = within(ticker).getAllByRole("listitem");
     expect(items).toHaveLength(1);
     expect(items[0]).toHaveTextContent("Denkt daran, Bilder und Videos von euren Hacks zu machen!");
+  });
+
+  it("should not show the pixel mouse when the board loads mid-phase", () => {
+    const { container } = render(<App />);
+    expect(container.querySelector(".pixel-cursor")).toBeNull();
+  });
+
+  it("should send the pixel mouse to the next item so it clicks right at the change", () => {
+    vi.setSystemTime(new Date(2026, 8, 28, 11, 14, 57));
+    const { container } = render(<App />);
+    expect(container.querySelector(".pixel-cursor")).toBeNull();
+
+    // Two seconds before 11:15 the mouse is on its way; Teamfindung hasn't started yet.
+    act(() => {
+      vi.advanceTimersByTime(1000);
+    });
+    expect(container.querySelector(".pixel-cursor")).not.toBeNull();
+    expect(screen.getByRole("listitem", { current: "step" })).toHaveTextContent("Ideenfindung (2/2)");
+
+    // The click lands at 11:15:00 on the dot, together with the switch.
+    act(() => {
+      vi.advanceTimersByTime(2000);
+    });
+    expect(screen.getByRole("listitem", { current: "step" })).toHaveTextContent("Teamfindung");
+
+    act(() => {
+      vi.advanceTimersByTime(10_000);
+    });
+    expect(container.querySelector(".pixel-cursor")).toBeNull();
   });
 
   it("should say goodbye after the last day", () => {

@@ -42,6 +42,7 @@ export function Timeline({ entries, remainingSeconds, dayLabel = null }: Timelin
           return (
             <li
               key={item.id}
+              data-item-id={item.id}
               className={`tl tl--${state}`}
               aria-current={state === "current" ? "step" : undefined}
             >
