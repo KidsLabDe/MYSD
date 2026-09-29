@@ -24,6 +24,10 @@ npx vitest run src/lib/schedule.test.ts                    # run a single test f
 npx vitest run -t "should report a gap between two items"  # run tests matching a name
 ```
 
+Requires **Node 24** (≥ 24.15, `engines` in `package.json`, `.nvmrc`); vitest 5 and jsdom 30 refuse
+older versions. CI reads the same `.nvmrc`. The toolchain is Vite 8 (rolldown bundler), Vitest 5
+with jsdom and `@vitest/coverage-v8`.
+
 `npm run build` is also the type-check gate — there is no separate lint step; TypeScript runs in
 `strict` mode with `noUnusedLocals`, `noUnusedParameters`, and `noUncheckedIndexedAccess`.
 

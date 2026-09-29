@@ -33,7 +33,12 @@ UI copy is in German.
 
 ## Getting started
 
+Needs **Node.js 24** (≥ 24.15, pinned in [`.nvmrc`](.nvmrc)); vitest and jsdom don't run on older
+versions. With [nvm](https://github.com/nvm-sh/nvm):
+
 ```bash
+nvm install        # once; reads .nvmrc
+nvm use            # in each new terminal, unless 24 is your nvm default
 npm install
 npm run dev        # dev server with hot reload → http://localhost:5173
 ```

@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Make Your School (MYS) Hackday dashboard — groups & projects overview, KidsLab branding",
+  "description": "Live agenda board for Make Your School (MYS) Hackdays, KidsLab branding",
   "engines": {
     "node": ">=24.15.0"
   },
@@ -26,6 +26,7 @@
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^6.1.1",
+    "@vitest/coverage-v8": "^5.0.2",
     "jsdom": "^30.1.1",
     "typescript": "^5.5.4",
     "vite": "^8.3.1",
