@@ -63,7 +63,7 @@ describe("App", () => {
   });
 
   it("should show the next day's plan on the next day", () => {
-    vi.setSystemTime(new Date(2026, 8, 29, 9, 0, 0));
+    vi.setSystemTime(new Date(2026, 8, 29, 10, 30, 0));
     render(<App />);
     expect(screen.getByText("Tag 2 von 3")).toBeInTheDocument();
     expect(screen.getByRole("listitem", { current: "step" })).toHaveTextContent("Arbeitsphase");
@@ -89,7 +89,7 @@ describe("App", () => {
     render(<App />);
     const panel = screen.getByRole("region", { name: /Aktueller Programmpunkt/i });
     expect(within(panel).getByText("Geschafft!")).toBeInTheDocument();
-    expect(within(panel).getByText("Morgen geht’s um 08:00 weiter.")).toBeInTheDocument();
+    expect(within(panel).getByText("Morgen geht’s um 10:00 weiter.")).toBeInTheDocument();
     expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
   });
 
@@ -122,6 +122,15 @@ describe("App", () => {
     } finally {
       window.history.pushState({}, "", "/");
     }
+  });
+
+  it("should show the important messages in the ticker", () => {
+    render(<App />);
+    const ticker = screen.getByRole("complementary", { name: "Hinweise" });
+    // Role queries skip the aria-hidden marquee, so each message is read once.
+    const items = within(ticker).getAllByRole("listitem");
+    expect(items).toHaveLength(1);
+    expect(items[0]).toHaveTextContent("Denkt daran, Bilder und Videos von euren Hacks zu machen!");
   });
 
   it("should say goodbye after the last day", () => {

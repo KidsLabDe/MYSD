@@ -44,4 +44,6 @@ export interface HackdayData {
   readonly title: string;
   /** The event's days; the board shows today's (see `lib/days.ts`). */
   readonly days: readonly HackdayDay[];
+  /** Important notes scrolling in the live ticker at the bottom (optional). */
+  readonly messages?: readonly string[];
 }

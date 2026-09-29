@@ -1,5 +1,8 @@
 {
   "title": "Make Your School · St. Ursula",
+  "messages": [
+    "Denkt daran, Bilder und Videos von euren Hacks zu machen!"
+  ],
   "days": [
     {
       "date": "2026-09-28",
@@ -88,29 +91,29 @@
       "schedule": [
         {
           "id": "d2-01",
-          "start": "08:00",
-          "end": "11:30",
+          "start": "10:00",
+          "end": "12:00",
           "title": "Arbeitsphase",
           "kind": "phase"
         },
         {
           "id": "d2-02",
-          "start": "11:30",
-          "end": "12:30",
+          "start": "12:00",
+          "end": "13:00",
           "title": "Mittagspause",
           "kind": "meal"
         },
         {
           "id": "d2-03",
-          "start": "12:30",
-          "end": "14:45",
+          "start": "13:00",
+          "end": "15:00",
           "title": "Arbeitsphase",
           "kind": "phase"
         },
         {
           "id": "d2-04",
-          "start": "14:45",
-          "end": "15:00",
+          "start": "15:00",
+          "end": "15:15",
           "title": "Zwischenpräsentation",
           "kind": "talk",
           "note": "Daily Scrum & Materialbestellung."

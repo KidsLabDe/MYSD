@@ -10,6 +10,7 @@ import { useClock } from "./hooks/useClock";
 import { useTheme } from "./hooks/useTheme";
 import { Header } from "./components/Header";
 import { NowPanel } from "./components/NowPanel";
+import { Ticker } from "./components/Ticker";
 import { Timeline } from "./components/Timeline";
 
 const data = rawData as HackdayData;
@@ -58,6 +59,8 @@ export default function App() {
           dayLabel={multiDay ? `Tag ${dayNumber} von ${selected.count}` : null}
         />
       </main>
+
+      <Ticker messages={data.messages ?? []} />
     </div>
   );
 }
