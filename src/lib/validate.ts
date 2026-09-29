@@ -13,6 +13,8 @@ export const DAY_COUNT = 3;
 export const MAX_ITEMS_PER_DAY = 10;
 /** Longest hero title that still wraps to two lines at 76px. */
 export const MAX_TITLE_CHARS = 36;
+/** Longest board name that sits comfortably next to the logo in the header. */
+export const MAX_BOARD_TITLE_CHARS = 30;
 /** Longest single word that fits on one hero line at 76px ("Abschlusspräsentation"). */
 export const MAX_WORD_CHARS = 21;
 
@@ -132,6 +134,10 @@ export function validateHackday(data: unknown): string[] {
   const errors: string[] = [];
 
   if (!isText(data.title)) errors.push('"title" fehlt oder ist leer.');
+  if (!isText(data.boardTitle)) errors.push('"boardTitle" fehlt oder ist leer.');
+  else if (data.boardTitle.length > MAX_BOARD_TITLE_CHARS) {
+    errors.push(`"boardTitle" ist zu lang für die Kopfzeile (max. ${MAX_BOARD_TITLE_CHARS} Zeichen).`);
+  }
 
   if (data.messages !== undefined) {
     if (!Array.isArray(data.messages)) errors.push('"messages" muss eine Liste sein.');

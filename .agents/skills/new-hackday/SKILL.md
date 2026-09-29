@@ -1,6 +1,6 @@
 ---
 name: new-hackday
-description: Guided German wizard to create the plan for the next Make Your School Hackday, or to change the current plan (times, items, ticker messages) of the agenda board in this repo (src/data/hackday.json). Archives the old plan, validates, makes sure the board's dev server runs, and commits. Use when an organizer wants to set up a new Hackday or says something like "Mittagspause heute 12–13" or "neuer Hinweis im Ticker". Not for code changes to the dashboard itself.
+description: Guided German wizard to create the plan for the next Make Your School Hackday, or to change the current plan (times, items, ticker messages, the board title in the header) of the agenda board in this repo (src/data/hackday.json). Archives the old plan, validates, makes sure the board's dev server runs, and commits. Use when an organizer wants to set up a new Hackday or says something like "Mittagspause heute 12–13" or "neuer Hinweis im Ticker". Not for code changes to the dashboard itself.
 allowed-tools: Read Edit Write Bash(npm test) Bash(npx vitest run *) Bash(sh .agents/skills/new-hackday/scripts/*) Bash(git status *) Bash(git add *) Bash(git commit *) Bash(git diff *)
 ---
 
@@ -27,6 +27,7 @@ oder den aktuellen Plan ändern?"
 ```json
 {
   "title": "Make Your School · St. Ursula",
+  "boardTitle": "MYS Hackday",
   "messages": ["Denkt daran, Bilder und Videos von euren Hacks zu machen!"],
   "days": [
     {
@@ -40,6 +41,9 @@ oder den aktuellen Plan ändern?"
 ```
 
 - `title`: always `Make Your School · <Schulname>`.
+- `boardTitle`: the name next to the logo in the board's header (and in the
+  browser tab), at most 30 characters. Default `MYS Hackday`; change it only
+  when the organizer asks for a different name.
 - `messages`: short notes for the scrolling ticker at the bottom. Empty list hides it.
 - `days`: **exactly 3 days**, dates `JJJJ-MM-TT`, strictly increasing
   (usually consecutive, but ask – the organizer decides).
@@ -86,6 +90,8 @@ Go step by step and wait for the answer after each step.
 
 1. **Basics:** "Wie heißt die Schule?" and "Wann ist der erste Tag?"
    Propose the next two days as day 2 and 3 and ask if that's right.
+   Keep the current `boardTitle` and don't ask about it unless the organizer
+   brings up the name on the board.
 2. **Plan source:** "Sollen wir den letzten Plan als Vorlage nehmen?"
    If they have a new plan instead, they can paste it (copied spreadsheet
    rows, text) or give a file path (CSV/text; for Excel ask them to paste
@@ -101,7 +107,7 @@ Go step by step and wait for the answer after each step.
    neighbouring items so there are no gaps or overlaps they didn't ask for.
    Show the day again until they say it fits.
 4. **Ticker:** show the current messages; ask whether to keep, change or add.
-5. **Summary:** all 3 days as tables plus title and messages. Ask
+5. **Summary:** all 3 days as tables plus title, board title and messages. Ask
    "Soll ich den Plan so übernehmen?" – continue only after a clear yes.
 6. **Archive, then write** (in this order):
    ```sh

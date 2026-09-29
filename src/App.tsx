@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { CSSProperties } from "react";
 import rawData from "./data/hackday.json";
 import type { HackdayData } from "./types";
@@ -37,6 +37,10 @@ export default function App() {
   const [debugOffset] = useState(initialDebugOffset);
   const now = useClock(debugOffset ?? 0);
   const scale = useBoardScale();
+
+  useEffect(() => {
+    document.title = `${data.boardTitle} · ${data.title}`;
+  }, []);
 
   // Presenter steps per day, in memory only (a reload returns to the plan).
   const [adjustments, setAdjustments] = useState<Readonly<Record<string, readonly Adjustment[]>>>(
@@ -89,7 +93,7 @@ export default function App() {
 
   return (
     <div className="board" style={{ "--board-scale": scale } as CSSProperties}>
-      <Header now={now} testTime={debugOffset !== null} theme={theme} onToggleTheme={toggleTheme} />
+      <Header title={data.boardTitle} now={now} testTime={debugOffset !== null} theme={theme} onToggleTheme={toggleTheme} />
 
       <main className="board__main">
         <NowPanel

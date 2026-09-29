@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { MAX_ITEMS_PER_DAY, validateHackday } from "./validate";
+import { MAX_BOARD_TITLE_CHARS, MAX_ITEMS_PER_DAY, validateHackday } from "./validate";
 
 const item = (id: string, start: string, end: string, title = "Arbeitsphase") => ({
   id,
@@ -11,6 +11,7 @@ const item = (id: string, start: string, end: string, title = "Arbeitsphase") =>
 
 const valid = () => ({
   title: "Make Your School · Testschule",
+  boardTitle: "MYS Hackday",
   messages: ["Denkt an eure Fotos!"],
   days: [
     { date: "2026-10-05", schedule: [item("d1-01", "08:00", "12:00")] },
@@ -109,6 +110,19 @@ describe("validateHackday", () => {
   it("should reject empty ticker messages", () => {
     expect(validateHackday({ ...valid(), messages: ["ok", "  "] })).toEqual([
       "Hinweis 2 im Ticker ist leer.",
+    ]);
+  });
+
+  it("should require a board title", () => {
+    const { boardTitle: _omit, ...rest } = valid();
+    expect(validateHackday(rest)).toEqual(['"boardTitle" fehlt oder ist leer.']);
+    expect(validateHackday({ ...valid(), boardTitle: " " })).toEqual(['"boardTitle" fehlt oder ist leer.']);
+  });
+
+  it("should reject a board title too long for the header", () => {
+    const boardTitle = "H".repeat(MAX_BOARD_TITLE_CHARS + 1);
+    expect(validateHackday({ ...valid(), boardTitle })).toEqual([
+      `"boardTitle" ist zu lang für die Kopfzeile (max. ${MAX_BOARD_TITLE_CHARS} Zeichen).`,
     ]);
   });
 

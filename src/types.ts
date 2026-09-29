@@ -49,6 +49,8 @@ export interface HackdayDay {
 export interface HackdayData {
   /** Event name, e.g. "Make Your School · St. Ursula". */
   readonly title: string;
+  /** Board name shown next to the logo in the header, e.g. "MYS Hackday". */
+  readonly boardTitle: string;
   /** The event's days; the board shows today's (see `lib/days.ts`). */
   readonly days: readonly HackdayDay[];
   /** Important notes scrolling in the live ticker at the bottom (optional). */

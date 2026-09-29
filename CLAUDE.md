@@ -35,12 +35,13 @@ with jsdom and `@vitest/coverage-v8`.
 
 Data flows one direction: **`hackday.json` + clock → pure functions → React → UI**.
 
-- **`src/data/hackday.json`** is the single source of content: `title`, exactly 3 `days` (each a
-  `date` and a `schedule` of `AgendaItem`s), and optional ticker `messages`. Its shape is in
+- **`src/data/hackday.json`** is the single source of content: `title`, `boardTitle` (the name in the
+  header, e.g. "MYS Hackday"), exactly 3 `days` (each a `date` and a `schedule` of `AgendaItem`s),
+  and optional ticker `messages`. Its shape is in
   **`src/types.ts`** (`HackdayData`, `HackdayDay`, `AgendaItem`, `AgendaKind`). Organizers change it
   through the **new-hackday skill** (`.agents/skills/new-hackday/SKILL.md`, symlinked from
   `.claude/skills/`), not by hand. The skill archives replaced plans in `src/data/history/` (created on first use).
-- **`src/lib/validate.ts`** holds the plan rules (3 days, ≤10 items/day, title ≤36 chars, no word
+- **`src/lib/validate.ts`** holds the plan rules (3 days, ≤10 items/day, board title ≤30 chars, item title ≤36 chars, no word
   >21 chars, no overlaps). They are measured against what fits the board. `src/data/hackday.test.ts`
   runs them, so `npm test` guards every data edit.
 - **`src/lib/`** holds all logic as **pure, clock-free functions** ("now" is always passed in), with

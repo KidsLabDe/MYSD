@@ -3,6 +3,8 @@ import type { Theme } from "../hooks/useTheme";
 import { MoonIcon, SunIcon } from "./icons";
 
 interface HeaderProps {
+  /** Board name next to the logo (`boardTitle` in `hackday.json`). */
+  title: string;
   now: Date;
   /** True when the clock runs from the `?date=&time=` debug params. */
   testTime: boolean;
@@ -12,13 +14,13 @@ interface HeaderProps {
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
-/** Top bar: MYS logo, a large live clock, and the light/dark toggle. */
-export function Header({ now, testTime, theme, onToggleTheme }: HeaderProps) {
+/** Top bar: logo with the board name, a large live clock, and the light/dark toggle. */
+export function Header({ title, now, testTime, theme, onToggleTheme }: HeaderProps) {
   return (
     <header className="header">
       <div className="logo">
         <img className="logo__img" src={kidslabLogo} alt="KidsLab" />
-        <span className="logo__title">MYS Hackday</span>
+        <span className="logo__title">{title}</span>
       </div>
 
       <span className="header__spacer" />

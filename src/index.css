@@ -242,6 +242,9 @@ button {
   font-size: var(--logo-title);
   line-height: 1.1;
   white-space: nowrap;
+  /* A long boardTitle gives way to the clock on narrow screens. */
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .header__spacer {
