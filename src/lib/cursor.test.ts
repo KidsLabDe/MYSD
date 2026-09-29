@@ -9,20 +9,22 @@ import {
 } from "./cursor";
 
 describe("clickDue", () => {
+  const lunch = { id: "lunch", key: "lunch@43200" };
+
   it("should be due once the next item starts within the lead time", () => {
-    expect(clickDue("lunch", CURSOR_CLICK_MS / 1000)).toEqual({ id: "lunch", lateMs: 0 });
+    expect(clickDue(lunch, CURSOR_CLICK_MS / 1000)).toEqual({ ...lunch, lateMs: 0 });
   });
 
   it("should report how late it starts when the lead moment was missed", () => {
-    expect(clickDue("lunch", CURSOR_CLICK_MS / 1000 - 1)).toEqual({ id: "lunch", lateMs: 1000 });
+    expect(clickDue(lunch, CURSOR_CLICK_MS / 1000 - 1)).toEqual({ ...lunch, lateMs: 1000 });
   });
 
   it("should not be due while the next item is further away", () => {
-    expect(clickDue("lunch", CURSOR_CLICK_MS / 1000 + 1)).toBeNull();
+    expect(clickDue(lunch, CURSOR_CLICK_MS / 1000 + 1)).toBeNull();
   });
 
   it("should not be due once the item has started", () => {
-    expect(clickDue("lunch", 0)).toBeNull();
+    expect(clickDue(lunch, 0)).toBeNull();
   });
 
   it("should not be due without a next item", () => {

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { act, render, screen, within } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import App from "./App";
 import { NowPanel } from "./components/NowPanel";
 import { buildTimeline, parseTime } from "./lib/schedule";
@@ -160,6 +160,38 @@ describe("App", () => {
       vi.advanceTimersByTime(10_000);
     });
     expect(container.querySelector(".pixel-cursor")).toBeNull();
+  });
+
+  it("should jump to the next phase on a presenter click, with the mouse clicking it", () => {
+    const { container } = render(<App />);
+    fireEvent.keyDown(window, { key: "PageDown" });
+    expect(container.querySelector(".pixel-cursor")).not.toBeNull();
+    expect(screen.getByRole("listitem", { current: "step" })).toHaveTextContent("Ideenfindung (2/2)");
+
+    act(() => {
+      vi.advanceTimersByTime(2000);
+    });
+    const current = screen.getByRole("listitem", { current: "step" });
+    expect(current).toHaveTextContent("Teamfindung");
+    // Only the switch moved: Teamfindung starts now but still ends as planned.
+    expect(within(current).getByText("10:45")).toBeInTheDocument();
+    expect(screen.getByText("Maximal 4 Teilnehmerinnen pro Gruppe.")).toBeInTheDocument();
+  });
+
+  it("should go back to the previous phase on a presenter back click", () => {
+    render(<App />);
+    fireEvent.keyDown(window, { key: "ArrowRight" });
+    act(() => {
+      vi.advanceTimersByTime(3000);
+    });
+    fireEvent.keyDown(window, { key: "ArrowLeft" });
+    act(() => {
+      vi.advanceTimersByTime(3000);
+    });
+    const current = screen.getByRole("listitem", { current: "step" });
+    expect(current).toHaveTextContent("Ideenfindung (2/2)");
+    // Back to the plan: it runs until 11:15 again (29:54 left, rounded up).
+    expect(current).toHaveTextContent("noch 30 Min");
   });
 
   it("should say goodbye after the last day", () => {

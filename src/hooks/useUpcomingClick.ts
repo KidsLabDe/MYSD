@@ -1,24 +1,19 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ClickDue } from "../lib/cursor";
-import { clickDue } from "../lib/cursor";
 
 /**
- * The click the pixel mouse should play for the item about to start (until
- * `clear` is called), plus `clear`. Each item is clicked at most once.
+ * Latches a due click for the pixel mouse (until `clear` is called), so it
+ * plays once per switch even though `due` is recomputed on every tick.
  */
-export function useUpcomingClick(
-  nextId: string | null,
-  untilNextSeconds: number | null,
-): [ClickDue | null, () => void] {
-  const playedId = useRef<string | null>(null);
+export function useUpcomingClick(due: ClickDue | null): [ClickDue | null, () => void] {
+  const playedKey = useRef<string | null>(null);
   const [click, setClick] = useState<ClickDue | null>(null);
 
   useEffect(() => {
-    const due = clickDue(nextId, untilNextSeconds);
-    if (due === null || due.id === playedId.current) return;
-    playedId.current = due.id;
+    if (due === null || due.key === playedKey.current) return;
+    playedKey.current = due.key;
     setClick(due);
-  }, [nextId, untilNextSeconds]);
+  }, [due]);
 
   const clear = useCallback(() => setClick(null), []);
   return [click, clear];

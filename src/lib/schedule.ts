@@ -64,12 +64,14 @@ export function secondsOfDay(date: Date): number {
   return date.getHours() * HOUR + date.getMinutes() * MINUTE + date.getSeconds();
 }
 
-function startSeconds(item: AgendaItem): number {
-  return parseTime(item.start) * MINUTE;
+/** Start in seconds since midnight (a presenter step may set it to the second). */
+export function startSeconds(item: AgendaItem): number {
+  return item.startSeconds ?? parseTime(item.start) * MINUTE;
 }
 
-function endSeconds(item: AgendaItem): number {
-  return parseTime(item.end) * MINUTE;
+/** End in seconds since midnight (a presenter step may set it to the second). */
+export function endSeconds(item: AgendaItem): number {
+  return item.endSeconds ?? parseTime(item.end) * MINUTE;
 }
 
 function clamp01(value: number): number {

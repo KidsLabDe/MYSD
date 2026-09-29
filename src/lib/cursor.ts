@@ -24,22 +24,27 @@ export const CURSOR_DURATION_MS = 4800;
  */
 export const CURSOR_CLICK_MS = 2000;
 
-export interface ClickDue {
+export interface ClickTarget {
   /** The item about to start, i.e. the row to click. */
   readonly id: string;
+  /** Identifies this one switch (item + moment), so each is clicked once. */
+  readonly key: string;
+}
+
+export interface ClickDue extends ClickTarget {
   /** How far into the trip it already is (e.g. the board loaded late). */
   readonly lateMs: number;
 }
 
 /**
- * Whether the mouse should be on its way to click `nextId`, which starts in
- * `untilNextSeconds`. Due from {@link CURSOR_CLICK_MS} before the start until it.
+ * Whether the mouse should be on its way to click `target`, which starts in
+ * `untilSeconds`. Due from {@link CURSOR_CLICK_MS} before the start until it.
  */
-export function clickDue(nextId: string | null, untilNextSeconds: number | null): ClickDue | null {
-  if (nextId === null || untilNextSeconds === null) return null;
-  const untilNextMs = untilNextSeconds * 1000;
-  if (untilNextMs <= 0 || untilNextMs > CURSOR_CLICK_MS) return null;
-  return { id: nextId, lateMs: CURSOR_CLICK_MS - untilNextMs };
+export function clickDue(target: ClickTarget | null, untilSeconds: number | null): ClickDue | null {
+  if (target === null || untilSeconds === null) return null;
+  const untilMs = untilSeconds * 1000;
+  if (untilMs <= 0 || untilMs > CURSOR_CLICK_MS) return null;
+  return { ...target, lateMs: CURSOR_CLICK_MS - untilMs };
 }
 
 /** Classic arrow cursor: `B` outline, `W` body, `.` transparent. Tip at (0,0). */

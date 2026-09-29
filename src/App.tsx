@@ -5,8 +5,11 @@ import type { HackdayData } from "./types";
 import { buildTimeline } from "./lib/schedule";
 import { effectiveSeconds, resumeLead, selectDay } from "./lib/days";
 import { parseDebugTime } from "./lib/debugTime";
+import type { Adjustment } from "./lib/presenter";
+import { applyAdjustments, dueClick, pendingAdjustment, planStep } from "./lib/presenter";
 import { useBoardScale } from "./hooks/useBoardScale";
 import { useClock } from "./hooks/useClock";
+import { usePresenterKeys } from "./hooks/usePresenterKeys";
 import { useTheme } from "./hooks/useTheme";
 import { useUpcomingClick } from "./hooks/useUpcomingClick";
 import { Header } from "./components/Header";
@@ -16,6 +19,7 @@ import { Ticker } from "./components/Ticker";
 import { Timeline } from "./components/Timeline";
 
 const data = rawData as HackdayData;
+const NO_ADJUSTMENTS: readonly Adjustment[] = [];
 
 /** Reads the `?date=&time=` debug params once; invalid values fall back to real time. */
 function initialDebugOffset(): number | null {
@@ -34,18 +38,37 @@ export default function App() {
   const now = useClock(debugOffset ?? 0);
   const scale = useBoardScale();
 
+  // Presenter steps per day, in memory only (a reload returns to the plan).
+  const [adjustments, setAdjustments] = useState<Readonly<Record<string, readonly Adjustment[]>>>(
+    {},
+  );
+
   // Everything below is recomputed each tick; cheap for a few days of items.
   const selected = selectDay(data.days, now);
-  const schedule = selected?.day.schedule ?? [];
   const nowSeconds = selected === null ? 0 : effectiveSeconds(selected.day.date, now);
-  const timeline = useMemo(() => buildTimeline(schedule, nowSeconds), [schedule, nowSeconds]);
+  const dayAdjustments = (selected && adjustments[selected.day.date]) ?? NO_ADJUSTMENTS;
+  const timeline = useMemo(() => {
+    const planned = selected?.day.schedule ?? [];
+    return buildTimeline(applyAdjustments(planned, dayAdjustments, nowSeconds), nowSeconds);
+  }, [selected?.day.schedule, dayAdjustments, nowSeconds]);
+
+  usePresenterKeys((step) => {
+    if (selected === null) return;
+    const { date, schedule } = selected.day;
+    const pressed = new Date(Date.now() + (debugOffset ?? 0));
+    const seconds = effectiveSeconds(date, pressed) + pressed.getMilliseconds() / 1000;
+    setAdjustments((prev) => {
+      const list = prev[date] ?? NO_ADJUSTMENTS;
+      const adjustment = planStep(schedule, list, step, seconds);
+      return adjustment === null ? prev : { ...prev, [date]: [...list, adjustment] };
+    });
+  });
 
   const multiDay = selected !== null && selected.count > 1;
   const dayNumber = selected === null ? 0 : selected.index + 1;
   const resume = selected === null ? null : resumeLead(data.days, selected.index, now);
   const [click, clearClick] = useUpcomingClick(
-    timeline.next?.id ?? null,
-    timeline.untilNextSeconds,
+    dueClick(timeline, pendingAdjustment(dayAdjustments, nowSeconds), nowSeconds),
   );
 
   return (
@@ -70,7 +93,7 @@ export default function App() {
 
       {click !== null && (
         <PixelCursor
-          key={click.id}
+          key={click.key}
           targetId={click.id}
           lateMs={click.lateMs}
           onDone={clearClick}

@@ -29,6 +29,13 @@ export interface AgendaItem {
   readonly location?: string;
   /** Optional one-line hint shown with the item. */
   readonly note?: string;
+  /**
+   * Exact start/end in seconds since midnight, set in memory only by a
+   * presenter step (see `lib/presenter.ts`); never part of `hackday.json`.
+   * `start`/`end` then hold the matching `HH:MM` labels.
+   */
+  readonly startSeconds?: number;
+  readonly endSeconds?: number;
 }
 
 /** One event day and its plan. */
