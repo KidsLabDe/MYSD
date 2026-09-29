@@ -1,5 +1,5 @@
 {
-  "title": "Make Your School · St. Ursula",
+  "title": "Make Your School · Gymnasium Wertingen",
   "messages": [
     "Denkt daran, Bilder und Videos von euren Hacks zu machen!"
   ],
@@ -72,14 +72,14 @@
         {
           "id": "d1-09",
           "start": "12:30",
-          "end": "14:45",
+          "end": "15:00",
           "title": "Arbeitsphase inkl. Projektplanung",
           "kind": "phase"
         },
         {
           "id": "d1-10",
-          "start": "14:45",
-          "end": "15:00",
+          "start": "15:00",
+          "end": "15:15",
           "title": "Zwischenpräsentation",
           "kind": "talk",
           "note": "Daily Scrum & Materialbestellung."
@@ -125,22 +125,29 @@
       "schedule": [
         {
           "id": "d3-01",
-          "start": "08:45",
-          "end": "12:00",
+          "start": "08:00",
+          "end": "08:30",
           "title": "Impulsvortrag",
           "kind": "talk",
           "note": "Mit Hinweisen zur Vorbereitung der Präsentation."
         },
         {
           "id": "d3-02",
+          "start": "08:30",
+          "end": "12:00",
+          "title": "Arbeitsphase",
+          "kind": "phase"
+        },
+        {
+          "id": "d3-03",
           "start": "12:00",
           "end": "12:40",
-          "title": "Aufräumen & Mittagessen",
+          "title": "Mittagessen",
           "kind": "meal",
           "note": "Butterbrezen als Snack."
         },
         {
-          "id": "d3-03",
+          "id": "d3-04",
           "start": "12:40",
           "end": "13:10",
           "title": "Interne Abschlusspräsentation",
@@ -148,19 +155,40 @@
           "note": "Mit Ausblick."
         },
         {
-          "id": "d3-04",
+          "id": "d3-05",
           "start": "13:10",
-          "end": "13:20",
+          "end": "14:45",
+          "title": "Vorbereitung Abschlusspräsentation",
+          "kind": "phase"
+        },
+        {
+          "id": "d3-06",
+          "start": "14:45",
+          "end": "15:15",
+          "title": "Aufräumen",
+          "kind": "phase"
+        },
+        {
+          "id": "d3-07",
+          "start": "15:15",
+          "end": "17:00",
+          "title": "Pause",
+          "kind": "break"
+        },
+        {
+          "id": "d3-08",
+          "start": "17:00",
+          "end": "17:15",
           "title": "Aufbau Marktplatz",
           "kind": "phase"
         },
         {
-          "id": "d3-05",
-          "start": "13:20",
-          "end": "14:00",
+          "id": "d3-09",
+          "start": "17:15",
+          "end": "19:00",
           "title": "Abschlusspräsentation extern",
           "kind": "talk",
-          "note": "Vor Schulleitung, Eltern und Presse."
+          "note": "Vor Schulleitung, Eltern und Presse. Ab 18 Uhr ist Fabian Mehring da."
         }
       ]
     }

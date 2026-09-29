@@ -163,7 +163,7 @@ describe("App", () => {
   });
 
   it("should say goodbye after the last day", () => {
-    vi.setSystemTime(new Date(2026, 8, 30, 15, 0, 0));
+    vi.setSystemTime(new Date(2026, 8, 30, 19, 30, 0));
     render(<App />);
     const panel = screen.getByRole("region", { name: /Aktueller Programmpunkt/i });
     expect(within(panel).getByText(/Der Hackday ist zu Ende/)).toBeInTheDocument();
