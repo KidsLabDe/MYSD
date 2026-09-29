@@ -274,6 +274,32 @@ describe("UI choice", () => {
     expect(screen.getByRole("listitem", { current: "step" })).toHaveTextContent("Ideenfindung (2/2)");
   });
 
+  it("should switch between Modern and Pixel from the header, like the theme toggle", () => {
+    storeChoice("modern");
+    const { unmount } = render(<App />);
+    fireEvent.click(screen.getByRole("button", { name: "Zur Pixel-Ansicht wechseln" }));
+    expect(screen.queryByRole("region", { name: /Aktueller Programmpunkt/i })).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Zur Modern-Ansicht wechseln" }));
+    expect(screen.getByRole("region", { name: /Aktueller Programmpunkt/i })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Zur Pixel-Ansicht wechseln" }));
+    unmount();
+    render(<App />);
+    expect(screen.getByRole("button", { name: "Zur Modern-Ansicht wechseln" })).toBeInTheDocument();
+  });
+
+  it("should let the switch leave a UI forced via ?ui=", () => {
+    window.history.pushState({}, "", "/?ui=modern");
+    try {
+      render(<App />);
+      fireEvent.click(screen.getByRole("button", { name: "Zur Pixel-Ansicht wechseln" }));
+      expect(screen.getByRole("button", { name: "Zur Modern-Ansicht wechseln" })).toBeInTheDocument();
+    } finally {
+      window.history.pushState({}, "", "/");
+    }
+  });
+
   it("should use the UI given as ?ui= without asking or storing it", () => {
     window.history.pushState({}, "", "/?ui=modern");
     try {

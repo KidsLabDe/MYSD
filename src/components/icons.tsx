@@ -36,6 +36,24 @@ export const MoonIcon = (p: IconProps) => (
   </Base>
 );
 
+/** UI switch target: Pixel (a staircase of pixels). */
+export const PixelIcon = (p: IconProps) => (
+  <Base {...p} fill="currentColor" stroke="none">
+    <rect x="3" y="15" width="6" height="6" />
+    <rect x="9" y="9" width="6" height="6" />
+    <rect x="15" y="3" width="6" height="6" />
+    <rect x="15" y="15" width="6" height="6" />
+  </Base>
+);
+
+/** UI switch target: Modern (a smooth rounded layout). */
+export const ModernIcon = (p: IconProps) => (
+  <Base {...p}>
+    <rect x="3" y="4" width="18" height="16" rx="4" />
+    <path d="M3 10h18M10 10v10" />
+  </Base>
+);
+
 export const ClockIcon = (p: IconProps) => (
   <Base {...p}>
     <circle cx="12" cy="12" r="9" />

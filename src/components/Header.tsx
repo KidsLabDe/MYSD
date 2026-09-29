@@ -1,6 +1,7 @@
 import kidslabLogo from "../assets/kidslab-logo.png";
 import type { Theme } from "../hooks/useTheme";
 import { MoonIcon, SunIcon } from "./icons";
+import { UiSwitch } from "./UiSwitch";
 
 interface HeaderProps {
   /** Board name next to the logo (`boardTitle` in `hackday.json`). */
@@ -10,12 +11,14 @@ interface HeaderProps {
   testTime: boolean;
   theme: Theme;
   onToggleTheme: () => void;
+  /** Switches to the Pixel UI. */
+  onToggleUi: () => void;
 }
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
-/** Top bar: logo with the board name, a large live clock, and the light/dark toggle. */
-export function Header({ title, now, testTime, theme, onToggleTheme }: HeaderProps) {
+/** Top bar: logo with the board name, a large live clock, the UI switch and the light/dark toggle. */
+export function Header({ title, now, testTime, theme, onToggleTheme, onToggleUi }: HeaderProps) {
   return (
     <header className="header">
       <div className="logo">
@@ -35,6 +38,8 @@ export function Header({ title, now, testTime, theme, onToggleTheme }: HeaderPro
         {pad(now.getHours())}:{pad(now.getMinutes())}
         <span className="clock__sec">:{pad(now.getSeconds())}</span>
       </time>
+
+      <UiSwitch ui="modern" onToggle={onToggleUi} />
 
       <button
         type="button"

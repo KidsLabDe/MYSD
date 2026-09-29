@@ -12,10 +12,11 @@ interface ModernBoardProps {
   scale: number;
   theme: Theme;
   onToggleTheme: () => void;
+  onToggleUi: () => void;
 }
 
 /** The Modern UI: KidsLab-styled board with hero, Tagesplan and ticker. */
-export function ModernBoard({ board, scale, theme, onToggleTheme }: ModernBoardProps) {
+export function ModernBoard({ board, scale, theme, onToggleTheme, onToggleUi }: ModernBoardProps) {
   const { data, timeline, plan, click } = board;
   return (
     <div className="board" style={{ "--board-scale": scale } as CSSProperties}>
@@ -25,6 +26,7 @@ export function ModernBoard({ board, scale, theme, onToggleTheme }: ModernBoardP
         testTime={board.testTime}
         theme={theme}
         onToggleTheme={onToggleTheme}
+        onToggleUi={onToggleUi}
       />
 
       <main className="board__main">

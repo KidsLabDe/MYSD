@@ -54,7 +54,8 @@ Data flows one direction: **`hackday.json` + clock → pure functions → React 
   - `cursor.ts`: the pixel-art mouse that "clicks" the next item as it starts (timing, bitmap, path).
   - `uiChoice.ts`: which board UI (`modern` | `pixel`) to show. The choice is stored for one
     event only (`eventKey` = first/last day) and resets after its last day or when the plan is
-    for another event. `?ui=modern|pixel` forces a UI without storing it.
+    for another event. `?ui=modern|pixel` forces a UI without storing it. `UiSwitch` (an icon
+    button next to the theme toggle, in both UIs) flips between them and stores the new choice.
   - `ticker.ts`, `debugTime.ts` (`?date=&time=` test clock), `board.ts` (1920×1080 stage scale),
     `clock.ts`, `brand.ts` (brand constants, German `KIND_LABELS`, `KIND_TONE`).
 - **`src/App.tsx`** owns the clock, debug offset and theme, and renders one of three screens: the
