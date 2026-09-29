@@ -126,67 +126,44 @@
         {
           "id": "d3-01",
           "start": "08:00",
-          "end": "08:30",
-          "title": "Impulsvortrag",
-          "kind": "talk",
-          "note": "Mit Hinweisen zur Vorbereitung der Präsentation."
-        },
-        {
-          "id": "d3-02",
-          "start": "08:30",
           "end": "12:00",
           "title": "Arbeitsphase",
           "kind": "phase"
         },
         {
-          "id": "d3-03",
+          "id": "d3-02",
           "start": "12:00",
-          "end": "12:40",
+          "end": "13:00",
           "title": "Mittagessen",
           "kind": "meal",
           "note": "Butterbrezen als Snack."
         },
         {
-          "id": "d3-04",
-          "start": "12:40",
-          "end": "13:10",
-          "title": "Interne Abschlusspräsentation",
-          "kind": "talk",
-          "note": "Mit Ausblick."
-        },
-        {
-          "id": "d3-05",
-          "start": "13:10",
-          "end": "14:45",
-          "title": "Vorbereitung Abschlusspräsentation",
-          "kind": "phase"
-        },
-        {
-          "id": "d3-06",
-          "start": "14:45",
+          "id": "d3-03",
+          "start": "13:00",
           "end": "15:15",
-          "title": "Aufräumen",
+          "title": "Arbeits- & Aufräumphase",
           "kind": "phase"
         },
         {
-          "id": "d3-07",
+          "id": "d3-04",
           "start": "15:15",
           "end": "17:00",
           "title": "Pause",
           "kind": "break"
         },
         {
-          "id": "d3-08",
+          "id": "d3-05",
           "start": "17:00",
-          "end": "17:15",
+          "end": "17:30",
           "title": "Aufbau Marktplatz",
           "kind": "phase"
         },
         {
-          "id": "d3-09",
-          "start": "17:15",
+          "id": "d3-06",
+          "start": "17:30",
           "end": "19:00",
-          "title": "Abschlusspräsentation extern",
+          "title": "Marktplatz & Präsentationen",
           "kind": "talk",
           "note": "Vor Schulleitung, Eltern und Presse. Ab 18 Uhr ist Fabian Mehring da."
         }
