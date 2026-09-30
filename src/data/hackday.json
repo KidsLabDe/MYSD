@@ -149,13 +149,13 @@
         {
           "id": "d3-04",
           "start": "13:00",
-          "end": "13:50",
+          "end": "14:50",
           "title": "Arbeits- & Aufräumphase",
           "kind": "phase"
         },
         {
           "id": "d3-05",
-          "start": "13:50",
+          "start": "14:50",
           "end": "15:00",
           "title": "Video-Abgabe Deadline",
           "kind": "phase"
