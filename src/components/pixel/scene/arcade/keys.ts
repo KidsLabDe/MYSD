@@ -14,7 +14,7 @@ export class GameSequence {
   }
 }
 
-export type DashAction = 'blinds' | 'weather' | 'full' | 'help' | 'escape' | 'printer' | 'coffee' | 'wave' | 'idle';
+export type DashAction = 'blinds' | 'weather' | 'full' | 'help' | 'escape' | 'printer' | 'coffee' | 'wave' | 'idle' | 'talk';
 /**
  * Tastenkürzel der Szene. Phasenwechsel (→/←) gehören usePresenterKeys, der Presenter-Klick
  * (PageDown/PageUp) dem Abreißkalender (tear.ts, direkt in engine.ts). G, A, M, E sind bewusst frei (nur für die Tastenfolge).
@@ -22,6 +22,7 @@ export type DashAction = 'blinds' | 'weather' | 'full' | 'help' | 'escape' | 'pr
 export function dashboardAction(key: string): DashAction | null {
   const M: Record<string, DashAction> = {
     j: 'blinds', w: 'weather', f: 'full', '?': 'help', Escape: 'escape', d: 'printer', k: 'coffee', h: 'wave', l: 'idle',
+    v: 'talk', // Vortrag: Kollege Fabi tritt auf (nochmal V: bricht ab)
   };
   return M[key] ?? M[key.toLowerCase()] ?? null;
 }

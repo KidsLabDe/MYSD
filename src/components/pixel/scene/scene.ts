@@ -4,6 +4,7 @@ import { windowHtml, rainDrops, stormDrops, snowFlakes } from './components/wind
 import { calendarHtml, type CalendarProps } from './components/calendar';
 import { computerHtml, type ComputerProps } from './components/computer';
 import { personHtml, type PersonProps } from './components/person';
+import { kollegeHtml, type KollegeProps } from './components/kollege';
 import { printerHtml, type PrinterView } from './printer';
 import { posterHtml } from './components/poster';
 import { TEAR_H, TEAR_W, tearPadHtml, tearPagesHtml } from './components/tearCalendar';
@@ -30,6 +31,8 @@ export interface SceneState {
   smallPlant?: boolean;
   /** layer ganzVorne: vor Tisch UND Computer. top in px (378 Boden, 324 Stufe, 270 Bank). */
   person: PersonProps & { visible: boolean; x: number; layer?: 'auto' | 'ganzVorne'; top?: number };
+  /** Kollege Fabi (Update 7): null = nicht auf der Bühne. Immer vor Tisch und Computer (Ebene 9, top 378). */
+  kollege?: (KollegeProps & { x: number }) | null;
 }
 
 function layer(stage: HTMLElement, id: string, css: string) {
@@ -42,7 +45,7 @@ function layer(stage: HTMLElement, id: string, css: string) {
 
 export class Scene {
   private back: HTMLElement; private tearPad: HTMLElement; private tearPages: HTMLElement; private win!: HTMLElement; private posterSlot!: HTMLElement; private cal: HTMLElement;
-  private person: HTMLElement; private front: HTMLElement; private printer: HTMLElement; private night: HTMLElement; private pc: HTMLElement;
+  private person: HTMLElement; private kollege: HTMLElement; private front: HTMLElement; private printer: HTMLElement; private night: HTMLElement; private pc: HTMLElement;
   private keys: Record<string, string> = {};
 
   constructor(public stage: HTMLElement) {
@@ -61,6 +64,8 @@ export class Scene {
     this.printer = layer(stage, 'l-printer', 'left: 348px; top: 432px; z-index: 5');
     this.night = layer(stage, 'l-night', 'left: 0px; top: 0px; width: 1920px; height: 1080px; background: rgba(12,16,34,0.45); pointer-events: none; z-index: 7; display: none');
     this.pc = layer(stage, 'l-pc', 'left: 828px; top: 360px; z-index: 8');
+    // Kollege Fabi: Ebene 9 wie Person ganzVorne. overflow: visible, weil Hände über die viewBox hinausragen.
+    this.kollege = layer(stage, 'l-kollege', 'top: 378px; left: 516px; z-index: 9; overflow: visible; display: none; pointer-events: none');
     this.back.innerHTML = roomBackHtml();
     this.win = this.back.querySelector('#window-slot') as HTMLElement;
     this.posterSlot = this.back.querySelector('#poster-slot') as HTMLElement;
@@ -114,6 +119,16 @@ export class Scene {
     this.person.style.filter = topmost && s.weather === 'nacht' ? 'brightness(0.6)' : '';
     const pp: PersonProps = { pose: p.pose, marker: p.marker, arm: p.arm ?? null, armDy: p.armDy ?? 0, view: p.view ?? 'back', face: p.face ?? 'auto', armLeft: p.armLeft ?? 'down', holding: p.holding ?? 'none', steamDy: p.steamDy ?? 0 };
     if (p.visible) this.set(this.person, 'person', pp, () => personHtml(pp));
+
+    const k = s.kollege ?? null;
+    this.kollege.style.display = k ? 'block' : 'none';
+    if (k) {
+      this.kollege.style.left = Math.round(k.x / 6) * 6 + 'px';
+      // wie Person ganzVorne: über dem Nacht-Overlay → brightness(0.6)
+      this.kollege.style.filter = s.weather === 'nacht' ? 'brightness(0.6)' : '';
+      const kp: KollegeProps = { view: k.view, pose: k.pose, face: k.face };
+      this.set(this.kollege, 'kollege', kp, () => kollegeHtml(kp));
+    }
   }
 }
 

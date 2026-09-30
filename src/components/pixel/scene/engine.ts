@@ -17,6 +17,8 @@ import { GameSequence, dashboardAction } from './arcade/keys';
 import type { Screen } from './arcade/screens';
 import { strikeVariants } from './strikes';
 import { TEAR_START, isTearKey, stepTear, tearPage, type TearState } from './tear';
+import { K_BLINK_MS, K_SPOT, kollegeAt, nextBlink, type KollegeState } from './kollege';
+import { KOLLEGE_FACES, KOLLEGE_POSES, KOLLEGE_VIEWS, type KollegeFace, type KollegePose, type KollegeView } from './components/kollege';
 import type { PixelPhase } from '../../../lib/pixelPhase';
 
 export interface SceneItem {
@@ -43,7 +45,7 @@ export interface SceneOptions {
   readonly latitude: number;
   readonly longitude: number;
   readonly poster: string;
-  /** Testparameter: ?weather=, ?print=, ?wave=, ?coffee=, ?arcade[=screen]&demo */
+  /** Testparameter: ?weather=, ?print=, ?wave=, ?coffee=, ?arcade[=screen]&demo, ?debug, ?kollege=pose&kview=&kface=&kleft= */
   readonly params: URLSearchParams;
 }
 
@@ -146,6 +148,11 @@ export class PixelScene {
   private rainOff = 0; private snowOff = 0; private lastRain = 0; private lastSnow = 0;
   private nextBolt = performance.now() + 6000; private boltT = -1e9;
   private lastPc: ComputerProps | null = null; private frozenPc: ComputerProps | null = null;
+  // Kollege Fabi (Vortrag, Taste V): unabhängig von der Warteschlange der Person
+  private talk: { start: number; leaveAt: number | null } | null = null;
+  private blinkAt = 0; private blinkUntil = -1;
+  /** ?debug / ?kollege=…: Kollege fest anzeigen (übersteuert den Vortrag) */
+  private readonly kDebug: { on: boolean; pose: KollegePose; view: KollegeView; face: KollegeFace; left: number };
 
   constructor(host: HTMLElement, private readonly opts: SceneOptions) {
     const q = opts.params;
@@ -180,6 +187,12 @@ export class PixelScene {
     this.waveAt = performance.now() + nextWave(this.waveTest);
     this.coffeeAt = performance.now() + nextCoffee(this.coffeeTest);
     try { this.idleOn = localStorage.getItem(LS_IDLE) !== '0'; } catch { /* Standard: an */ }
+    const pick = <T extends string>(list: readonly T[], v: string | null, d: T): T => (list as readonly string[]).includes(v ?? '') ? (v as T) : d;
+    this.kDebug = {
+      on: q.has('kollege'), pose: pick(KOLLEGE_POSES, q.get('kollege'), 'stand'), view: pick(KOLLEGE_VIEWS, q.get('kview'), 'front'),
+      face: pick(KOLLEGE_FACES, q.get('kface'), 'auto'), left: Number(q.get('kleft')) || K_SPOT,
+    };
+    if (q.has('debug')) this.cleanups.push(this.buildDebug());
 
     // Capture-Phase: läuft vor usePresenterKeys, damit die Pfeile im Spiel nicht die Phase wechseln
     // und PageDown/PageUp nur den Abreißkalender bedienen
@@ -299,7 +312,8 @@ export class PixelScene {
         if (printer.state === 'empty' && t >= printer.startAt) due.push('printStart');
         if (t >= this.waveAt) due.push('wave');
         if (t >= this.coffeeAt) due.push('coffee');
-        const k = pickIdle({ enabled: this.idleOn, queueEmpty: true, phaseChangePending: false, remainingMs: L.ende ? Infinity : L.remainingMs, due, last: this.lastIdle });
+        // Während des Vortrags pausiert der automatische Leerlauf (D/K/H von Hand gehen weiter)
+        const k = this.talk ? null : pickIdle({ enabled: this.idleOn, queueEmpty: true, phaseChangePending: false, remainingMs: L.ende ? Infinity : L.remainingMs, due, last: this.lastIdle });
         if (k) this.runIdle(k);
       }
     } else if (L.idx === a.idx + 1 && this.dayKeyStable()) {
@@ -347,8 +361,56 @@ export class PixelScene {
       rainOff: this.rainOff, snowOff: this.snowOff, bolt,
       calendar: cal, computer: { ...pc, dark: a.dark }, person: { ...a.person },
       cupOnDesk: a.cupOnDesk, printer: this.printer.view(t),
+      kollege: this.kollegeFrame(t),
     };
     this.scene.render(s);
+  }
+
+  /** Kollege für dieses Bild: Debug fest, sonst Vortrag (mit Blinzeln); beendet den Vortrag, wenn er draußen ist. */
+  private kollegeFrame(t: number): (KollegeState & { x: number }) | null {
+    const d = this.kDebug;
+    if (d.on) return { x: d.left, view: d.view, pose: d.pose, face: d.face };
+    if (!this.talk) return null;
+    if (t >= this.blinkAt) { this.blinkUntil = t + K_BLINK_MS; this.blinkAt = t + nextBlink(Math.random()); }
+    const k = kollegeAt(t - this.talk.start, this.talk.leaveAt, t < this.blinkUntil);
+    if (!k) this.talk = null;
+    return k;
+  }
+
+  /** Taste V: Auftritt, während des Vortrags Abbruch (er geht sofort). Unabhängig von der Person. */
+  private toggleTalk() {
+    const t = performance.now();
+    if (!this.talk) {
+      this.talk = { start: t, leaveAt: null };
+      this.blinkAt = t + nextBlink(Math.random()); this.blinkUntil = -1;
+      this.toast.show('Vortrag');
+    } else if (this.talk.leaveAt === null) {
+      this.talk = { ...this.talk, leaveAt: t - this.talk.start };
+      this.toast.show('Vortrag beendet');
+    }
+  }
+
+  /** ?debug: Kollege sichtbar schalten, Pose/Ansicht/Mimik/Standplatz wählen */
+  private buildDebug(): () => void {
+    const d = this.kDebug;
+    const box = document.createElement('div');
+    box.style.cssText = 'position: fixed; left: 8px; bottom: 8px; z-index: 1000; width: 250px; background: rgba(20,12,10,0.92); color: #EDE0C8; font: 12px/1.4 system-ui, sans-serif; padding: 10px; border-radius: 6px';
+    const row = (label: string, el: HTMLElement) => { const l = document.createElement('label'); l.style.cssText = 'display: flex; justify-content: space-between; align-items: center; gap: 8px; margin: 4px 0'; l.append(label, el); box.appendChild(l); };
+    const sel = (opts: readonly string[], v: string, on: (v: string) => void) => { const s = document.createElement('select'); for (const o of opts) s.add(new Option(o, o)); s.value = v; s.onchange = () => on(s.value); return s; };
+    const h = document.createElement('div'); h.textContent = 'Debug · Kollege Fabi'; h.style.cssText = 'font-weight: 700; margin-bottom: 6px'; box.appendChild(h);
+    const chk = document.createElement('input'); chk.type = 'checkbox'; chk.checked = d.on; chk.onchange = () => (d.on = chk.checked);
+    row('sichtbar (fest)', chk);
+    row('pose', sel(KOLLEGE_POSES, d.pose, (v) => (d.pose = v as KollegePose)));
+    row('view', sel(KOLLEGE_VIEWS, d.view, (v) => (d.view = v as KollegeView)));
+    row('face', sel(KOLLEGE_FACES, d.face, (v) => (d.face = v as KollegeFace)));
+    const left = document.createElement('input');
+    Object.assign(left, { type: 'number', step: '6', min: '-264', max: '1920', value: String(d.left) }); left.style.width = '70px';
+    left.oninput = () => { const v = Number(left.value); if (Number.isFinite(v)) d.left = v; };
+    row('left (px)', left);
+    // Tasten im Panel gehören dem Panel, nicht der Szene
+    box.addEventListener('keydown', (e) => e.stopPropagation(), true);
+    document.body.appendChild(box);
+    return () => box.remove();
   }
 
   // ---- Tastenkürzel ----
@@ -392,6 +454,7 @@ export class PixelScene {
         break;
       case 'coffee': this.manual.push('coffee'); toast.show(anim.busy ? 'Kaffeepause: kommt gleich' : 'Kaffeepause'); break;
       case 'wave': this.manual.push('wave'); toast.show(anim.busy ? 'Hallo: kommt gleich' : 'Hallo!'); break;
+      case 'talk': this.toggleTalk(); break;
       case 'idle':
         this.idleOn = !this.idleOn;
         try { localStorage.setItem(LS_IDLE, this.idleOn ? '1' : '0'); } catch { /* egal */ }

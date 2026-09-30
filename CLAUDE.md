@@ -76,7 +76,7 @@ Data flows one direction: **`hackday.json` + clock → pure functions → React 
   and feeds it each tick from the `BoardModel`: `lib/pixelPhase.ts` maps the timeline to the
   scene's phase state (row, monitor state, blinds per kind). The scene never computes the plan;
   it only animates towards it. Clicker steps stay with `usePresenterKeys`; the scene's own keys
-  (J, W, D, K, H, L, F, ?) are listed in its help overlay (`?`). While the game is open, the scene
+  (J, W, D, K, H, L, V, F, ?) are listed in its help overlay (`?`). While the game is open, the scene
   captures all keys so arrows don't step the plan. Sprites in `scene/generated/` come verbatim
   from the design files on the `lofi-dashboard` branch. Weather location and poster variant live
   in **`src/data/ort.json`** (update it for a new school); weather comes from Open-Meteo.
@@ -85,6 +85,15 @@ Data flows one direction: **`hackday.json` + clock → pure functions → React 
   never steps the plan; the scene catches those keys in its capture listener before
   `usePresenterKeys`, so there only `→`/`←` step phases. Logic is pure in `scene/tear.ts`
   (immutable `TearState`, stepped from the scene's rAF loop), sprites in `scene/components/tearCalendar.ts`.
+  **Colleague Fabi** (Kollege, design Update 7, second character): key `V` starts a talk, `V` again
+  ends it. Independent of the main character's animation queue: pure time function `scene/kollege.ts`
+  (`kollegeAt(t, leaveAt, blink)`: walk in from −264 with view right, turn, `TALK_STEPS` in view
+  front, walk out left), rendered in layer `l-kollege` (z 9 like the ganzVorne person, `overflow:
+  visible` because hands reach past the sprite's viewBox, `brightness(0.6)` at night). Spot `K_SPOT
+  = 516`: the design proposed 540, but the `point` hand then covers the monitor screen (starts at
+  858 px). While he talks, automatic idle animations pause. Sprite `scene/generated/Kollege.ts` is
+  generated verbatim from `design/Kollege.dc.html` (not in this repo) with `tools/gen-sprites.mjs`
+  of the lo-fi project. `?debug` (panel) or `?kollege=<pose>&kview=&kface=&kleft=` pin him for checks.
 
 **Board mode:** at ≥1280×720 the CSS renders a fixed 1920×1080 stage scaled by `--board-scale`, so the
 4K whiteboard shows exactly the design. Smaller screens get a responsive layout.
