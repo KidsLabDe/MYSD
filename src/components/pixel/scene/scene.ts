@@ -6,6 +6,8 @@ import { computerHtml, type ComputerProps } from './components/computer';
 import { personHtml, type PersonProps } from './components/person';
 import { printerHtml, type PrinterView } from './printer';
 import { posterHtml } from './components/poster';
+import { TEAR_H, TEAR_W, tearPadHtml, tearPagesHtml } from './components/tearCalendar';
+import type { TearState } from './tear';
 import type { Weather } from './types';
 
 export const DESK_END = 1392; // ab hier steht die Person VOR dem Tisch
@@ -39,15 +41,20 @@ function layer(stage: HTMLElement, id: string, css: string) {
 }
 
 export class Scene {
-  private back: HTMLElement; private win!: HTMLElement; private posterSlot!: HTMLElement; private cal: HTMLElement;
+  private back: HTMLElement; private tearPad: HTMLElement; private tearPages: HTMLElement; private win!: HTMLElement; private posterSlot!: HTMLElement; private cal: HTMLElement;
   private person: HTMLElement; private front: HTMLElement; private printer: HTMLElement; private night: HTMLElement; private pc: HTMLElement;
   private keys: Record<string, string> = {};
 
   constructor(public stage: HTMLElement) {
     stage.style.cssText = "width: 1920px; height: 1080px; position: relative; overflow: hidden; background: #4A2E2B; font-family: 'Pixelify Sans', monospace; color: #2A1A18";
     this.back = layer(stage, 'l-back', 'left: 0px; top: 0px; z-index: 1');
+    // Abreißkalender direkt nach Room_Back (gleiche Ebene, später im DOM): Blätter fallen hinter Pflanze, Tisch und Schrank
+    const tear = layer(stage, 'l-tear', `left: 0px; top: 324px; width: ${TEAR_W}px; height: ${TEAR_H}px; z-index: 1; pointer-events: none`);
+    this.tearPad = document.createElement('div');
+    this.tearPages = document.createElement('div');
+    tear.append(this.tearPad, this.tearPages);
     this.cal = layer(stage, 'l-cal', 'left: 1476px; top: 36px; z-index: 2');
-    // Reihenfolge wie design/Main.dc.html: Room_Back 1 · Kalender 2 · Person hinten 3 · Room_Front 4 · Drucker 5 ·
+    // Reihenfolge wie design/Main.dc.html: Room_Back 1 (+ Abreißkalender) · Kalender 2 · Person hinten 3 · Room_Front 4 · Drucker 5 ·
     // Person vorne 6 · Nacht-Overlay 7 · Computer 8 · Person ganzVorne 9
     this.person = layer(stage, 'l-person', 'top: 378px; left: 1392px; z-index: 6');
     this.front = layer(stage, 'l-front', 'left: 0px; top: 0px; z-index: 4');
@@ -65,6 +72,13 @@ export class Scene {
     this.keys[key] = k;
     el.innerHTML = html();
     return true;
+  }
+
+  /** Abreißkalender, jeden Frame: DOM nur bei Änderung neu */
+  renderTear(t: TearState) {
+    this.set(this.tearPad, 'tearPad', t.day, () => tearPadHtml(t.day));
+    const html = tearPagesHtml(t);
+    if (this.keys.tearPages !== html) { this.keys.tearPages = html; this.tearPages.innerHTML = html; }
   }
 
   render(s: SceneState) {

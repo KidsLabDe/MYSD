@@ -1,6 +1,7 @@
 // Lo-Fi-Szene als Board-UI (aus dem Lo-Fi-Board, dort main.ts). Den Plan-Zustand (Phase, Countdown,
 // Jalousie) liefert das BoardModel; die Szene animiert nur dorthin: Abhaken, Jalousie, Leerlauf, Easter Egg.
-// Phasenwechsel per Clicker (→/←) laufen über usePresenterKeys, nicht hier.
+// Phasenwechsel per Pfeiltaste (→/←) laufen über usePresenterKeys, nicht hier. Der Presenter-Klick
+// (PageDown/PageUp) reißt hier ein Blatt vom Abreißkalender und erreicht den Plan nicht.
 import './fonts.css';
 import { Scene, fitStage, type SceneState } from './scene';
 import { WeatherService } from './weather';
@@ -15,6 +16,7 @@ import { ArcadeSession } from './arcade/session';
 import { GameSequence, dashboardAction } from './arcade/keys';
 import type { Screen } from './arcade/screens';
 import { strikeVariants } from './strikes';
+import { TEAR_START, isTearKey, stepTear, tearPage, type TearState } from './tear';
 import type { PixelPhase } from '../../../lib/pixelPhase';
 
 export interface SceneItem {
@@ -126,6 +128,8 @@ export class PixelScene {
   private strikes: number[] = [];
   private key = '';
   private raf = 0;
+  /** Abreißkalender: Druck und Frame laufen beide auf dem Hauptthread, nie gleichzeitig */
+  private tear: TearState = TEAR_START;
   private disposed = false;
 
   // Jalousie per J: gilt, bis die Phase wechselt
@@ -178,6 +182,7 @@ export class PixelScene {
     try { this.idleOn = localStorage.getItem(LS_IDLE) !== '0'; } catch { /* Standard: an */ }
 
     // Capture-Phase: läuft vor usePresenterKeys, damit die Pfeile im Spiel nicht die Phase wechseln
+    // und PageDown/PageUp nur den Abreißkalender bedienen
     window.addEventListener('keydown', this.onKey, true);
     this.cleanups.push(() => window.removeEventListener('keydown', this.onKey, true));
 
@@ -256,6 +261,8 @@ export class PixelScene {
 
   private loop = (t: number) => {
     if (this.disposed) return;
+    this.tear = stepTear(this.tear, t);
+    this.scene.renderTear(this.tear);
     if (this.input) {
       this.control(t);
       this.render(t);
@@ -350,6 +357,12 @@ export class PixelScene {
     const { anim, arcadeSession, toast } = this;
     // Solange das Spiel offen ist, gehören alle Tasten dem Spiel – auch die Clicker-Tasten des Boards
     if (arcadeSession?.open) { arcadeSession.key(e); e.preventDefault(); e.stopImmediatePropagation(); return; }
+    // Presenter-Klick: genau ein Blatt pro Druck (Halten zählt nicht), nie ein Phasenwechsel
+    if (isTearKey(e.key)) {
+      e.preventDefault(); e.stopImmediatePropagation();
+      if (!e.repeat) this.tear = tearPage(this.tear, performance.now());
+      return;
+    }
     if (this.gameSeq.push(e.key, performance.now())) {
       this.arcadeRequested = true;
       this.arcadeToastShown = !(anim.busy && !anim.idleRunning);

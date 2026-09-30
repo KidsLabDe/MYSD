@@ -80,6 +80,11 @@ Data flows one direction: **`hackday.json` + clock → pure functions → React 
   captures all keys so arrows don't step the plan. Sprites in `scene/generated/` come verbatim
   from the design files on the `lofi-dashboard` branch. Weather location and poster variant live
   in **`src/data/ort.json`** (update it for a new school); weather comes from Open-Meteo.
+  **Tear-off calendar** (Abreißkalender, left wall, layer right after Room_Back): in the Pixel UI
+  the presenter click (`PageDown`/`PageUp`) tears exactly one page (days 1–31, then reset) and
+  never steps the plan; the scene catches those keys in its capture listener before
+  `usePresenterKeys`, so there only `→`/`←` step phases. Logic is pure in `scene/tear.ts`
+  (immutable `TearState`, stepped from the scene's rAF loop), sprites in `scene/components/tearCalendar.ts`.
 
 **Board mode:** at ≥1280×720 the CSS renders a fixed 1920×1080 stage scaled by `--board-scale`, so the
 4K whiteboard shows exactly the design. Smaller screens get a responsive layout.

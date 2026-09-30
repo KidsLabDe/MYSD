@@ -42,6 +42,7 @@ export class HelpOverlay {
     this.el = document.createElement('div');
     this.el.style.cssText = "position: absolute; left: 480px; top: 180px; width: 960px; z-index: 41; box-sizing: border-box; padding: 30px 36px; background: rgba(42,26,24,0.95); border: 6px solid #8A4E30; color: #EDE0C8; font-family: 'Pixelify Sans', monospace; font-size: 30px; line-height: 42px; display: none";
     const rows: [string, string][] = [
+      ['Bild ↓ / ↑', 'Kalenderblatt abreißen (Presenter)'],
       ['→', 'nächste Phase jetzt (abhaken)'], ['←', 'eine Phase zurück'],
       ['J', 'Jalousie auf / zu'], ['W', 'Wetter durchschalten (Test)'],
       ['D', 'Drucker einen Schritt weiter'], ['K', 'Kaffeepause jetzt'], ['H', 'Hallo: winken'],

@@ -16,8 +16,8 @@ export class GameSequence {
 
 export type DashAction = 'blinds' | 'weather' | 'full' | 'help' | 'escape' | 'printer' | 'coffee' | 'wave' | 'idle';
 /**
- * Tastenkürzel der Szene. Phasenwechsel (→/←, PageDown/PageUp) gehören dem Clicker des Boards
- * (usePresenterKeys), nicht der Szene. G, A, M, E sind bewusst frei (nur für die Tastenfolge).
+ * Tastenkürzel der Szene. Phasenwechsel (→/←) gehören usePresenterKeys, der Presenter-Klick
+ * (PageDown/PageUp) dem Abreißkalender (tear.ts, direkt in engine.ts). G, A, M, E sind bewusst frei (nur für die Tastenfolge).
  */
 export function dashboardAction(key: string): DashAction | null {
   const M: Record<string, DashAction> = {

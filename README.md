@@ -18,7 +18,9 @@ UI copy is in German.
 - **Live ticker**: a marquee of notes at the bottom, at a constant reading speed.
 - **Pixel mouse**: a pixel-art cursor flies over and "clicks" the next item the second it starts.
 - **Presenter clicker**: `→`/`PageDown` start the next item now, `←`/`PageUp` go back. Only the
-  switch between two items moves, and only in memory. A reload returns to the plan.
+  switch between two items moves, and only in memory. A reload returns to the plan. In the Pixel
+  UI, `PageDown`/`PageUp` (the presenter click) instead tear one page off the tear-off calendar on
+  the left wall; there only the arrow keys step the plan.
 - **Whiteboard mode**: on screens of at least 1280×720, a fixed 1920×1080 stage scales to fit
   (e.g. a 4K board). Smaller screens get a responsive layout.
 - **Test clock**: `?date=YYYY-MM-DD&time=HH:MM` previews any moment.
@@ -111,7 +113,8 @@ damit keine Lücken entstehen), zeigt dir den Tag zur Kontrolle, prüft und comm
 
 Geht es nur spontan früher oder später weiter, reicht ein Presenter: `→` bzw. `PageDown` startet
 den nächsten Punkt sofort, `←` bzw. `PageUp` springt zurück. Das gilt nur bis zum Neuladen der Seite,
-der Plan selbst bleibt unverändert.
+der Plan selbst bleibt unverändert. In der Pixel-Ansicht reißt der Presenter-Klick (`PageDown`/`PageUp`)
+stattdessen ein Blatt vom Abreißkalender ab; dort wechseln nur `→`/`←` die Phase.
 
 ### Vorschau: einen anderen Tag oder eine andere Uhrzeit ansehen
 
