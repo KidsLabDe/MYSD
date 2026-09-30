@@ -46,7 +46,7 @@ export class HelpOverlay {
       ['→', 'nächste Phase jetzt (abhaken)'], ['←', 'eine Phase zurück'],
       ['J', 'Jalousie auf / zu'], ['W', 'Wetter durchschalten (Test)'],
       ['D', 'Drucker einen Schritt weiter'], ['K', 'Kaffeepause jetzt'], ['H', 'Hallo: winken'],
-      ['L', 'Leerlauf-Animationen an / aus'], ['F', 'Vollbild'], ['?', 'diese Hilfe (Esc schließt)'],
+      ['L', 'Leerlauf-Animationen an / aus'], ['V', 'Vortrag (Kollege)'], ['F', 'Vollbild'], ['?', 'diese Hilfe (Esc schließt)'],
     ];
     this.el.innerHTML = `<div style="font-size: 36px; margin-bottom: 18px; color: #F2B866">TASTENKÜRZEL</div>` +
       rows.map(([k, t]) => `<div style="display: flex; gap: 24px"><span style="width: 150px; color: #F2B866">${k}</span><span>${t}</span></div>`).join('');

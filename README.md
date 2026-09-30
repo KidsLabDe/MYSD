@@ -21,6 +21,11 @@ UI copy is in German.
   switch between two items moves, and only in memory. A reload returns to the plan. In the Pixel
   UI, `PageDown`/`PageUp` (the presenter click) instead tear one page off the tear-off calendar on
   the left wall; there only the arrow keys step the plan.
+- **Talk (Pixel UI)**: `V` brings in a second character, our colleague Fabi, who walks in from
+  the left, gives a short talk next to the monitor (open, talk, point at the timer, clicker, point
+  up, think, clap, wave) and walks out again. `V` again ends it early. The character who ticks
+  off the calendar keeps working meanwhile; only its automatic idle animations pause.
+  `?debug` shows a panel to pin Fabi in any pose/view/face/position (`?kollege=point&kview=front&kleft=516` does the same via URL).
 - **Whiteboard mode**: on screens of at least 1280×720, a fixed 1920×1080 stage scales to fit
   (e.g. a 4K board). Smaller screens get a responsive layout.
 - **Test clock**: `?date=YYYY-MM-DD&time=HH:MM` previews any moment.
@@ -115,6 +120,8 @@ Geht es nur spontan früher oder später weiter, reicht ein Presenter: `→` bzw
 den nächsten Punkt sofort, `←` bzw. `PageUp` springt zurück. Das gilt nur bis zum Neuladen der Seite,
 der Plan selbst bleibt unverändert. In der Pixel-Ansicht reißt der Presenter-Klick (`PageDown`/`PageUp`)
 stattdessen ein Blatt vom Abreißkalender ab; dort wechseln nur `→`/`←` die Phase.
+Mit `V` hält unser Kollege Fabi dort einen kurzen Vortrag neben dem Monitor; nochmal `V` beendet ihn.
+`?` zeigt in der Pixel-Ansicht alle Tasten.
 
 ### Vorschau: einen anderen Tag oder eine andere Uhrzeit ansehen
 
