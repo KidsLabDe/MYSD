@@ -181,3 +181,22 @@ https://kidslabde.github.io/MYSD/. Nothing is published if a test fails. This ne
 
 `npm run build` outputs a static site to `dist/` that any static host can serve. For hosting
 under a subpath, pass it through: `npm run build -- --base=/sub/path/`.
+
+## Contributors
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/BergByte">
+        <img src="https://avatars.githubusercontent.com/u/245052205?v=4" width="100" alt="BergByte" /><br />
+        <sub><b>BergByte</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/another-human-being">
+        <img src="https://avatars.githubusercontent.com/u/75072418?v=4" width="100" alt="another-human-being" /><br />
+        <sub><b>another-human-being</b></sub>
+      </a>
+    </td>
+  </tr>
+</table>
