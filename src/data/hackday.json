@@ -149,27 +149,34 @@
         {
           "id": "d3-04",
           "start": "13:00",
-          "end": "15:15",
+          "end": "13:50",
           "title": "Arbeits- & Aufräumphase",
           "kind": "phase"
         },
         {
           "id": "d3-05",
-          "start": "15:15",
-          "end": "17:00",
+          "start": "13:50",
+          "end": "15:00",
+          "title": "Video-Abgabe Deadline",
+          "kind": "phase"
+        },
+        {
+          "id": "d3-06",
+          "start": "15:00",
+          "end": "16:30",
           "title": "Pause",
           "kind": "break"
         },
         {
-          "id": "d3-06",
-          "start": "17:00",
-          "end": "17:30",
+          "id": "d3-07",
+          "start": "16:30",
+          "end": "17:00",
           "title": "Aufbau Marktplatz",
           "kind": "phase"
         },
         {
-          "id": "d3-07",
-          "start": "17:30",
+          "id": "d3-08",
+          "start": "17:00",
           "end": "19:00",
           "title": "Marktplatz & Präsentationen",
           "kind": "talk",
