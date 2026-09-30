@@ -14,6 +14,7 @@ import { pickIdle, nextWave, nextCoffee, type IdleKind } from './idle';
 import { ArcadeSession } from './arcade/session';
 import { GameSequence, dashboardAction } from './arcade/keys';
 import type { Screen } from './arcade/screens';
+import { strikeVariants } from './strikes';
 import type { PixelPhase } from '../../../lib/pixelPhase';
 
 export interface SceneItem {
@@ -102,6 +103,9 @@ export function computerView(input: SceneInput): ComputerProps {
   return { state: L.state, num: pad2(L.idx + 1), total, clock, phase, countdown: hms(L.remainingMs), next, fill: L.fill };
 }
 
+/** Strich-Variante je Eintrag: stabil über Start und Titel */
+const strikesFor = (items: readonly SceneItem[]) => strikeVariants(items.map((x) => `${x.start} ${x.title}`));
+
 const dayKey = (i: SceneInput) => `${i.date}|${i.items.map((x) => `${x.start}-${x.end} ${x.title}`).join('|')}`;
 
 export class PixelScene {
@@ -119,6 +123,7 @@ export class PixelScene {
   private readonly cleanups: (() => void)[] = [];
   private readonly nameSizes = new Map<string, number | undefined>();
   private input: SceneInput | null = null;
+  private strikes: number[] = [];
   private key = '';
   private raf = 0;
   private disposed = false;
@@ -188,6 +193,7 @@ export class PixelScene {
   /** Neuer Board-Zustand (jede Sekunde). Beim ersten Mal und bei einem neuen Tag: Endzustand ohne Animation. */
   update(input: SceneInput) {
     const first = this.input === null;
+    if (input.items !== this.input?.items) this.strikes = strikesFor(input.items);
     this.input = input;
     const k = dayKey(input);
     if (first || (k !== this.key && !this.anim.busy)) {
@@ -291,7 +297,7 @@ export class PixelScene {
       }
     } else if (L.idx === a.idx + 1 && this.dayKeyStable()) {
       const prev = a.idx;
-      anim.run('phase', () => anim.phaseDone(prev, () => { const now = this.resolved(); return now.idx === prev + 1 ? now.blinds : a.blinds; }, calOffset(prev, L.n)));
+      anim.run('phase', () => anim.phaseDone(prev, () => { const now = this.resolved(); return now.idx === prev + 1 ? now.blinds : a.blinds; }, calOffset(prev, L.n), this.strikes[prev] ?? 0));
     } else this.snap(L); // Sprung (←, neuer Tag, Laptop geschlafen, Stau): Endzustand direkt
   }
 
@@ -326,7 +332,7 @@ export class PixelScene {
     const calTitle = upper(input.title || 'Hackday');
     const cal: CalendarProps = {
       title: calTitle, titleSize: calTitleSize(calTitle), subline: input.subline,
-      rows: input.items.slice(off, off + CAL_ROWS).map((p) => ({ time: p.start, name: p.title, size: this.nameSize(p.title) })),
+      rows: input.items.slice(off, off + CAL_ROWS).map((p, i) => ({ time: p.start, name: p.title, size: this.nameSize(p.title), strike: this.strikes[off + i] ?? 0 })),
       struck: a.struck - off, nowRow: nowAbs < 0 ? -1 : nowAbs - off, draw: a.draw,
     };
     const s: SceneState = {

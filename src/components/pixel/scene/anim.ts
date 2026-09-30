@@ -4,6 +4,7 @@
 import { handDy, TIP, type Arm, type View, type Face, type ArmLeft, type Holding } from './components/person';
 import { restHandleY } from './components/window';
 import { LED, type Printer } from './printer';
+import { strikeY } from './strikes';
 import type { IdleKind } from './idle';
 import type { ArcadeSession } from './arcade/session';
 import type { Pose } from './types';
@@ -22,13 +23,11 @@ export const ROWS: { bench: boolean; arm: Arm }[] = [
   { bench: true, arm: 'up' }, { bench: true, arm: 'steil' }, { bench: false, arm: 'up' }, { bench: false, arm: 'diag' },
   { bench: false, arm: 'flach' }, { bench: false, arm: 'waagrecht' }, { bench: false, arm: 'leichtRunter' }, { bench: false, arm: 'runter' },
 ];
-/** Linienstufen: lokal 2–15 y5, 16–35 y4, 36–51 y5, 52–63 y4 */
-const segY = (local: number) => (local < 16 || (local >= 36 && local < 52) ? 5 : 4);
-/** Figur-Position für Zeile i bei n gezogenen Pixeln (Szene-x des Linienendes = 250 + n). */
-export function strokePose(i: number, n: number) {
+/** Figur-Position für Zeile i bei n gezogenen Pixeln (Szene-x des Linienendes = 250 + n), Strich-Variante v (strikes.ts). */
+export function strokePose(i: number, n: number, v = 0) {
   const r = ROWS[Math.max(0, Math.min(i, ROWS.length - 1))]!, tip = TIP[r.arm];
   const xEnd = 250 + n;
-  const lineTop = 32 + 10 * i + segY(xEnd - 249);
+  const lineTop = 32 + 10 * i + strikeY(v, xEnd - 249);
   const top = r.bench ? 45 : 63;
   return { left: (xEnd - tip.x) * 6, top: top * 6, arm: r.arm, armDy: lineTop - (top + tip.top) };
 }
@@ -158,14 +157,14 @@ export class Animator {
   async leave(marker: boolean) { await this.walk(OFFSTAGE, marker); this.hide(); }
 
   /** Teil A: Phase prevIdx wird abgehakt. targetBlinds() liefert die Jalousie der neuen Phase. */
-  async phaseDone(prevIdx: number, targetBlinds: () => number, rowOffset = 0) {
+  async phaseDone(prevIdx: number, targetBlinds: () => number, rowOffset = 0, strike = 0) {
     const a = this.a, p = a.person;
     a.freezePc = true;                                   // 01 Countdown + LED blinken 3×
     for (let i = 0; i < 3; i++) { a.dark = true; await this.wait(100); a.dark = false; await this.wait(100); }
     a.freezePc = false;
     const row = Math.max(0, Math.min(prevIdx - rowOffset, ROWS.length - 1)); // Zeile im Kalenderfenster
     const rowCfg = ROWS[row]!;
-    const start = strokePose(row, 2);
+    const start = strokePose(row, 2, strike);
     this.enter();                                        // 02 rein (view left), am Ziel zum Kalender drehen
     await this.walk(start.left, true);
     await this.turn('back');
@@ -176,7 +175,7 @@ export class Animator {
     const t0 = performance.now();                        // 04 Strich wächst 1 px / 32 ms, Figur trippelt mit
     for (let n = 3; n <= 62; n++) {
       while (performance.now() - t0 < (n - 2) * 32) await frame();
-      const s = strokePose(row, n);
+      const s = strokePose(row, n, strike);
       a.draw = { row, len: n };
       p.x = s.left; p.armDy = s.armDy;
       p.pose = Math.floor((n - 2) / 3) % 2 ? 'walkB' : 'walkA';
