@@ -68,8 +68,18 @@ Data flows one direction: **`hackday.json` + clock → pure functions → React 
   `mys-ui`), `usePresenterKeys`, `useUpcomingClick`.
 - **`src/components/`** are presentational and controlled by props. `modern/ModernBoard.tsx`
   composes the Modern UI from the shared components (`Header`, `NowPanel`, `Timeline`, `Ticker`,
-  `PixelCursor`, `Confetti`, …; `icons.tsx` is a small inline-SVG set). `pixel/` holds the Pixel
-  UI (placeholder until its design handoff) with its own `pixel.css`; `UiPicker` has `picker.css`.
+  `PixelCursor`, `Confetti`, …; `icons.tsx` is a small inline-SVG set). `UiPicker` has `picker.css`.
+- **Pixel UI** (`src/components/pixel/`, ported from the lo-fi board on branch `lofi-dashboard`):
+  a pixel-art room (CRT monitor with countdown, wall calendar a character ticks off, window with
+  blinds and live weather, 3D printer, idle animations, easter egg "Bug-Jagd" via G·A·M·E).
+  `PixelBoard.tsx` mounts `scene/engine.ts` (`PixelScene`, imperative DOM/SVG, its own rAF loop)
+  and feeds it each tick from the `BoardModel`: `lib/pixelPhase.ts` maps the timeline to the
+  scene's phase state (row, monitor state, blinds per kind). The scene never computes the plan;
+  it only animates towards it. Clicker steps stay with `usePresenterKeys`; the scene's own keys
+  (J, W, D, K, H, L, F, ?) are listed in its help overlay (`?`). While the game is open, the scene
+  captures all keys so arrows don't step the plan. Sprites in `scene/generated/` come verbatim
+  from the design files on the `lofi-dashboard` branch. Weather location and poster variant live
+  in **`src/data/ort.json`** (update it for a new school); weather comes from Open-Meteo.
 
 **Board mode:** at ≥1280×720 the CSS renders a fixed 1920×1080 stage scaled by `--board-scale`, so the
 4K whiteboard shows exactly the design. Smaller screens get a responsive layout.

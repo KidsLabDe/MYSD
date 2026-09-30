@@ -38,7 +38,7 @@ export default function App() {
   }, []);
 
   if (ui === null) return <UiPicker title={data.boardTitle} onChoose={choose} />;
-  if (ui === "pixel") return <PixelBoard board={board} scale={scale} onToggleUi={toggle} />;
+  if (ui === "pixel") return <PixelBoard board={board} onToggleUi={toggle} />;
   return (
     <ModernBoard
       board={board}

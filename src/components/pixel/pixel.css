@@ -1,37 +1,24 @@
-/* Pixel UI. Placeholder styles until the design handoff; the board-mode stage
-   (1920×1080, --board-scale) comes from `.board` in index.css. */
+/* Pixel UI. The scene draws its own 1920×1080 stage and scales it to whole
+   device pixels (scene/scene.ts fitStage); this only frames it. The room has
+   fixed pixel-art colors, so it looks the same in light and dark theme. */
 .pixel-board {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 24px;
-  min-height: 100vh;
-  padding: 16px;
-  text-align: center;
-  font-family: var(--font-display);
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: #000;
 }
 
-.pixel-board__title,
-.pixel-board__clock,
-.pixel-board__now {
-  margin: 0;
-  color: var(--brand);
+/* The Modern/Pixel switch stays out of the scene until someone reaches for it. */
+.pixel-board__switch {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 50;
+  opacity: 0.25;
+  transition: opacity 0.2s;
 }
 
-.pixel-board__title { font-size: clamp(32px, 5vw, 96px); }
-.pixel-board__clock { font-size: clamp(48px, 10vw, 200px); color: var(--text); }
-.pixel-board__now { font-size: clamp(24px, 4vw, 72px); }
-
-.pixel-board__hint {
-  margin: 0;
-  font-family: var(--font-body);
-  color: var(--text-faint);
-}
-
-@media (min-width: 1280px) and (min-height: 720px) {
-  .pixel-board {
-    min-height: 0;
-    justify-content: center;
-  }
+.pixel-board__switch:hover,
+.pixel-board__switch:focus-within {
+  opacity: 1;
 }

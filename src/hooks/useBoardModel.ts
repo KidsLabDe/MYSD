@@ -17,6 +17,8 @@ export interface BoardModel {
   readonly now: Date;
   /** True when the clock runs from the `?date=&time=` debug params. */
   readonly testTime: boolean;
+  /** ISO date of the shown day (`YYYY-MM-DD`), or null without days. */
+  readonly date: string | null;
   /** Today's (or the selected day's) timeline, with presenter steps applied. */
   readonly timeline: TimelineState;
   readonly nowSeconds: number;
@@ -100,6 +102,7 @@ export function useBoardModel(
     data,
     now,
     testTime: debugOffset !== null,
+    date: selected?.day.date ?? null,
     timeline,
     nowSeconds,
     resumeLead: selected === null ? null : resumeLead(data.days, selected.index, now),
