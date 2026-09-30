@@ -140,8 +140,8 @@ describe("App", () => {
     const ticker = screen.getByRole("complementary", { name: "Hinweise" });
     // Role queries skip the aria-hidden marquee, so each message is read once.
     const items = within(ticker).getAllByRole("listitem");
-    expect(items).toHaveLength(1);
-    expect(items[0]).toHaveTextContent("Denkt daran, Bilder und Videos von euren Hacks zu machen!");
+    const messages = (rawData as HackdayData).messages ?? [];
+    expect(items.map((item) => item.textContent)).toEqual(messages);
   });
 
   it("should not show the pixel mouse when the board loads mid-phase", () => {
