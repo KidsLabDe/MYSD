@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>KidsLab-Poster Varianten</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1928px; height: 480px; box-sizing: border-box; padding: 40px; background: #4A2E2B; font-family: 'Pixelify Sans', monospace; color: #EDE0C8; display: flex; flex-direction: column; gap: 28px">
+<div style="font-size: 28px; font-weight: 700">KidsLab-Poster · 4 Varianten (Originalgröße in der Szene)</div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 40px">
+<div style="display: flex; flex-direction: column; gap: 14px"><dc-import name="Poster" variant="papier" hint-size="378px,288px"></dc-import><div style="font-size: 20px; font-weight: 700">1 · papier – schräg, 4× Klebeband</div></div>
+<div style="display: flex; flex-direction: column; gap: 14px"><dc-import name="Poster" variant="gerahmt" hint-size="378px,288px"></dc-import><div style="font-size: 20px; font-weight: 700">2 · gerahmt – Holzrahmen, dunkel</div></div>
+<div style="display: flex; flex-direction: column; gap: 14px"><dc-import name="Poster" variant="banner" hint-size="378px,288px"></dc-import><div style="font-size: 20px; font-weight: 700">3 · banner – Stoff mit Holzstäben</div></div>
+<div style="display: flex; flex-direction: column; gap: 14px"><dc-import name="Poster" variant="duoton" hint-size="378px,288px"></dc-import><div style="font-size: 20px; font-weight: 700">4 · duoton – Terrakotta, einfarbig</div></div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1928,"height":480}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

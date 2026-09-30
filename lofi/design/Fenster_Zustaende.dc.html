@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Fenster: Wetter und Jalousie</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 2050px; height: 1340px; box-sizing: border-box; padding: 40px; background: #4A2E2B; font-family: 'Pixelify Sans', monospace; color: #EDE0C8; display: flex; flex-direction: column; gap: 28px">
+<div style="font-size: 28px; font-weight: 700">Fenster · 6 Wetterlagen und Jalousie-Stufen (Ausschnitt, 50 %)</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px">
+<div style="display: flex; flex-direction: column; gap: 10px"><div style="font-size: 20px; font-weight: 700">sonnig · Jalousie 40 %</div><div style="width: 630px; height: 336px; overflow: hidden"><div style="transform: scale(0.5); transform-origin: 0px 0px"><dc-import name="Window" weather="sonnig" blinds="{{ 40 }}" hint-size="1260px,672px"></dc-import></div></div></div>
+<div style="display: flex; flex-direction: column; gap: 10px"><div style="font-size: 20px; font-weight: 700">bewoelkt · Jalousie 40 %</div><div style="width: 630px; height: 336px; overflow: hidden"><div style="transform: scale(0.5); transform-origin: 0px 0px"><dc-import name="Window" weather="bewoelkt" blinds="{{ 40 }}" hint-size="1260px,672px"></dc-import></div></div></div>
+<div style="display: flex; flex-direction: column; gap: 10px"><div style="font-size: 20px; font-weight: 700">regen · Jalousie 40 %</div><div style="width: 630px; height: 336px; overflow: hidden"><div style="transform: scale(0.5); transform-origin: 0px 0px"><dc-import name="Window" weather="regen" blinds="{{ 40 }}" hint-size="1260px,672px"></dc-import></div></div></div>
+<div style="display: flex; flex-direction: column; gap: 10px"><div style="font-size: 20px; font-weight: 700">schnee · Jalousie 40 %</div><div style="width: 630px; height: 336px; overflow: hidden"><div style="transform: scale(0.5); transform-origin: 0px 0px"><dc-import name="Window" weather="schnee" blinds="{{ 40 }}" hint-size="1260px,672px"></dc-import></div></div></div>
+<div style="display: flex; flex-direction: column; gap: 10px"><div style="font-size: 20px; font-weight: 700">gewitter · Jalousie 40 %</div><div style="width: 630px; height: 336px; overflow: hidden"><div style="transform: scale(0.5); transform-origin: 0px 0px"><dc-import name="Window" weather="gewitter" blinds="{{ 40 }}" hint-size="1260px,672px"></dc-import></div></div></div>
+<div style="display: flex; flex-direction: column; gap: 10px"><div style="font-size: 20px; font-weight: 700">nacht · Jalousie 40 %</div><div style="width: 630px; height: 336px; overflow: hidden"><div style="transform: scale(0.5); transform-origin: 0px 0px"><dc-import name="Window" weather="nacht" blinds="{{ 40 }}" hint-size="1260px,672px"></dc-import></div></div></div>
+<div style="display: flex; flex-direction: column; gap: 10px"><div style="font-size: 20px; font-weight: 700">Jalousie 0 % · offen</div><div style="width: 630px; height: 336px; overflow: hidden"><div style="transform: scale(0.5); transform-origin: 0px 0px"><dc-import name="Window" weather="sonnig" blinds="{{ 0 }}" hint-size="1260px,672px"></dc-import></div></div></div>
+<div style="display: flex; flex-direction: column; gap: 10px"><div style="font-size: 20px; font-weight: 700">Jalousie 70 %</div><div style="width: 630px; height: 336px; overflow: hidden"><div style="transform: scale(0.5); transform-origin: 0px 0px"><dc-import name="Window" weather="sonnig" blinds="{{ 70 }}" hint-size="1260px,672px"></dc-import></div></div></div>
+<div style="display: flex; flex-direction: column; gap: 10px"><div style="font-size: 20px; font-weight: 700">Jalousie 100 % · zu (Pitches)</div><div style="width: 630px; height: 336px; overflow: hidden"><div style="transform: scale(0.5); transform-origin: 0px 0px"><dc-import name="Window" weather="sonnig" blinds="{{ 100 }}" hint-size="1260px,672px"></dc-import></div></div></div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":2050,"height":1340}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "title": "Hackday",
+  "date": "[DATUM, z. B. 2026-11-14]",
+  "location": {
+    "name": "[ORT]",
+    "latitude": 48.3705,
+    "longitude": 10.8978,
+    "_hinweis": "Platzhalter-Koordinaten (Augsburg) – durch den Veranstaltungsort ersetzen"
+  },
+  "phases": [
+    { "name": "Check-in & Frühstück", "start": "09:00", "end": "09:30", "blinds": 0 },
+    { "name": "Kick-off",             "start": "09:30", "end": "10:00", "blinds": 0 },
+    { "name": "Teams & Ideen",        "start": "10:00", "end": "10:45", "blinds": 40 },
+    { "name": "Hacking I",            "start": "10:45", "end": "12:30", "blinds": 40 },
+    { "name": "Mittagessen",          "start": "12:30", "end": "13:15", "blinds": 0, "type": "pause" },
+    { "name": "Hacking II",           "start": "13:15", "end": "15:30", "blinds": 40 },
+    { "name": "Pitches",              "start": "15:30", "end": "16:30", "blinds": 100 },
+    { "name": "Abschluss",            "start": "16:30", "end": "17:00", "blinds": 0 }
+  ]
+}

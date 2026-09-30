@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Easter Egg – Ablauf in der Szene</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&amp;family=Pixelify+Sans:wght@400;700&amp;family=Press+Start+2P&amp;family=Space+Mono:wght@400;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 3072px; height: 1060px; box-sizing: border-box; padding: 40px; background: #2A1A18; font-family: 'Pixelify Sans', monospace; color: #EDE0C8; display: flex; flex-direction: column; gap: 28px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<div style="font-size: 34px; font-weight: 700">Easter Egg · vom Dashboard in die Bug-Jagd (Gesamtszene 30 %)</div>
+<div style="font-size: 18px; color: #C8B89A">Tastenfolge G · A · M · E (innerhalb von 2 s) → Figur läuft zum Computer → Monitor zoomt auf ca. 65 % der Bildbreite (1248×888 px inkl. Rahmen, zentriert).</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 28px">
+<sc-for list="{{frames}}" as="f" hint-placeholder-count="5">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div style="width: 576px; height: 324px; position: relative; overflow: hidden; border: 3px solid #5E3320; box-sizing: content-box">
+<div style="position: absolute; left: 0px; top: 0px; width: 1920px; height: 1080px; transform: scale(0.3); transform-origin: 0px 0px">
+<div style="position: absolute; left: 0px; top: 0px"><dc-import name="Room_Back" weather="sonnig" blinds="{{ 40 }}" hint-size="1920px,1080px"></dc-import></div>
+<div style="position: absolute; left: 1476px; top: 36px"><dc-import name="Calendar" struck="{{ 3 }}" hint-size="432px,660px"></dc-import></div>
+<div style="position: absolute; left: 0px; top: 0px"><dc-import name="Room_Front" weather="sonnig" blinds="{{ 40 }}" small-plant="{{ false }}" hint-size="1920px,1080px"></dc-import></div>
+<div style="position: absolute; left: 348px; top: 432px"><dc-import name="Printer3D" variant="open" state="printing" layer="{{ 4 }}" obj="bulb" hint-size="276px,276px"></dc-import></div>
+<div style="position: absolute; left: 828px; top: 360px"><dc-import name="Computer" state="{{f.pc}}" hint-size="528px,384px"></dc-import></div>
+<sc-if value="{{f.person}}" hint-placeholder-val="{{ true }}">
+<div style="position: absolute; left: {{f.px}}px; top: 378px"><dc-import name="Person" view="{{f.view}}" pose="{{f.pose}}" marker="{{ false }}" hint-size="264px,600px"></dc-import></div>
+</sc-if>
+<sc-if value="{{f.dim}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; left: 0px; top: 0px; width: 1920px; height: 1080px; background: rgba(14,10,8,{{f.dimA}})"></div>
+</sc-if>
+<sc-if value="{{f.zoom}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; left: {{f.zx}}px; top: {{f.zy}}px; width: 1248px; height: 888px; transform: scale({{f.zs}}); transform-origin: 0px 0px">
+<div style="width: 1248px; height: 888px; box-sizing: border-box; background: #D8CBB0; border-bottom: 18px solid #B9AA8C; padding: 36px 36px 42px; box-shadow: 0 24px 0 rgba(26,15,13,0.45)">
+<div style="width: 1176px; height: 792px; box-sizing: border-box; border: 12px solid #2A2622; overflow: hidden; position: relative"><div style="position: absolute; left: 0px; top: 0px; width: 1152px; height: 792px"><dc-import name="Arcade" screen="title" hint-size="1152px,792px"></dc-import></div></div>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{f.toast}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; left: 660px; top: 960px; width: 600px; height: 72px; background: rgba(20,12,10,0.92); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: 'Pixelify Sans', monospace; font-size: 34px; color: #F2B866">G · A · M · E · Bug-Jagd startet</div>
+</sc-if>
+</div>
+</div>
+<div style="font-size: 20px; font-weight: 700">{{f.title}}</div>
+<div style="font-size: 15px; color: #C8B89A">{{f.info}}</div>
+</div>
+</sc-for>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; font-family: 'Space Mono', monospace; font-size: 16px; line-height: 1.6">
+<div style="display: flex; flex-direction: column; gap: 6px"><div style="font-family: 'Pixelify Sans', monospace; font-size: 24px; font-weight: 700">Start und Ende</div><div style="white-space: pre-line">{{tStart}}</div></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><div style="font-family: 'Pixelify Sans', monospace; font-size: 24px; font-weight: 700">Spielregeln</div><div style="white-space: pre-line">{{tRules}}</div></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><div style="font-family: 'Pixelify Sans', monospace; font-size: 24px; font-weight: 700">Rangliste und Dashboard</div><div style="white-space: pre-line">{{tBoard}}</div></div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":3072,"height":1060}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const F = function (o) { return Object.assign({ pc: 'laeuft', person: false, px: 0, view: 'back', pose: 'stand', dim: false, dimA: 0, zoom: false, zx: 0, zy: 0, zs: 1, toast: false }, o); };
+    return {
+      frames: [
+        F({ toast: true, title: '1 · Tastenfolge', info: 'G A M E innerhalb von 2 s · Toast 1,5 s' }),
+        F({ person: true, px: 1260, view: 'left', pose: 'walkA', title: '2 · Figur läuft zum Computer', info: 'von rechts, view left, Ebene ganzVorne · bis left 960' }),
+        F({ person: true, px: 960, pc: 'arcade', title: '3 · Vor dem Computer', info: 'drehen zu back · Bildschirm zeigt BUG-JAGD / READY? · 600 ms' }),
+        F({ person: true, px: 960, pc: 'arcade', dim: true, dimA: 0.3, zoom: true, zx: 684, zy: 303, zs: 0.5, title: '4 · Zoom', info: 'Monitor wächst aus seiner Position zur Mitte, 6 Stufen à 80 ms' }),
+        F({ person: true, px: 960, pc: 'arcade', dim: true, dimA: 0.6, zoom: true, zx: 336, zy: 96, zs: 1, title: '5 · Bug-Jagd', info: 'Titelbild · ENTER startet · Szene abgedunkelt' })
+      ],
+      tStart: 'Auslöser: Tasten G, A, M, E nacheinander innerhalb von 2 s. Alternativ ?arcade im Testmodus.\nNur wenn gerade nichts abgehakt wird; sonst „kommt gleich“ und Start danach.\nEnde: ESC jederzeit, oder nach 45 s ohne Eingabe auf Titel/Rangliste, oder spätestens nach 5 min.\nZurück: Zoom rückwärts, Figur dreht nach rechts und läuft raus.',
+      tRules: 'Labyrinth 28×20 Kacheln (eigenes Layout, ohne Sackgassen, Tunnel in Zeile 10): 214 Bits à 10, 4 Kaffeetassen à 50.\nSchwierigkeit wie ein klassischer Arcade-Automat, steigend je Runde:\nRunde 1: Bugs 75 % des Spieltempos, Kaffee wirkt 6 s · Runde 2–4: 85 %, 5→3 s · Runde 5+: 95 %, 2→1 s, ab Runde 9 wirkt Kaffee nicht mehr.\nBugs wechseln zwischen Streuen (7 s) und Jagen (20 s), 4 Wellen, danach nur Jagen.\nIm Tunnel sind Bugs halb so schnell. Fang 200/400/800/1600. 3 Leben, +1 Leben bei 10 000 Punkten.\nBewegung kachelweise in 1-px-Schritten, Pfeiltaste wird vorgemerkt.',
+      tBoard: 'Rangliste: Top 10, Namen bis 8 Zeichen (A–Z, 0–9, Leerzeichen), gespeichert in localStorage des Beamer-Rechners (Schlüssel hackday.bugjagd.v1). Reset nur mit Shift+R im Rangliste-Bildschirm.\nWährend des Spiels: Dashboard-Tasten aus, Pfeiltasten gehören dem Spiel. Zeit, Countdown und Wetter laufen im Hintergrund weiter.\nEndet eine Phase während des Spiels: Hinweis „PHASE VORBEI“ oben im HUD; das Abhaken startet sofort nach dem Schließen.'
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+{
+ "title": "Test",
+ "date": "",
+ "location": {
+  "name": "Test",
+  "latitude": 48.37,
+  "longitude": 10.9
+ },
+ "phases": [
+  {
+   "name": "Check-in",
+   "start": "09:00",
+   "end": "09:10",
+   "blinds": 0
+  },
+  {
+   "name": "Kick-off",
+   "start": "09:10",
+   "end": "09:20",
+   "blinds": 0
+  },
+  {
+   "name": "Teams",
+   "start": "09:20",
+   "end": "09:30",
+   "blinds": 40
+  },
+  {
+   "name": "Hacking I",
+   "start": "09:30",
+   "end": "09:40",
+   "blinds": 40
+  },
+  {
+   "name": "Mittag",
+   "start": "09:40",
+   "end": "09:50",
+   "blinds": 0,
+   "type": "pause"
+  },
+  {
+   "name": "Hacking II",
+   "start": "09:50",
+   "end": "10:00",
+   "blinds": 40
+  },
+  {
+   "name": "Pitches",
+   "start": "10:00",
+   "end": "10:10",
+   "blinds": 100
+  },
+  {
+   "name": "Abschluss",
+   "start": "10:10",
+   "end": "10:20",
+   "blinds": 0
+  }
+ ]
+}

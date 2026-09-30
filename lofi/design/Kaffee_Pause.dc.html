@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Kaffeepause – Figur trinkt</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&amp;family=Pixelify+Sans:wght@400;700&amp;family=Space+Mono:wght@400;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1724px; height: 1400px; box-sizing: border-box; padding: 40px; background: #2A1A18; font-family: 'Pixelify Sans', monospace; color: #EDE0C8; display: flex; flex-direction: column; gap: 28px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<div style="font-size: 32px; font-weight: 700">Kaffeepause · Figur nimmt die Tasse und trinkt</div>
+<div style="font-size: 18px; color: #C8B89A">Ausschnitt der Gesamtszene x 60–190 / y 40–170 (Szenenpixel), 50 %. Tasse auf dem Tisch x 104–125. Figur in Ebene „ganzVorne“, top 378.</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px">
+<sc-for list="{{frames}}" as="f" hint-placeholder-count="8">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<div style="width: 390px; height: 390px; position: relative; overflow: hidden; border: 3px solid #5E3320; box-sizing: content-box">
+<div style="position: absolute; left: 0px; top: 0px; width: 780px; height: 780px; transform: scale(0.5); transform-origin: 0px 0px">
+<div style="position: absolute; left: -360px; top: -240px; width: 1920px; height: 1080px">
+<div style="position: absolute; left: 0px; top: 0px"><dc-import name="Room_Back" weather="sonnig" blinds="{{ 40 }}" hint-size="1920px,1080px"></dc-import></div>
+<div style="position: absolute; left: 0px; top: 0px"><dc-import name="Room_Front" weather="sonnig" blinds="{{ 40 }}" small-plant="{{ false }}" cup="{{f.cup}}" hint-size="1920px,1080px"></dc-import></div>
+<div style="position: absolute; left: 348px; top: 432px"><dc-import name="Printer3D" variant="open" state="printing" layer="{{ 4 }}" obj="bulb" hint-size="276px,276px"></dc-import></div>
+<div style="position: absolute; left: 828px; top: 360px"><dc-import name="Computer" state="laeuft" hint-size="528px,384px"></dc-import></div>
+<div style="position: absolute; left: {{f.px}}px; top: 378px"><dc-import name="Person" view="{{f.view}}" pose="{{f.pose}}" arm-left="{{f.armLeft}}" holding="{{f.holding}}" face="{{f.face}}" marker="{{ false }}" hint-size="264px,600px"></dc-import></div>
+</div>
+</div>
+</div>
+<div style="font-size: 18px; font-weight: 700">{{f.title}}</div>
+<div style="font-size: 15px; color: #C8B89A">{{f.info}}</div>
+</div>
+</sc-for>
+</div>
+<div style="font-family: 'Space Mono', monospace; font-size: 16px; line-height: 1.6; white-space: pre-line">{{text}}</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1724,"height":1400}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const F = function (o) {
+      return Object.assign({ cup: true, px: 660, view: 'back', pose: 'stand', armLeft: 'down', holding: 'none', face: 'auto' }, o);
+    };
+    return {
+      frames: [
+        F({ px: 840, view: 'left', pose: 'walkA', title: '1 · Figur kommt', info: 'von rechts, view left · bis left 660' }),
+        F({ armLeft: 'greifen', title: '2 · Greifen', info: 'view back · armLeft greifen · left 660' }),
+        F({ cup: false, armLeft: 'greifen', holding: 'cup', title: '3 · Tasse hoch', info: 'Tasse wandert in die Hand, Untertasse bleibt' }),
+        F({ cup: false, view: 'front', pose: 'cupLow', title: '4 · Zum Publikum', info: 'view front · cupLow · smile, Tasse dampft' }),
+        F({ cup: false, view: 'front', pose: 'cupDrink', title: '5 · Trinken', info: 'cupDrink · Augen zu (blink)' }),
+        F({ cup: false, view: 'front', pose: 'cupLow', face: 'grin', title: '6 · „Ahh“', info: 'cupLow · grin' }),
+        F({ cup: false, armLeft: 'greifen', holding: 'cup', title: '7 · Abstellen', info: 'view back · Tasse zurück auf die Untertasse' }),
+        F({ px: 720, view: 'right', pose: 'walkA', title: '8 · Geht', info: 'view right · raus nach rechts' })
+      ],
+      text: 'Zufällige Leerlauf-Animation wie das Winken. Nur bei leerer Warteschlange und frühestens 60 s vor einem Phasenende. Zufallsabstand 4–8 min (Test: ?coffee=15), nie zweimal hintereinander dieselbe Leerlauf-Animation (Winken / Kaffee / Drucker).\nAblauf (ca. 9 s): rein (view left) → drehen zu back (120 ms) → greifen 300 ms → Tasse in der Hand, Untertasse bleibt 300 ms → drehen zum Publikum (Zwischenbild Seite, 120 ms) → cupLow 600 ms → cupDrink 900 ms → cupLow 300 ms → cupDrink 700 ms → cupLow + grin 800 ms → drehen zu back → Tasse abstellen 300 ms → drehen nach rechts → raus.\nDampf: die zwei Dampf-Pixel über der Tasse im 400-ms-Takt 1 px hoch und wieder zurück. Abhaken hat Vorrang: Tasse sofort zurückstellen (ohne Animation) und abbrechen.'
+    };
+  }
+}
+</script>
+</body>
+</html>

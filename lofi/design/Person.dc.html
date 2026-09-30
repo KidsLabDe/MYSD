@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Person, Pixel-Sprite</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 264px; height: 600px; position: relative; overflow: visible; font-family: monospace; color: #2A1A18">
+<svg width="264" height="600" viewBox="0 0 44 100" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" style="display: block; overflow: visible">
+<rect x="6" y="98" width="32" height="2" fill="#1A0F0D" opacity="0.35"></rect>
+<sc-if value="{{viewBack}}" hint-placeholder-val="{{ true }}">
+<g id="body" transform="{{body}}">
+<!-- NEU (stepB): Verlängerung des linken Hosenbeins, wenn legL um 9 px nach unten zum Boden reicht -->
+<sc-if value="{{legLLong}}" hint-placeholder-val="{{ false }}">
+<g>
+<rect x="12" y="62" width="8" height="10" fill="#2A2D2A"></rect>
+<rect x="12" y="62" width="2" height="10" fill="#353935"></rect>
+</g>
+</sc-if>
+<g id="legL" transform="{{legL}}">
+<rect x="12" y="62" width="8" height="32" fill="#2A2D2A"></rect>
+<rect x="12" y="62" width="2" height="32" fill="#353935"></rect>
+<rect x="10" y="93" width="11" height="4" fill="#EDE0C8"></rect>
+<rect x="10" y="97" width="11" height="1" fill="#B9AA8C"></rect>
+</g>
+<g id="legR" transform="{{legR}}">
+<rect x="24" y="62" width="8" height="32" fill="#23261F"></rect>
+<rect x="23" y="93" width="11" height="4" fill="#EDE0C8"></rect>
+<rect x="23" y="97" width="11" height="1" fill="#B9AA8C"></rect>
+</g>
+<g id="armL" transform="{{armL}}">
+<sc-if value="{{armLDown}}" hint-placeholder-val="{{ true }}">
+<g>
+<rect x="3" y="30" width="6" height="25" fill="#2C5C5A"></rect>
+<rect x="3" y="30" width="2" height="25" fill="#357170"></rect>
+<rect x="3" y="55" width="6" height="2" fill="#24504E"></rect>
+<rect x="3" y="57" width="6" height="5" fill="#D99A76"></rect>
+</g>
+</sc-if>
+<!-- NEU armL greifen: linke Hand auf Druckbett-Höhe (Hand x 2–7, y 44–48), Unterarm verkürzt = greift nach vorn in den Drucker -->
+<sc-if value="{{armLGreifen}}" hint-placeholder-val="{{ false }}">
+<g>
+<rect x="3" y="30" width="6" height="10" fill="#2C5C5A"></rect>
+<rect x="3" y="30" width="2" height="10" fill="#357170"></rect>
+<rect x="2" y="38" width="6" height="4" fill="#2C5C5A"></rect>
+<rect x="2" y="42" width="6" height="2" fill="#24504E"></rect>
+<rect x="2" y="44" width="6" height="5" fill="#D99A76"></rect>
+<g transform="translate(2 38)">
+<sc-if value="{{holdBulb}}" hint-placeholder-val="{{ false }}"><g><rect x="1" y="0" width="4" height="1" fill="#FCE680"></rect><rect x="0" y="1" width="6" height="3" fill="#FCE680"></rect><rect x="1" y="4" width="4" height="1" fill="#FCE680"></rect><rect x="2" y="5" width="2" height="1" fill="#F0A31B"></rect></g></sc-if>
+<sc-if value="{{holdCube}}" hint-placeholder-val="{{ false }}"><g><rect x="0" y="1" width="5" height="5" fill="#3E7C7A"></rect><rect x="0" y="1" width="5" height="1" fill="#4A8C89"></rect></g></sc-if>
+<sc-if value="{{holdRocket}}" hint-placeholder-val="{{ false }}"><g><rect x="2" y="0" width="1" height="1" fill="#C4493A"></rect><rect x="1" y="1" width="3" height="1" fill="#C4493A"></rect><rect x="1" y="2" width="3" height="3" fill="#EDE0C8"></rect><rect x="0" y="4" width="1" height="2" fill="#C4493A"></rect><rect x="4" y="4" width="1" height="2" fill="#C4493A"></rect></g></sc-if>
+<sc-if value="{{holdCup}}" hint-placeholder-val="{{ false }}"><g><rect x="0" y="1" width="5" height="5" fill="#F2EEE6"></rect><rect x="0" y="1" width="5" height="1" fill="#5E3320"></rect><rect x="4" y="2" width="1" height="4" fill="#D8D0C4"></rect><rect x="5" y="2" width="1" height="1" fill="#F2EEE6"></rect><rect x="6" y="3" width="1" height="2" fill="#F2EEE6"></rect><rect x="5" y="5" width="1" height="1" fill="#F2EEE6"></rect></g></sc-if>
+<sc-if value="{{holdHeart}}" hint-placeholder-val="{{ false }}"><g><rect x="0" y="1" width="2" height="1" fill="#F07A7A"></rect><rect x="3" y="1" width="2" height="1" fill="#F07A7A"></rect><rect x="0" y="2" width="5" height="1" fill="#F07A7A"></rect><rect x="1" y="3" width="3" height="1" fill="#F07A7A"></rect><rect x="2" y="4" width="1" height="1" fill="#F07A7A"></rect></g></sc-if>
+</g>
+</g>
+</sc-if>
+<!-- NEU armL druecken: linke Hand auf Höhe der Drucker-Taste (Hand x 1–7, y 36–40, Zeigefinger x 1) -->
+<sc-if value="{{armLDruecken}}" hint-placeholder-val="{{ false }}">
+<g>
+<rect x="3" y="30" width="6" height="4" fill="#2C5C5A"></rect>
+<rect x="3" y="30" width="2" height="4" fill="#357170"></rect>
+<rect x="2" y="34" width="6" height="2" fill="#24504E"></rect>
+<rect x="2" y="36" width="6" height="5" fill="#D99A76"></rect>
+<rect x="1" y="37" width="1" height="2" fill="#D99A76"></rect>
+</g>
+</sc-if>
+</g>
+<rect x="18" y="20" width="8" height="6" fill="#C0845F"></rect>
+<rect x="11" y="25" width="22" height="2" fill="#3E7C7A"></rect>
+<rect x="8" y="27" width="28" height="33" fill="#3E7C7A"></rect>
+<rect x="8" y="27" width="3" height="33" fill="#4A8C89"></rect>
+<rect x="32" y="27" width="4" height="33" fill="#357170"></rect>
+<rect x="9" y="60" width="26" height="4" fill="#2C5C5A"></rect>
+<rect x="14" y="24" width="16" height="7" fill="#2C5C5A"></rect>
+<rect x="16" y="31" width="12" height="2" fill="#2C5C5A"></rect>
+<g id="hoodie-logo">
+<g transform="translate(1 1)" fill="#1A2E2D">
+<rect x="10" y="36" width="1" height="5"></rect><rect x="12" y="36" width="1" height="2"></rect><rect x="11" y="38" width="1" height="1"></rect><rect x="12" y="39" width="1" height="2"></rect>
+<rect x="14" y="36" width="3" height="1"></rect><rect x="15" y="37" width="1" height="3"></rect><rect x="14" y="40" width="3" height="1"></rect>
+<rect x="18" y="36" width="2" height="1"></rect><rect x="18" y="37" width="1" height="3"></rect><rect x="20" y="37" width="1" height="3"></rect><rect x="18" y="40" width="2" height="1"></rect>
+<rect x="22" y="36" width="3" height="1"></rect><rect x="22" y="37" width="1" height="1"></rect><rect x="22" y="38" width="3" height="1"></rect><rect x="24" y="39" width="1" height="1"></rect><rect x="22" y="40" width="3" height="1"></rect>
+<rect x="16" y="43" width="1" height="4"></rect><rect x="16" y="47" width="3" height="1"></rect>
+<rect x="21" y="43" width="1" height="1"></rect><rect x="20" y="44" width="1" height="4"></rect><rect x="22" y="44" width="1" height="4"></rect><rect x="21" y="45" width="1" height="1"></rect>
+<rect x="24" y="43" width="1" height="5"></rect><rect x="25" y="43" width="1" height="1"></rect><rect x="26" y="44" width="1" height="1"></rect><rect x="25" y="45" width="1" height="1"></rect><rect x="26" y="46" width="1" height="1"></rect><rect x="25" y="47" width="1" height="1"></rect>
+<rect x="27" y="31" width="4" height="1"></rect><rect x="26" y="32" width="6" height="3"></rect><rect x="27" y="35" width="4" height="1"></rect><rect x="28" y="36" width="2" height="3"></rect>
+</g>
+<g fill="#F0A31B"><rect x="10" y="36" width="1" height="5"></rect><rect x="12" y="36" width="1" height="2"></rect><rect x="11" y="38" width="1" height="1"></rect><rect x="12" y="39" width="1" height="2"></rect></g>
+<g fill="#C48BC4"><rect x="14" y="36" width="3" height="1"></rect><rect x="15" y="37" width="1" height="3"></rect><rect x="14" y="40" width="3" height="1"></rect></g>
+<g fill="#F07A7A"><rect x="18" y="36" width="2" height="1"></rect><rect x="18" y="37" width="1" height="3"></rect><rect x="20" y="37" width="1" height="3"></rect><rect x="18" y="40" width="2" height="1"></rect></g>
+<g fill="#7FE0C2"><rect x="22" y="36" width="3" height="1"></rect><rect x="22" y="37" width="1" height="1"></rect><rect x="22" y="38" width="3" height="1"></rect><rect x="24" y="39" width="1" height="1"></rect><rect x="22" y="40" width="3" height="1"></rect></g>
+<g fill="#4CC8F0"><rect x="16" y="43" width="1" height="4"></rect><rect x="16" y="47" width="3" height="1"></rect></g>
+<g fill="#FCE680"><rect x="21" y="43" width="1" height="1"></rect><rect x="20" y="44" width="1" height="4"></rect><rect x="22" y="44" width="1" height="4"></rect><rect x="21" y="45" width="1" height="1"></rect></g>
+<g fill="#E83030"><rect x="24" y="43" width="1" height="5"></rect><rect x="25" y="43" width="1" height="1"></rect><rect x="26" y="44" width="1" height="1"></rect><rect x="25" y="45" width="1" height="1"></rect><rect x="26" y="46" width="1" height="1"></rect><rect x="25" y="47" width="1" height="1"></rect></g>
+<g fill="#FCE680"><rect x="27" y="31" width="4" height="1"></rect><rect x="26" y="32" width="6" height="3"></rect><rect x="27" y="35" width="4" height="1"></rect></g>
+<rect x="28" y="33" width="2" height="1" fill="#F07A7A"></rect>
+<rect x="28" y="36" width="2" height="1" fill="#F0A31B"></rect>
+<rect x="28" y="37" width="2" height="1" fill="#F07A7A"></rect>
+<rect x="28" y="38" width="2" height="1" fill="#4CC8F0"></rect>
+</g>
+<rect x="10" y="11" width="2" height="5" fill="#D99A76"></rect>
+<rect x="32" y="11" width="2" height="5" fill="#D99A76"></rect>
+<rect x="14" y="2" width="16" height="2" fill="#2A1A18"></rect>
+<rect x="12" y="4" width="20" height="16" fill="#2A1A18"></rect>
+<rect x="13" y="20" width="18" height="2" fill="#2A1A18"></rect>
+<rect x="16" y="4" width="8" height="1" fill="#46302A"></rect>
+<rect x="14" y="6" width="3" height="1" fill="#46302A"></rect>
+<g id="armR" transform="{{armR}}">
+<sc-if value="{{armDown}}" hint-placeholder-val="{{ true }}">
+<g>
+<rect x="35" y="30" width="6" height="25" fill="#2C5C5A"></rect>
+<rect x="35" y="55" width="6" height="2" fill="#24504E"></rect>
+<rect x="35" y="57" width="6" height="5" fill="#D99A76"></rect>
+<sc-if value="{{showMarker}}" hint-placeholder-val="{{ true }}">
+<g>
+<rect x="36" y="62" width="4" height="7" fill="#C4493A"></rect>
+<rect x="37" y="69" width="2" height="2" fill="#2A1A18"></rect>
+</g>
+</sc-if>
+</g>
+</sc-if>
+<sc-if value="{{armUp}}" hint-placeholder-val="{{ false }}">
+<g>
+<rect x="35" y="6" width="6" height="26" fill="#2C5C5A"></rect>
+<rect x="35" y="6" width="6" height="2" fill="#24504E"></rect>
+<rect x="35" y="0" width="6" height="6" fill="#D99A76"></rect>
+<sc-if value="{{showMarker}}" hint-placeholder-val="{{ true }}">
+<g>
+<rect x="36" y="-6" width="4" height="6" fill="#C4493A"></rect>
+<rect x="37" y="-8" width="2" height="2" fill="#2A1A18"></rect>
+</g>
+</sc-if>
+</g>
+</sc-if>
+<sc-if value="{{armDiag}}" hint-placeholder-val="{{ false }}">
+<g>
+<rect x="34" y="26" width="7" height="7" fill="#2C5C5A"></rect>
+<rect x="38" y="22" width="7" height="7" fill="#2C5C5A"></rect>
+<rect x="42" y="18" width="7" height="7" fill="#2C5C5A"></rect>
+<rect x="46" y="14" width="7" height="7" fill="#2C5C5A"></rect>
+<rect x="50" y="12" width="3" height="5" fill="#24504E"></rect>
+<rect x="52" y="9" width="6" height="6" fill="#D99A76"></rect>
+<rect x="56" y="5" width="3" height="5" fill="#C4493A"></rect>
+</g>
+</sc-if>
+<!-- NEU: Schreib-Arme für das Abhaken. Gezeichnet, nicht rotiert. Stift zeigt nach rechts, Spitze = dunkles Pixel ganz rechts. -->
+<sc-if value="{{armSteil}}" hint-placeholder-val="{{ false }}">
+<g>
+<!-- steil · Zeile 1 (auf der Bank) · Spitze x 45–46, y 2–3 (rechtestes Pixel x 46) -->
+<rect x="35" y="20" width="6" height="13" fill="#2C5C5A"></rect>
+<rect x="35" y="14" width="6" height="6" fill="#2C5C5A"></rect>
+<rect x="36" y="8" width="6" height="6" fill="#2C5C5A"></rect>
+<rect x="36" y="6" width="6" height="2" fill="#24504E"></rect>
+<rect x="37" y="0" width="6" height="6" fill="#D99A76"></rect>
+<sc-if value="{{showMarker}}" hint-placeholder-val="{{ true }}">
+<g>
+<rect x="43" y="2" width="2" height="2" fill="#C4493A"></rect>
+<rect x="45" y="2" width="2" height="2" fill="#2A1A18"></rect>
+</g>
+</sc-if>
+</g>
+</sc-if>
+<sc-if value="{{armFlach}}" hint-placeholder-val="{{ false }}">
+<g>
+<!-- flach · Zeile 4 (Boden) · Spitze x 52–53, y 14–15 (rechtestes Pixel x 53) -->
+<rect x="35" y="24" width="6" height="9" fill="#2C5C5A"></rect>
+<rect x="39" y="19" width="6" height="7" fill="#2C5C5A"></rect>
+<rect x="44" y="16" width="2" height="6" fill="#24504E"></rect>
+<rect x="45" y="14" width="5" height="6" fill="#D99A76"></rect>
+<sc-if value="{{showMarker}}" hint-placeholder-val="{{ true }}">
+<g>
+<rect x="50" y="14" width="2" height="2" fill="#C4493A"></rect>
+<rect x="52" y="14" width="2" height="2" fill="#2A1A18"></rect>
+</g>
+</sc-if>
+</g>
+</sc-if>
+<sc-if value="{{armWaagrecht}}" hint-placeholder-val="{{ false }}">
+<g>
+<!-- waagrecht · Zeile 5 (Boden) · Spitze x 55–56, y 24–25 (rechtestes Pixel x 56) -->
+<rect x="35" y="25" width="6" height="8" fill="#2C5C5A"></rect>
+<rect x="41" y="24" width="5" height="7" fill="#2C5C5A"></rect>
+<rect x="46" y="24" width="2" height="6" fill="#24504E"></rect>
+<rect x="48" y="23" width="5" height="6" fill="#D99A76"></rect>
+<sc-if value="{{showMarker}}" hint-placeholder-val="{{ true }}">
+<g>
+<rect x="53" y="24" width="2" height="2" fill="#C4493A"></rect>
+<rect x="55" y="24" width="2" height="2" fill="#2A1A18"></rect>
+</g>
+</sc-if>
+</g>
+</sc-if>
+<sc-if value="{{armLeicht}}" hint-placeholder-val="{{ false }}">
+<g>
+<!-- leichtRunter · Zeile 6 (Boden) · Spitze x 53–54, y 34–35 (rechtestes Pixel x 54) -->
+<rect x="35" y="28" width="6" height="8" fill="#2C5C5A"></rect>
+<rect x="38" y="34" width="6" height="6" fill="#2C5C5A"></rect>
+<rect x="44" y="34" width="2" height="6" fill="#24504E"></rect>
+<rect x="46" y="33" width="5" height="6" fill="#D99A76"></rect>
+<sc-if value="{{showMarker}}" hint-placeholder-val="{{ true }}">
+<g>
+<rect x="51" y="34" width="2" height="2" fill="#C4493A"></rect>
+<rect x="53" y="34" width="2" height="2" fill="#2A1A18"></rect>
+</g>
+</sc-if>
+</g>
+</sc-if>
+<sc-if value="{{armRunter}}" hint-placeholder-val="{{ false }}">
+<g>
+<!-- runter · Zeile 7 (Boden) · Spitze x 53–54, y 44–45 (rechtestes Pixel x 54) -->
+<rect x="35" y="30" width="6" height="12" fill="#2C5C5A"></rect>
+<rect x="38" y="40" width="6" height="6" fill="#2C5C5A"></rect>
+<rect x="44" y="41" width="2" height="6" fill="#24504E"></rect>
+<rect x="46" y="41" width="5" height="6" fill="#D99A76"></rect>
+<sc-if value="{{showMarker}}" hint-placeholder-val="{{ true }}">
+<g>
+<rect x="51" y="44" width="2" height="2" fill="#C4493A"></rect>
+<rect x="53" y="44" width="2" height="2" fill="#2A1A18"></rect>
+</g>
+</sc-if>
+</g>
+</sc-if>
+</g>
+</g>
+</sc-if>
+<!-- ===== NEU: Seitenansicht (Blick nach rechts; nach links = gespiegelt über translate(44 0) scale(-1 1), ganzzahlig) ===== -->
+<sc-if value="{{viewSide}}" hint-placeholder-val="{{ false }}">
+<g id="side" transform="{{sideFlip}}">
+<g transform="{{sideBody}}">
+<sc-if value="{{sideStand}}" hint-placeholder-val="{{ true }}">
+<g>
+<rect x="16" y="62" width="10" height="31" fill="#2A2D2A"></rect>
+<rect x="16" y="62" width="2" height="31" fill="#353935"></rect>
+<rect x="16" y="93" width="13" height="4" fill="#EDE0C8"></rect>
+<rect x="16" y="97" width="13" height="1" fill="#B9AA8C"></rect>
+</g>
+</sc-if>
+<sc-if value="{{sideA}}" hint-placeholder-val="{{ false }}">
+<g>
+<!-- Schritt: hinteres Bein zurück, vorderes Bein vor -->
+<rect x="15" y="62" width="7" height="12" fill="#23261F"></rect>
+<rect x="12" y="74" width="7" height="10" fill="#23261F"></rect>
+<rect x="10" y="84" width="7" height="9" fill="#23261F"></rect>
+<rect x="6" y="93" width="11" height="4" fill="#B9AA8C"></rect>
+<rect x="6" y="97" width="11" height="1" fill="#A8997A"></rect>
+<rect x="21" y="62" width="8" height="12" fill="#2A2D2A"></rect>
+<rect x="24" y="74" width="8" height="10" fill="#2A2D2A"></rect>
+<rect x="26" y="84" width="7" height="9" fill="#2A2D2A"></rect>
+<rect x="26" y="93" width="12" height="4" fill="#EDE0C8"></rect>
+<rect x="26" y="97" width="12" height="1" fill="#B9AA8C"></rect>
+</g>
+</sc-if>
+<sc-if value="{{sideB}}" hint-placeholder-val="{{ false }}">
+<g>
+<!-- Durchschwingen: hinteres Bein angewinkelt, vorderes Bein trägt -->
+<rect x="14" y="62" width="7" height="14" fill="#23261F"></rect>
+<rect x="11" y="76" width="7" height="10" fill="#23261F"></rect>
+<rect x="8" y="86" width="10" height="4" fill="#B9AA8C"></rect>
+<rect x="18" y="62" width="8" height="31" fill="#2A2D2A"></rect>
+<rect x="18" y="62" width="2" height="31" fill="#353935"></rect>
+<rect x="18" y="93" width="12" height="4" fill="#EDE0C8"></rect>
+<rect x="18" y="97" width="12" height="1" fill="#B9AA8C"></rect>
+</g>
+</sc-if>
+<rect x="20" y="20" width="6" height="6" fill="#C0845F"></rect>
+<rect x="11" y="22" width="8" height="9" fill="#2C5C5A"></rect>
+<rect x="13" y="26" width="18" height="34" fill="#3E7C7A"></rect>
+<rect x="13" y="26" width="3" height="34" fill="#357170"></rect>
+<rect x="29" y="28" width="2" height="30" fill="#4A8C89"></rect>
+<rect x="10" y="26" width="4" height="8" fill="#2C5C5A"></rect>
+<rect x="27" y="29" width="1" height="7" fill="#EDE0C8"></rect>
+<rect x="22" y="46" width="9" height="7" fill="#357170"></rect>
+<rect x="22" y="46" width="9" height="1" fill="#2C5C5A"></rect>
+<rect x="13" y="60" width="18" height="4" fill="#2C5C5A"></rect>
+<!-- Kopf im Profil -->
+<rect x="21" y="6" width="11" height="15" fill="#D99A76"></rect>
+<rect x="32" y="12" width="1" height="3" fill="#D99A76"></rect>
+<rect x="22" y="20" width="9" height="1" fill="#C0845F"></rect>
+<rect x="15" y="2" width="14" height="2" fill="#2A1A18"></rect>
+<rect x="13" y="4" width="18" height="4" fill="#2A1A18"></rect>
+<rect x="13" y="8" width="9" height="12" fill="#2A1A18"></rect>
+<rect x="14" y="20" width="7" height="2" fill="#2A1A18"></rect>
+<rect x="29" y="8" width="2" height="1" fill="#2A1A18"></rect>
+<rect x="17" y="4" width="6" height="1" fill="#46302A"></rect>
+<rect x="22" y="11" width="2" height="4" fill="#C0845F"></rect>
+<rect x="28" y="11" width="2" height="2" fill="#2A1A18"></rect>
+<rect x="29" y="17" width="2" height="1" fill="#8A4E30"></rect>
+<!-- vorderer Arm -->
+<sc-if value="{{sideArmBack}}" hint-placeholder-val="{{ false }}">
+<g>
+<rect x="16" y="29" width="6" height="12" fill="#2C5C5A"></rect>
+<rect x="13" y="39" width="6" height="12" fill="#2C5C5A"></rect>
+<rect x="13" y="51" width="6" height="2" fill="#24504E"></rect>
+<rect x="12" y="53" width="6" height="5" fill="#D99A76"></rect>
+<sc-if value="{{sideMarker}}" hint-placeholder-val="{{ true }}">
+<g><rect x="13" y="58" width="4" height="5" fill="#C4493A"></rect><rect x="14" y="63" width="2" height="2" fill="#2A1A18"></rect></g>
+</sc-if>
+</g>
+</sc-if>
+<!-- NEU: Druckteil vor der Brust tragen (Seitenansicht) -->
+<sc-if value="{{sideArmCarry}}" hint-placeholder-val="{{ false }}">
+<g>
+<rect x="18" y="29" width="6" height="10" fill="#2C5C5A"></rect>
+<rect x="21" y="37" width="6" height="4" fill="#2C5C5A"></rect>
+<rect x="27" y="37" width="2" height="4" fill="#24504E"></rect>
+<rect x="29" y="36" width="4" height="5" fill="#D99A76"></rect>
+<g transform="translate(28 30)">
+<sc-if value="{{holdBulb}}" hint-placeholder-val="{{ false }}"><g><rect x="1" y="0" width="4" height="1" fill="#FCE680"></rect><rect x="0" y="1" width="6" height="3" fill="#FCE680"></rect><rect x="1" y="4" width="4" height="1" fill="#FCE680"></rect><rect x="2" y="5" width="2" height="1" fill="#F0A31B"></rect></g></sc-if>
+<sc-if value="{{holdCube}}" hint-placeholder-val="{{ false }}"><g><rect x="0" y="1" width="5" height="5" fill="#3E7C7A"></rect><rect x="0" y="1" width="5" height="1" fill="#4A8C89"></rect></g></sc-if>
+<sc-if value="{{holdRocket}}" hint-placeholder-val="{{ false }}"><g><rect x="2" y="0" width="1" height="1" fill="#C4493A"></rect><rect x="1" y="1" width="3" height="1" fill="#C4493A"></rect><rect x="1" y="2" width="3" height="3" fill="#EDE0C8"></rect><rect x="0" y="4" width="1" height="2" fill="#C4493A"></rect><rect x="4" y="4" width="1" height="2" fill="#C4493A"></rect></g></sc-if>
+<sc-if value="{{holdCup}}" hint-placeholder-val="{{ false }}"><g><rect x="0" y="1" width="5" height="5" fill="#F2EEE6"></rect><rect x="0" y="1" width="5" height="1" fill="#5E3320"></rect><rect x="4" y="2" width="1" height="4" fill="#D8D0C4"></rect><rect x="5" y="2" width="1" height="1" fill="#F2EEE6"></rect><rect x="6" y="3" width="1" height="2" fill="#F2EEE6"></rect><rect x="5" y="5" width="1" height="1" fill="#F2EEE6"></rect></g></sc-if>
+<sc-if value="{{holdHeart}}" hint-placeholder-val="{{ false }}"><g><rect x="0" y="1" width="2" height="1" fill="#F07A7A"></rect><rect x="3" y="1" width="2" height="1" fill="#F07A7A"></rect><rect x="0" y="2" width="5" height="1" fill="#F07A7A"></rect><rect x="1" y="3" width="3" height="1" fill="#F07A7A"></rect><rect x="2" y="4" width="1" height="1" fill="#F07A7A"></rect></g></sc-if>
+</g>
+</g>
+</sc-if>
+<sc-if value="{{sideArmDown}}" hint-placeholder-val="{{ true }}">
+<g>
+<rect x="18" y="29" width="6" height="26" fill="#2C5C5A"></rect>
+<rect x="18" y="55" width="6" height="2" fill="#24504E"></rect>
+<rect x="18" y="57" width="6" height="5" fill="#D99A76"></rect>
+<sc-if value="{{sideMarker}}" hint-placeholder-val="{{ true }}">
+<g><rect x="19" y="62" width="4" height="6" fill="#C4493A"></rect><rect x="20" y="68" width="2" height="2" fill="#2A1A18"></rect></g>
+</sc-if>
+</g>
+</sc-if>
+</g>
+</g>
+</sc-if>
+<!-- ===== NEU: Vorderansicht (zum Publikum) mit Gesicht und Winken ===== -->
+<sc-if value="{{viewFront}}" hint-placeholder-val="{{ false }}">
+<g id="front">
+<rect x="12" y="62" width="8" height="31" fill="#2A2D2A"></rect>
+<rect x="12" y="62" width="2" height="31" fill="#353935"></rect>
+<rect x="24" y="62" width="8" height="31" fill="#2A2D2A"></rect>
+<rect x="30" y="62" width="2" height="31" fill="#23261F"></rect>
+<rect x="10" y="93" width="11" height="4" fill="#EDE0C8"></rect>
+<rect x="10" y="97" width="11" height="1" fill="#B9AA8C"></rect>
+<rect x="23" y="93" width="11" height="4" fill="#EDE0C8"></rect>
+<rect x="23" y="97" width="11" height="1" fill="#B9AA8C"></rect>
+<rect x="19" y="20" width="6" height="4" fill="#C0845F"></rect>
+<rect x="11" y="25" width="22" height="2" fill="#3E7C7A"></rect>
+<rect x="8" y="27" width="28" height="33" fill="#3E7C7A"></rect>
+<rect x="8" y="27" width="3" height="33" fill="#4A8C89"></rect>
+<rect x="32" y="27" width="4" height="33" fill="#357170"></rect>
+<rect x="13" y="23" width="18" height="4" fill="#2C5C5A"></rect>
+<rect x="19" y="24" width="6" height="3" fill="#C0845F"></rect>
+<rect x="18" y="27" width="1" height="7" fill="#EDE0C8"></rect>
+<rect x="25" y="27" width="1" height="7" fill="#EDE0C8"></rect>
+<rect x="13" y="46" width="18" height="8" fill="#357170"></rect>
+<rect x="13" y="46" width="18" height="1" fill="#2C5C5A"></rect>
+<rect x="9" y="60" width="26" height="4" fill="#2C5C5A"></rect>
+<!-- Brust-Logo (rechts im Bild): nur die KidsLab-Glühbirne, 5×8 Pixel mit Schatten, Sockel in den Logo-Farben -->
+<g id="chest-logo">
+<g transform="translate(1 1)" fill="#1A2E2D"><rect x="29" y="35" width="3" height="1"></rect><rect x="28" y="36" width="5" height="3"></rect><rect x="29" y="39" width="3" height="1"></rect><rect x="29" y="40" width="3" height="3"></rect></g>
+<g fill="#FCE680"><rect x="29" y="35" width="3" height="1"></rect><rect x="28" y="36" width="5" height="3"></rect><rect x="29" y="39" width="3" height="1"></rect></g>
+<rect x="30" y="37" width="1" height="1" fill="#F07A7A"></rect>
+<rect x="29" y="40" width="3" height="1" fill="#F0A31B"></rect>
+<rect x="29" y="41" width="3" height="1" fill="#F07A7A"></rect>
+<rect x="29" y="42" width="3" height="1" fill="#4CC8F0"></rect>
+</g>
+<!-- Kopf von vorn -->
+<rect x="10" y="11" width="2" height="5" fill="#D99A76"></rect>
+<rect x="32" y="11" width="2" height="5" fill="#D99A76"></rect>
+<rect x="14" y="7" width="16" height="14" fill="#D99A76"></rect>
+<rect x="15" y="20" width="14" height="1" fill="#C0845F"></rect>
+<rect x="14" y="2" width="16" height="2" fill="#2A1A18"></rect>
+<rect x="12" y="4" width="20" height="5" fill="#2A1A18"></rect>
+<rect x="12" y="9" width="3" height="11" fill="#2A1A18"></rect>
+<rect x="29" y="9" width="3" height="11" fill="#2A1A18"></rect>
+<rect x="15" y="9" width="4" height="1" fill="#2A1A18"></rect>
+<rect x="24" y="9" width="3" height="1" fill="#2A1A18"></rect>
+<rect x="16" y="4" width="8" height="1" fill="#46302A"></rect>
+<sc-if value="{{eyesOpen}}" hint-placeholder-val="{{ true }}">
+<g>
+<rect x="17" y="12" width="2" height="3" fill="#2A1A18"></rect>
+<rect x="25" y="12" width="2" height="3" fill="#2A1A18"></rect>
+<rect x="18" y="12" width="1" height="1" fill="#EDE0C8"></rect>
+<rect x="26" y="12" width="1" height="1" fill="#EDE0C8"></rect>
+</g>
+</sc-if>
+<sc-if value="{{eyesClosed}}" hint-placeholder-val="{{ false }}">
+<g>
+<!-- blinzeln / Lach-Augen: flache Bögen -->
+<rect x="16" y="14" width="1" height="1" fill="#2A1A18"></rect><rect x="17" y="13" width="2" height="1" fill="#2A1A18"></rect><rect x="19" y="14" width="1" height="1" fill="#2A1A18"></rect>
+<rect x="24" y="14" width="1" height="1" fill="#2A1A18"></rect><rect x="25" y="13" width="2" height="1" fill="#2A1A18"></rect><rect x="27" y="14" width="1" height="1" fill="#2A1A18"></rect>
+</g>
+</sc-if>
+<sc-if value="{{mouthNeutral}}" hint-placeholder-val="{{ false }}">
+<rect x="20" y="18" width="4" height="1" fill="#8A4E30"></rect>
+</sc-if>
+<sc-if value="{{mouthSmile}}" hint-placeholder-val="{{ true }}">
+<g>
+<rect x="18" y="17" width="1" height="1" fill="#8A4E30"></rect>
+<rect x="19" y="18" width="6" height="1" fill="#8A4E30"></rect>
+<rect x="25" y="17" width="1" height="1" fill="#8A4E30"></rect>
+</g>
+</sc-if>
+<sc-if value="{{mouthGrin}}" hint-placeholder-val="{{ false }}">
+<g>
+<rect x="18" y="17" width="8" height="1" fill="#5E3320"></rect>
+<rect x="19" y="18" width="6" height="1" fill="#5E3320"></rect>
+<rect x="19" y="17" width="6" height="1" fill="#EDE0C8"></rect>
+</g>
+</sc-if>
+<sc-if value="{{blush}}" hint-placeholder-val="{{ true }}">
+<g>
+<rect x="15" y="16" width="2" height="1" fill="#E0909E"></rect>
+<rect x="27" y="16" width="2" height="1" fill="#E0909E"></rect>
+</g>
+</sc-if>
+<!-- Arme: rechts im Bild (linke Hand der Figur) immer unten -->
+<rect x="35" y="30" width="6" height="25" fill="#2C5C5A"></rect>
+<rect x="39" y="30" width="2" height="25" fill="#24504E"></rect>
+<rect x="35" y="55" width="6" height="2" fill="#24504E"></rect>
+<rect x="35" y="57" width="6" height="5" fill="#D99A76"></rect>
+<!-- NEU Kaffee: Tasse vor der Brust (cupLow) und am Mund (cupDrink), mit dem Arm links im Bild -->
+<sc-if value="{{frontCupLow}}" hint-placeholder-val="{{ false }}">
+<g>
+<rect x="3" y="30" width="6" height="10" fill="#2C5C5A"></rect>
+<rect x="3" y="30" width="2" height="10" fill="#357170"></rect>
+<rect x="5" y="38" width="8" height="5" fill="#2C5C5A"></rect>
+<rect x="13" y="38" width="2" height="5" fill="#24504E"></rect>
+<rect x="15" y="39" width="5" height="4" fill="#D99A76"></rect>
+<rect x="15" y="33" width="5" height="6" fill="#F2EEE6"></rect>
+<rect x="15" y="33" width="5" height="1" fill="#5E3320"></rect>
+<rect x="19" y="34" width="1" height="5" fill="#D8D0C4"></rect>
+<rect x="20" y="35" width="1" height="1" fill="#F2EEE6"></rect><rect x="21" y="36" width="1" height="2" fill="#F2EEE6"></rect><rect x="20" y="38" width="1" height="1" fill="#F2EEE6"></rect>
+<rect x="16" y="30" width="1" height="2" fill="#FFF4D8" opacity="0.5"></rect><rect x="18" y="28" width="1" height="2" fill="#FFF4D8" opacity="0.4"></rect>
+</g>
+</sc-if>
+<sc-if value="{{frontCupDrink}}" hint-placeholder-val="{{ false }}">
+<g>
+<rect x="3" y="26" width="6" height="8" fill="#2C5C5A"></rect>
+<rect x="3" y="26" width="2" height="8" fill="#357170"></rect>
+<rect x="6" y="21" width="6" height="7" fill="#2C5C5A"></rect>
+<rect x="11" y="20" width="2" height="5" fill="#24504E"></rect>
+<rect x="13" y="20" width="4" height="5" fill="#D99A76"></rect>
+<rect x="16" y="15" width="6" height="6" fill="#F2EEE6"></rect>
+<rect x="16" y="15" width="1" height="6" fill="#D8D0C4"></rect>
+<rect x="22" y="16" width="1" height="1" fill="#F2EEE6"></rect><rect x="23" y="17" width="1" height="2" fill="#F2EEE6"></rect><rect x="22" y="19" width="1" height="1" fill="#F2EEE6"></rect>
+</g>
+</sc-if>
+<sc-if value="{{frontArmDown}}" hint-placeholder-val="{{ true }}">
+<g>
+<rect x="3" y="30" width="6" height="25" fill="#2C5C5A"></rect>
+<rect x="3" y="30" width="2" height="25" fill="#357170"></rect>
+<rect x="3" y="55" width="6" height="2" fill="#24504E"></rect>
+<rect x="3" y="57" width="6" height="5" fill="#D99A76"></rect>
+</g>
+</sc-if>
+<sc-if value="{{frontWaveA}}" hint-placeholder-val="{{ false }}">
+<g>
+<!-- Winken A: Hand oben, senkrecht -->
+<rect x="3" y="24" width="6" height="8" fill="#2C5C5A"></rect>
+<rect x="1" y="16" width="6" height="8" fill="#2C5C5A"></rect>
+<rect x="0" y="10" width="6" height="6" fill="#2C5C5A"></rect>
+<rect x="0" y="8" width="6" height="2" fill="#24504E"></rect>
+<rect x="0" y="2" width="6" height="6" fill="#D99A76"></rect>
+<rect x="0" y="0" width="1" height="2" fill="#D99A76"></rect><rect x="2" y="0" width="1" height="2" fill="#D99A76"></rect><rect x="4" y="0" width="1" height="2" fill="#D99A76"></rect>
+<rect x="6" y="4" width="1" height="2" fill="#D99A76"></rect>
+</g>
+</sc-if>
+<sc-if value="{{frontWaveB}}" hint-placeholder-val="{{ false }}">
+<g>
+<!-- Winken B: Hand nach außen gekippt -->
+<rect x="3" y="24" width="6" height="8" fill="#2C5C5A"></rect>
+<rect x="0" y="17" width="6" height="7" fill="#2C5C5A"></rect>
+<rect x="-2" y="12" width="6" height="5" fill="#2C5C5A"></rect>
+<rect x="-3" y="10" width="6" height="2" fill="#24504E"></rect>
+<rect x="-4" y="4" width="6" height="6" fill="#D99A76"></rect>
+<rect x="-5" y="2" width="1" height="2" fill="#D99A76"></rect><rect x="-3" y="2" width="1" height="2" fill="#D99A76"></rect><rect x="-1" y="2" width="1" height="2" fill="#D99A76"></rect>
+<rect x="2" y="6" width="1" height="2" fill="#D99A76"></rect>
+</g>
+</sc-if>
+</g>
+</sc-if>
+</svg>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"pose":{"editor":"enum","default":"stand","options":["stand","walkA","walkB","reach","strike","grab","pullA","pullB","stepA","stepB","waveA","waveB","cupLow","cupDrink"]},"view":{"editor":"enum","default":"back","options":["back","right","left","front"]},"face":{"editor":"enum","default":"auto","options":["auto","neutral","smile","grin","blink"]},"marker":{"editor":"boolean","default":true},"armLeft":{"editor":"enum","default":"down","options":["down","greifen","druecken"]},"holding":{"editor":"enum","default":"none","options":["none","bulb","cube","rocket","heart","cup"]},"arm":{"editor":"enum","default":"auto","options":["auto","down","up","diag","steil","flach","waagrecht","leichtRunter","runter"]},"armDy":{"editor":"int","default":0,"min":-4,"max":4},"$preview":{"width":264,"height":600}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const z = 'translate(0 0)';
+    const P = {
+      stand:  { body: z, legL: z, legR: z, armL: z, armR: z, arm: 'down' },
+      walkA:  { body: z, legL: 'translate(0 -3)', legR: z, armL: 'translate(0 1)', armR: 'translate(0 -1)', arm: 'down' },
+      walkB:  { body: 'translate(0 -1)', legL: z, legR: 'translate(0 -3)', armL: 'translate(0 -1)', armR: 'translate(0 1)', arm: 'down' },
+      reach:  { body: z, legL: z, legR: 'translate(0 -1)', armL: z, armR: z, arm: 'up' },
+      grab:   { body: z, legL: z, legR: z, armL: 'translate(0 1)', armR: z, arm: 'up' },
+      pullA:  { body: 'translate(0 1)', legL: z, legR: z, armL: 'translate(0 1)', armR: 'translate(0 8)', arm: 'up' },
+      pullB:  { body: 'translate(0 2)', legL: z, legR: z, armL: 'translate(0 2)', armR: 'translate(0 16)', arm: 'up' },
+      strike: { body: 'translate(1 0)', legL: z, legR: 'translate(0 -1)', armL: z, armR: z, arm: 'diag' },
+      // NEU: Aufsteigen auf die Bank. stepA bei top 63 (rechtes Bein 9 px angehoben),
+      // stepB bei top 54 (rechter Fuß auf der Bank y 143, linker Fuß noch am Boden y 161 → Bein verlängert)
+      stepA:  { body: z, legL: z, legR: 'translate(0 -9)', armL: 'translate(0 1)', armR: z, arm: 'down' },
+      stepB:  { body: z, legL: 'translate(0 9)', legR: 'translate(0 -9)', armL: 'translate(0 -1)', armR: z, arm: 'down', legLLong: true }
+    };
+    const pose = P[this.props.pose] ? this.props.pose : 'stand';
+    const p = Object.assign({ legLLong: false }, P[pose]);
+    // NEU: Prop arm überschreibt die Armvariante der Pose (Beine der Pose bleiben).
+    // Dann kein Körper-Wippen und der Arm hält still; armDy verschiebt nur den rechten Arm (Stufen der Strichlinie).
+    const ARMS = ['down', 'up', 'diag', 'steil', 'flach', 'waagrecht', 'leichtRunter', 'runter'];
+    const armProp = this.props.arm;
+    if (ARMS.indexOf(armProp) >= 0) {
+      p.arm = armProp;
+      p.body = z;
+      p.armR = 'translate(0 ' + (this.props.armDy ?? 0) + ')';
+    }
+    // NEU: Blickrichtung. back = bisherige Rückenansicht (alle Posen), right/left = Seitenansicht beim Laufen,
+    // front = zum Publikum (stand, waveA, waveB). left ist die gespiegelte right-Ansicht.
+    const view = ['back', 'right', 'left', 'front'].indexOf(this.props.view) >= 0 ? this.props.view : 'back';
+    const side = view === 'right' || view === 'left';
+    const sidePose = (pose === 'walkA' || pose === 'walkB') ? pose : 'stand';
+    const rawPose = this.props.pose;
+    const wave = view === 'front' && (rawPose === 'waveA' || rawPose === 'waveB') ? rawPose : null;
+    // NEU: linker Arm (Rückenansicht) für den Drucker, holding = Druckteil in der Hand (greifen hinten, tragen seitlich)
+    const armLeft = ['down', 'greifen', 'druecken'].indexOf(this.props.armLeft) >= 0 ? this.props.armLeft : 'down';
+    const holding = ['bulb', 'cube', 'rocket', 'heart', 'cup'].indexOf(this.props.holding) >= 0 ? this.props.holding : 'none';
+    // NEU Kaffee: cupLow = Tasse vor der Brust, cupDrink = Tasse am Mund (nur view front)
+    const cupPose = view === 'front' && (rawPose === 'cupLow' || rawPose === 'cupDrink') ? rawPose : null;
+    let face = this.props.face ?? 'auto';
+    if (face === 'auto') face = wave ? 'grin' : cupPose === 'cupDrink' ? 'blink' : 'smile';
+    const blindsPose = pose === 'grab' || pose === 'pullA' || pose === 'pullB';
+    const showMarker = !blindsPose && (this.props.marker ?? true);
+    return Object.assign({}, p, {
+      armDown: p.arm === 'down', armUp: p.arm === 'up', armDiag: p.arm === 'diag',
+      armSteil: p.arm === 'steil', armFlach: p.arm === 'flach', armWaagrecht: p.arm === 'waagrecht',
+      armLeicht: p.arm === 'leichtRunter', armRunter: p.arm === 'runter',
+      showMarker: showMarker,
+      viewBack: view === 'back', viewSide: side, viewFront: view === 'front',
+      sideFlip: view === 'left' ? 'translate(44 0) scale(-1 1)' : 'translate(0 0)',
+      sideBody: sidePose === 'walkB' ? 'translate(0 -1)' : 'translate(0 0)',
+      sideStand: sidePose === 'stand', sideA: sidePose === 'walkA', sideB: sidePose === 'walkB',
+      sideArmCarry: holding !== 'none', sideArmBack: holding === 'none' && sidePose === 'walkA', sideArmDown: holding === 'none' && sidePose !== 'walkA',
+      armLDown: armLeft === 'down', armLGreifen: armLeft === 'greifen', armLDruecken: armLeft === 'druecken',
+      holdBulb: holding === 'bulb', holdCube: holding === 'cube', holdRocket: holding === 'rocket', holdHeart: holding === 'heart', holdCup: holding === 'cup',
+      sideMarker: this.props.marker ?? true,
+      frontArmDown: !wave && !cupPose, frontCupLow: cupPose === 'cupLow', frontCupDrink: cupPose === 'cupDrink', frontWaveA: wave === 'waveA', frontWaveB: wave === 'waveB',
+      eyesOpen: face !== 'blink' && face !== 'grin', eyesClosed: face === 'blink' || face === 'grin',
+      mouthNeutral: face === 'neutral', mouthSmile: face === 'smile' || face === 'blink', mouthGrin: face === 'grin',
+      blush: face === 'smile' || face === 'grin' || face === 'blink'
+    });
+  }
+}
+</script>
+</body>
+</html>

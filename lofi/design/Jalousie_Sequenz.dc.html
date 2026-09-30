@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Jalousie-Sequenz</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 2390px; height: 780px; box-sizing: border-box; padding: 40px; background: #2A1A18; font-family: 'Pixelify Sans', monospace; color: #EDE0C8; display: flex; flex-direction: column; gap: 28px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="font-size: 30px; font-weight: 700">Jalousie öffnen · Frame für Frame (Ausschnitt links, 50 %)</div>
+<div style="font-size: 18px; color: #C8B89A">Person steht hinter dem Tisch an der Schnur (left 462). Zyklus grab → pullA → pullB je 150 ms, pro Zyklus fährt die Jalousie ca. 20 % hoch. Schließen: gleiche Frames rückwärts.</div>
+</div>
+<div style="display: flex; gap: 30px">
+<sc-for list="{{frames}}" as="f" hint-placeholder-count="6">
+<div style="width: 360px; display: flex; flex-direction: column; gap: 12px">
+<div style="width: 360px; height: 540px; overflow: hidden; position: relative; border: 3px solid #5E3320; box-sizing: border-box">
+<div style="position: absolute; left: 0px; top: 0px; width: 1920px; height: 1080px; transform: scale(0.5); transform-origin: 0px 0px">
+<div style="position: absolute; left: 0px; top: 0px"><dc-import name="Room_Back" weather="sonnig" blinds="{{f.blinds}}" hint-size="1920px,1080px"></dc-import></div>
+<div style="position: absolute; left: 462px; top: 378px"><dc-import name="Person" pose="{{f.pose}}" hint-size="264px,600px"></dc-import></div>
+<div style="position: absolute; left: 0px; top: 0px"><dc-import name="Room_Front" weather="sonnig" blinds="{{f.blinds}}" hint-size="1920px,1080px"></dc-import></div>
+</div>
+</div>
+<div style="font-size: 20px; font-weight: 700">{{f.label}}</div>
+<div style="font-size: 16px; color: #C8B89A">{{f.info}}</div>
+</div>
+</sc-for>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":2390,"height":780}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      frames: [
+        { label: '1 · grab', pose: 'grab', blinds: 100, info: 'Jalousie 100 %, Hand an der Schnur' },
+        { label: '2 · pullA', pose: 'pullA', blinds: 90, info: 'Schnur 8 px runter' },
+        { label: '3 · pullB', pose: 'pullB', blinds: 80, info: 'Schnur ganz unten' },
+        { label: '4 · grab', pose: 'grab', blinds: 80, info: 'nachgreifen' },
+        { label: '5 · pullB', pose: 'pullB', blinds: 40, info: 'nach 2 weiteren Zyklen' },
+        { label: '6 · stand', pose: 'stand', blinds: 0, info: 'offen, dann rauslaufen' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

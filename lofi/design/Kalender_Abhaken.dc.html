@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Kalender abhaken – alle Zeilen</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&amp;family=Pixelify+Sans:wght@400;700&amp;family=Press+Start+2P&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1772px; height: 3860px; box-sizing: border-box; padding: 40px; background: #2A1A18; font-family: 'Pixelify Sans', monospace; color: #EDE0C8; display: flex; flex-direction: column; gap: 28px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<div style="font-size: 32px; font-weight: 700">Kalender abhaken · alle 8 Zeilen · Stiftspitze auf der Linie</div>
+<div style="font-size: 18px; color: #C8B89A">Ausschnitt der Gesamtszene x 186–320 / y 0–168 (Szenenpixel), 50 %. Je Zeile: Linienanfang (2 px gezogen) und Linienende (62 px). Person in Ebene „ganzVorne“. Werte in CSS-px der 1920×1080-Bühne.</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px">
+<sc-for list="{{frames}}" as="f" hint-placeholder-count="16">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<div style="width: 402px; height: 504px; position: relative; overflow: hidden; border: 3px solid #5E3320; box-sizing: content-box">
+<div style="position: absolute; left: 0px; top: 0px; width: 804px; height: 1008px; transform: scale(0.5); transform-origin: 0px 0px">
+<div style="position: absolute; left: -1116px; top: 0px; width: 1920px; height: 1080px">
+<div style="position: absolute; left: 0px; top: 0px"><dc-import name="Room_Back" weather="sonnig" blinds="{{ 40 }}" hint-size="1920px,1080px"></dc-import></div>
+<div style="position: absolute; left: 1476px; top: 36px"><dc-import name="Calendar" struck="{{f.row}}" draw-row="{{f.row}}" draw-len="{{f.n}}" hint-size="432px,660px"></dc-import></div>
+<div style="position: absolute; left: 0px; top: 0px"><dc-import name="Room_Front" weather="sonnig" blinds="{{ 40 }}" hint-size="1920px,1080px"></dc-import></div>
+<div style="position: absolute; left: 828px; top: 360px"><dc-import name="Computer" state="laeuft" hint-size="528px,384px"></dc-import></div>
+<div style="position: absolute; left: {{f.leftPx}}px; top: {{f.topPx}}px"><dc-import name="Person" pose="stand" arm="{{f.arm}}" arm-dy="{{f.armDy}}" hint-size="264px,600px"></dc-import></div>
+</div>
+</div>
+</div>
+<div style="font-size: 18px; font-weight: 700">{{f.title}}</div>
+<div style="font-size: 15px; color: #C8B89A">{{f.info}}</div>
+</div>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px; margin-top: 12px">
+<div style="font-size: 32px; font-weight: 700">Auf die Bank steigen und wieder herunter</div>
+<div style="font-size: 18px; color: #C8B89A">Je Frame 150 ms, nur ganze Pixel. Hoch: 1 → 4, runter: 4 → 7. Person left 1284 px (Startposition Zeile 0), Arm down mit Stift.</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px">
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="7">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<div style="width: 402px; height: 504px; position: relative; overflow: hidden; border: 3px solid #5E3320; box-sizing: content-box">
+<div style="position: absolute; left: 0px; top: 0px; width: 804px; height: 1008px; transform: scale(0.5); transform-origin: 0px 0px">
+<div style="position: absolute; left: -1116px; top: 0px; width: 1920px; height: 1080px">
+<div style="position: absolute; left: 0px; top: 0px"><dc-import name="Room_Back" weather="sonnig" blinds="{{ 40 }}" hint-size="1920px,1080px"></dc-import></div>
+<div style="position: absolute; left: 1476px; top: 36px"><dc-import name="Calendar" struck="{{ 0 }}" hint-size="432px,660px"></dc-import></div>
+<div style="position: absolute; left: 0px; top: 0px"><dc-import name="Room_Front" weather="sonnig" blinds="{{ 40 }}" hint-size="1920px,1080px"></dc-import></div>
+<div style="position: absolute; left: 828px; top: 360px"><dc-import name="Computer" state="laeuft" hint-size="528px,384px"></dc-import></div>
+<div style="position: absolute; left: 1284px; top: {{s.topPx}}px"><dc-import name="Person" pose="{{s.pose}}" hint-size="264px,600px"></dc-import></div>
+</div>
+</div>
+</div>
+<div style="font-size: 18px; font-weight: 700">{{s.title}}</div>
+<div style="font-size: 15px; color: #C8B89A">{{s.info}}</div>
+</div>
+</sc-for>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1772,"height":3860}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // Je Zeile: Standfläche, Armvariante, Spitze (rechtestes Pixel tipX, oberes Pixel tipTop) in Sprite-Koordinaten
+    const R = [
+      { bench: true,  arm: 'up',           tipX: 38, tipTop: -8 },
+      { bench: true,  arm: 'steil',        tipX: 46, tipTop: 2 },
+      { bench: false, arm: 'up',           tipX: 38, tipTop: -8 },
+      { bench: false, arm: 'diag',         tipX: 58, tipTop: 5 },
+      { bench: false, arm: 'flach',        tipX: 53, tipTop: 14 },
+      { bench: false, arm: 'waagrecht',    tipX: 56, tipTop: 24 },
+      { bench: false, arm: 'leichtRunter', tipX: 54, tipTop: 34 },
+      { bench: false, arm: 'runter',       tipX: 54, tipTop: 44 }
+    ];
+    // Strichlinie: lokal x 2–63 (Szene-x 251–312). Stufen: lokal 2–15 y5, 16–35 y4, 36–51 y5, 52–63 y4
+    const segY = function (local) { return (local < 16 || (local >= 36 && local < 52)) ? 5 : 4; };
+    const frames = [];
+    R.forEach(function (r, i) {
+      [2, 62].forEach(function (n) {
+        const xEnd = 250 + n;               // Szene-x des letzten gezogenen Pixels
+        const local = xEnd - 249;
+        const lineTop = 32 + 10 * i + segY(local);
+        const top = r.bench ? 45 : 63;
+        const left = xEnd - r.tipX;
+        const armDy = lineTop - (top + r.tipTop);
+        frames.push({
+          row: i, n: n, arm: r.arm, armDy: armDy,
+          leftPx: left * 6, topPx: top * 6,
+          title: 'Zeile ' + i + ' · ' + (n === 2 ? 'Linienanfang' : 'Linienende'),
+          info: (r.bench ? 'Bank' : 'Boden') + ' · Arm ' + r.arm + ' · armDy ' + armDy + ' · left ' + (left * 6) + ' · top ' + (top * 6)
+        });
+      });
+    });
+    const steps = [
+      { pose: 'stand', top: 63, title: '1 · stand', info: 'Boden · top 378' },
+      { pose: 'stepA', top: 63, title: '2 · stepA', info: 'Bein hoch · top 378' },
+      { pose: 'stepB', top: 54, title: '3 · stepB', info: 'Gewicht hoch · top 324' },
+      { pose: 'stand', top: 45, title: '4 · stand', info: 'auf der Bank · top 270' },
+      { pose: 'stepB', top: 54, title: '5 · stepB', info: 'runter · top 324' },
+      { pose: 'stepA', top: 63, title: '6 · stepA', info: 'runter · top 378' },
+      { pose: 'stand', top: 63, title: '7 · stand', info: 'Boden · top 378' }
+    ].map(function (s) { return Object.assign({}, s, { topPx: s.top * 6 }); });
+    return { frames: frames, steps: steps };
+  }
+}
+</script>
+</body>
+</html>

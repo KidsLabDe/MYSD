@@ -1,0 +1,18 @@
+{
+  "title": "Hackday",
+  "date": "",
+  "poster": "papier",
+  "location": {
+    "name": "Augsburg",
+    "latitude": 48.3705,
+    "longitude": 10.8978
+  },
+  "phases": [
+    { "name": "Arbeitsphase",         "start": "09:00", "end": "10:30", "blinds": 0 },
+    { "name": "Zwischenpräsentation", "start": "10:30", "end": "11:00", "blinds": 100 },
+    { "name": "Arbeitsphase",         "start": "11:00", "end": "12:30", "blinds": 0 },
+    { "name": "Mittagspause",         "start": "12:30", "end": "13:15", "blinds": 50, "type": "pause" },
+    { "name": "Arbeitsphase",         "start": "13:15", "end": "14:45", "blinds": 0 },
+    { "name": "Zwischenpräsentation", "start": "14:45", "end": "15:30", "blinds": 100 }
+  ]
+}

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><title>Referenz</title>
+<style>body{margin:0;background:#4A2E2B}</style></head>
+<body>
+<div id="out"></div>
+<script type="module">
+import '../src/fonts.css';
+import { renderDc, logic, opts } from './dcref.js';
+const q = new URLSearchParams(location.search);
+if (q.get('overlay') === '0') opts.overlay = false;
+let el;
+if (q.get('name') === 'AbhakenFrame') {
+  // Frame der Tafel Kalender_Abhaken (Werte aus deren renderVals), 1:1 statt 50 %, gleiche Ebenenfolge wie auf der Tafel
+  const v = await logic('Kalender_Abhaken');
+  const kind = q.get('kind') || 'frame', i = Number(q.get('i') || 0);
+  const f = kind === 'frame' ? v.frames[i] : v.steps[i];
+  el = document.createElement('div');
+  el.style.cssText = 'position: relative; width: 1920px; height: 1080px; overflow: hidden; background: #4A2E2B';
+  const add = async (left, top, name, props) => { const d = document.createElement('div'); d.style.cssText = `position: absolute; left: ${left}px; top: ${top}px`; d.appendChild(await renderDc(name, props)); el.appendChild(d); };
+  await add(0, 0, 'Room_Back', { weather: 'sonnig', blinds: 40 });
+  await add(1476, 36, 'Calendar', kind === 'frame' ? { struck: f.row, drawRow: f.row, drawLen: f.n } : { struck: 0 });
+  await add(0, 0, 'Room_Front', { weather: 'sonnig', blinds: 40 });
+  await add(828, 360, 'Computer', { state: 'laeuft' });
+  await add(kind === 'frame' ? f.leftPx : 1284, f.topPx, 'Person', kind === 'frame' ? { pose: 'stand', arm: f.arm, armDy: f.armDy } : { pose: f.pose });
+  document.body.dataset.frame = JSON.stringify(f);
+} else if (q.get('name') === 'BoardFrame') {
+  // Einzelbild einer Tafel (Drucker_Zyklus, Kaffee_Pause) 1:1 in voller Szene, Ebenenfolge wie auf der Tafel
+  const board = q.get('board'), i = Number(q.get('i') || 0);
+  const f = (await logic(board)).frames[i];
+  el = document.createElement('div');
+  el.style.cssText = 'position: relative; width: 1920px; height: 1080px; overflow: hidden; background: #4A2E2B';
+  const add = async (left, top, name, props) => { const d = document.createElement('div'); d.style.cssText = `position: absolute; left: ${left}px; top: ${top}px`; d.appendChild(await renderDc(name, props)); el.appendChild(d); };
+  await add(0, 0, 'Room_Back', { weather: 'sonnig', blinds: 40 });
+  if (board === 'Drucker_Zyklus') {
+    await add(0, 0, 'Room_Front', { weather: 'sonnig', blinds: 40, smallPlant: false });
+    await add(348, 432, 'Printer3D', { variant: 'open', state: f.state, layer: f.layer, headX: f.hx, obj: f.obj });
+    if (f.person) await add(f.px, 378, 'Person', { view: f.view, pose: f.pose, armLeft: f.armLeft, holding: f.holding, marker: false });
+  } else {
+    await add(0, 0, 'Room_Front', { weather: 'sonnig', blinds: 40, smallPlant: false, cup: f.cup });
+    await add(348, 432, 'Printer3D', { variant: 'open', state: 'printing', layer: 4, obj: 'bulb' });
+    await add(828, 360, 'Computer', { state: 'laeuft' });
+    await add(f.px, 378, 'Person', { view: f.view, pose: f.pose, armLeft: f.armLeft, holding: f.holding, face: f.face, marker: false });
+  }
+  document.body.dataset.frame = JSON.stringify(f);
+} else if (q.get('name') === 'Sprite') {
+  // Einzelne Person (Tafel Person_Ansichten): Referenz oder Code (mine=1)
+  const props = JSON.parse(q.get('props') || '{}');
+  el = document.createElement('div');
+  el.style.cssText = 'position: relative; width: 400px; height: 720px; background: #4A2E2B';
+  const d = document.createElement('div'); d.style.cssText = 'position: absolute; left: 60px; top: 60px';
+  if (q.get('mine') === '1') { const { personHtml } = await import('../src/components/person.ts'); d.innerHTML = personHtml({ marker: true, ...props }); }
+  else d.appendChild(await renderDc('Person', props));
+  el.appendChild(d);
+} else if (q.get('name') === 'ArcadeScreen') {
+  // Bildschirm aus Arcade.dc.html (Beispielzustand), 1152×792 oben links
+  const inner = await renderDc('Arcade', { screen: q.get('screen') || 'title' });
+  el = document.createElement('div');
+  el.style.cssText = 'position: relative; width: 1920px; height: 1080px; background: #000';
+  inner.style.position = 'absolute'; inner.style.left = '384px'; inner.style.top = '144px';
+  el.appendChild(inner);
+} else if (q.get('name') === 'ArcadeFrame') {
+  // Zoom-Endbild aus Arcade_Ablauf: Monitor-Rahmen 1248×888 bei 336/96 mit Titelbild
+  el = document.createElement('div');
+  el.style.cssText = 'position: relative; width: 1920px; height: 1080px; background: #000';
+  const f = document.createElement('div');
+  f.style.cssText = 'position: absolute; left: 336px; top: 96px; width: 1248px; height: 888px';
+  f.innerHTML = '<div style="width: 1248px; height: 888px; box-sizing: border-box; background: #D8CBB0; border-bottom: 18px solid #B9AA8C; padding: 36px 36px 42px; box-shadow: 0 24px 0 rgba(26,15,13,0.45)"><div style="width: 1176px; height: 792px; box-sizing: border-box; border: 12px solid #2A2622; overflow: hidden; position: relative"><div id="in" style="position: absolute; left: 0px; top: 0px; width: 1152px; height: 792px"></div></div></div>';
+  f.querySelector('#in').appendChild(await renderDc('Arcade', { screen: q.get('screen') || 'title' }));
+  el.appendChild(f);
+} else el = await renderDc(q.get('name') || 'Main', JSON.parse(q.get('props') || '{}'));
+document.getElementById('out').appendChild(el);
+// Bewusste Abweichung: Computer bleibt im Code bei 828/360 (Design-Update: 736/348)
+if (q.get('pcfix') !== '0') for (const d of el.querySelectorAll('div')) if (d.style.left === '736px' && d.style.top === '348px') { d.style.left = '828px'; d.style.top = '360px'; }
+await Promise.all([...document.images].map((i) => i.complete ? null : new Promise((r) => { i.onload = i.onerror = r; })));
+await document.fonts.ready;
+document.body.dataset.ready = '1';
+</script>
+</body></html>

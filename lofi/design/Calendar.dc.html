@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Wandkalender mit Phasen, Pixel</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&amp;family=Press+Start+2P&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 432px; height: 660px; position: relative; font-family: 'Pixelify Sans', monospace; color: #2A1A18">
+<svg width="432" height="660" viewBox="0 0 72 110" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" style="position: absolute; left: 0px; top: 0px; display: block">
+<g fill="#8A4E30">
+<rect x="31" y="3" width="4" height="1"></rect><rect x="27" y="4" width="4" height="1"></rect><rect x="23" y="5" width="4" height="1"></rect><rect x="19" y="6" width="4" height="1"></rect><rect x="15" y="7" width="4" height="1"></rect><rect x="11" y="8" width="4" height="1"></rect><rect x="8" y="9" width="3" height="1"></rect>
+<rect x="37" y="3" width="4" height="1"></rect><rect x="41" y="4" width="4" height="1"></rect><rect x="45" y="5" width="4" height="1"></rect><rect x="49" y="6" width="4" height="1"></rect><rect x="53" y="7" width="4" height="1"></rect><rect x="57" y="8" width="4" height="1"></rect><rect x="61" y="9" width="3" height="1"></rect>
+</g>
+<rect x="35" y="1" width="2" height="2" fill="#2A1A18"></rect>
+<rect x="5" y="12" width="66" height="98" fill="#1A0F0D" opacity="0.4"></rect>
+<rect x="3" y="10" width="66" height="98" fill="#EDE0C8"></rect>
+<rect x="3" y="10" width="66" height="14" fill="#C4493A"></rect>
+<rect x="3" y="24" width="66" height="1" fill="#9E3A2E"></rect>
+<g fill="#2A1A18">
+<rect x="10" y="9" width="2" height="3"></rect><rect x="20" y="9" width="2" height="3"></rect><rect x="30" y="9" width="2" height="3"></rect><rect x="40" y="9" width="2" height="3"></rect><rect x="50" y="9" width="2" height="3"></rect><rect x="60" y="9" width="2" height="3"></rect>
+</g>
+<g fill="#D6C6A6">
+<rect x="68" y="102" width="1" height="6"></rect><rect x="67" y="103" width="1" height="5"></rect><rect x="66" y="104" width="1" height="4"></rect><rect x="65" y="105" width="1" height="3"></rect><rect x="64" y="106" width="1" height="2"></rect><rect x="63" y="107" width="1" height="1"></rect>
+</g>
+</svg>
+<div style="position: absolute; left: 18px; top: 60px; width: 396px; height: 84px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: #EDE0C8">
+<div style="font-family: 'Press Start 2P', monospace; font-size: 24px; line-height: 1">HACKDAY</div>
+<div style="font-size: 16px; letter-spacing: 1px">[DATUM] · [ORT]</div>
+</div>
+<div style="position: absolute; left: 18px; top: 156px; width: 396px; display: flex; flex-direction: column">
+<sc-for list="{{rows}}" as="row" hint-placeholder-count="8">
+<div data-row="{{row.idx}}" style="position: relative; height: 60px; box-sizing: border-box; padding: 0px 18px; display: flex; align-items: center; gap: 12px; border-bottom: 3px dashed #D6C6A6; background: {{row.bg}}">
+<div style="width: 56px; font-size: 18px; color: #8A6A55; opacity: {{row.op}}">{{row.time}}</div>
+<div style="flex-grow: 1; font-size: 23px; line-height: 1; white-space: nowrap; opacity: {{row.op}}">{{row.name}}</div>
+<sc-if value="{{row.done}}" hint-placeholder-val="{{ false }}">
+<svg width="24" height="18" viewBox="0 0 8 6" shape-rendering="crispEdges" style="display: block"><g fill="#4F7A3E"><rect x="0" y="3" width="1" height="1"></rect><rect x="1" y="4" width="1" height="1"></rect><rect x="2" y="5" width="1" height="1"></rect><rect x="3" y="4" width="1" height="1"></rect><rect x="4" y="3" width="1" height="1"></rect><rect x="5" y="2" width="1" height="1"></rect><rect x="6" y="1" width="1" height="1"></rect><rect x="7" y="0" width="1" height="1"></rect></g></svg>
+</sc-if>
+<sc-if value="{{row.now}}" hint-placeholder-val="{{ false }}">
+<div style="background: #C4493A; color: #EDE0C8; font-size: 16px; padding: 3px 8px; white-space: nowrap">JETZT</div>
+</sc-if>
+<sc-if value="{{row.done}}" hint-placeholder-val="{{ false }}">
+<svg class="strike" width="396" height="60" viewBox="0 0 66 10" shape-rendering="crispEdges" style="position: absolute; left: 0px; top: 0px; pointer-events: none"><g fill="#C4493A"><rect x="2" y="5" width="14" height="2"></rect><rect x="16" y="4" width="20" height="2"></rect><rect x="36" y="5" width="16" height="2"></rect><rect x="52" y="4" width="12" height="2"></rect></g></svg>
+</sc-if>
+<sc-if value="{{row.drawing}}" hint-placeholder-val="{{ false }}">
+<div class="strike-draw" style="position: absolute; left: 0px; top: 0px; width: {{row.clipW}}px; height: 60px; overflow: hidden; pointer-events: none"><svg width="396" height="60" viewBox="0 0 66 10" shape-rendering="crispEdges" style="display: block"><g fill="#C4493A"><rect x="2" y="5" width="14" height="2"></rect><rect x="16" y="4" width="20" height="2"></rect><rect x="36" y="5" width="16" height="2"></rect><rect x="52" y="4" width="12" height="2"></rect></g></svg></div>
+</sc-if>
+</div>
+</sc-for>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"struck":{"editor":"int","default":3,"min":0,"max":8},"drawRow":{"editor":"int","default":-1,"min":-1,"max":7},"drawLen":{"editor":"int","default":0,"min":0,"max":62},"$preview":{"width":432,"height":660}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const P = [
+      ['09:00', 'Check-in & Frühstück'],
+      ['09:30', 'Kick-off'],
+      ['10:00', 'Teams & Ideen'],
+      ['10:45', 'Hacking I'],
+      ['12:30', 'Mittagessen'],
+      ['13:15', 'Hacking II'],
+      ['15:30', 'Pitches'],
+      ['16:30', 'Abschluss']
+    ];
+    const struck = Math.max(0, Math.min(8, this.props.struck ?? 3));
+    // NEU: teilweise gezogener Strich während der Abhak-Animation.
+    // drawRow = Zeile, drawLen = sichtbare Pixel ab lokal x 2 (Szene-x 251), 1–62 → Linienende Szene-x 251 + drawLen − 1
+    const drawRow = this.props.drawRow ?? -1;
+    const drawLen = Math.max(0, Math.min(62, this.props.drawLen ?? 0));
+    const rows = P.map(function (p, i) {
+      return {
+        idx: i,
+        time: p[0],
+        name: p[1],
+        done: i < struck,
+        now: i === struck,
+        op: i < struck ? '0.45' : '1',
+        bg: i === struck ? 'rgba(224,169,74,0.32)' : 'rgba(0,0,0,0)',
+        drawing: i === drawRow && i >= struck,
+        clipW: (2 + drawLen) * 6
+      };
+    });
+    return { rows: rows };
+  }
+}
+</script>
+</body>
+</html>

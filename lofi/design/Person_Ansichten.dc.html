@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Person – Blickrichtungen und Winken</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&amp;family=Space+Mono:wght@400;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 3060px; height: 1380px; box-sizing: border-box; padding: 40px 60px; background: #4A2E2B; font-family: 'Pixelify Sans', monospace; color: #EDE0C8; display: flex; flex-direction: column; gap: 60px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<div style="font-size: 30px; font-weight: 700">Person · Blickrichtungen (Prop view) und Winken</div>
+<div style="font-size: 18px; color: #C8B89A">view = back | right | left | front. left ist die gespiegelte right-Ansicht (translate(44 0) scale(-1 1), ganzzahlig). Gesicht über Prop face = auto | neutral | smile | grin | blink.</div>
+</div>
+<div style="display: flex; gap: 70px; align-items: flex-end">
+<sc-for list="{{cells}}" as="c" hint-placeholder-count="9">
+<div style="width: 264px; display: flex; flex-direction: column; gap: 18px">
+<dc-import name="Person" view="{{c.view}}" pose="{{c.pose}}" face="{{c.face}}" hint-size="264px,600px"></dc-import>
+<div style="font-size: 20px; font-weight: 700; text-align: center">{{c.label}}</div>
+</div>
+</sc-for>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; font-family: 'Space Mono', monospace; font-size: 17px; line-height: 1.6">
+<div style="display: flex; flex-direction: column; gap: 8px"><div style="font-family: 'Pixelify Sans', monospace; font-size: 24px; font-weight: 700">Laufen</div><div style="white-space: pre-line">{{walkText}}</div></div>
+<div style="display: flex; flex-direction: column; gap: 8px"><div style="font-family: 'Pixelify Sans', monospace; font-size: 24px; font-weight: 700">Drehen</div><div style="white-space: pre-line">{{turnText}}</div></div>
+<div style="display: flex; flex-direction: column; gap: 8px"><div style="font-family: 'Pixelify Sans', monospace; font-size: 24px; font-weight: 700">Zufällig winken</div><div style="white-space: pre-line">{{waveText}}</div></div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":3060,"height":1380}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      cells: [
+        { view: 'left', pose: 'walkA', face: 'auto', label: 'left · walkA' },
+        { view: 'left', pose: 'walkB', face: 'auto', label: 'left · walkB' },
+        { view: 'left', pose: 'stand', face: 'auto', label: 'left · stand' },
+        { view: 'right', pose: 'walkA', face: 'auto', label: 'right · walkA' },
+        { view: 'right', pose: 'stand', face: 'auto', label: 'right · stand' },
+        { view: 'front', pose: 'stand', face: 'smile', label: 'front · smile' },
+        { view: 'front', pose: 'waveA', face: 'grin', label: 'front · waveA' },
+        { view: 'front', pose: 'waveB', face: 'grin', label: 'front · waveB' },
+        { view: 'front', pose: 'stand', face: 'blink', label: 'front · blink' }
+      ],
+      walkText: 'Nach links (von rechts rein): view left, walkA/walkB alle 180 ms, 6 px pro Schritt.\nNach rechts (raus): view right, gleiche Frames.\nBody wippt bei walkB 1 px (wie hinten).\nStift in der Hand bleibt sichtbar (marker), beim Jalousie-Gang aus.',
+      turnText: 'Seite → Rücken: stand in Laufrichtung (120 ms), dann view back.\nRücken → Seite: view back (stand) → Seite stand (120 ms) → walkA.\nRücken → Publikum: back → Seite stand (120 ms) → front smile.\nIn Pixel-Art genügt ein Zwischenbild, eine 3/4-Ansicht ist nicht nötig.',
+      waveText: 'Nur wenn die Warteschlange leer ist und die nächste Phase frühestens in 60 s endet.\nZufallsabstand 90–180 s (Test: ?wave=10).\n1. von rechts rein bis left 1500 (Ebene ganzVorne)\n2. drehen zum Publikum, smile 400 ms\n3. waveA/waveB im Wechsel je 250 ms, 3 × (grin)\n4. blink 150 ms, smile 600 ms\n5. drehen nach rechts, rauslaufen.\nBricht eine Phase ab: Winken sofort beenden, Abhaken hat Vorrang.'
+    };
+  }
+}
+</script>
+</body>
+</html>

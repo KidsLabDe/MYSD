@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Hackday Dashboard – Gesamtszene</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&amp;family=Pixelify+Sans:wght@400;700&amp;family=Press+Start+2P&amp;display=swap">
+<style>
+body{margin:0;background:#4A2E2B}
+</style>
+</helmet>
+<div style="width: 1920px; height: 1080px; position: relative; overflow: hidden; background: #4A2E2B; font-family: 'Pixelify Sans', monospace; color: #2A1A18">
+<div style="position: absolute; left: 0px; top: 0px">
+<dc-import name="Room_Back" weather="{{weather}}" blinds="{{blinds}}" poster="{{poster}}" hint-size="1920px,1080px"></dc-import>
+</div>
+<div style="position: absolute; left: 1476px; top: 36px">
+<dc-import name="Calendar" struck="{{struck}}" hint-size="432px,660px"></dc-import>
+</div>
+<sc-if value="{{personBehind}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; top: {{personTop}}px; left: {{personX}}px">
+<dc-import name="Person" pose="{{pose}}" view="{{view}}" face="{{face}}" marker="{{marker}}" arm="{{arm}}" arm-dy="{{armDy}}" arm-left="{{armLeft}}" holding="{{holding}}" hint-size="264px,600px"></dc-import>
+</div>
+</sc-if>
+<div style="position: absolute; left: 0px; top: 0px">
+<dc-import name="Room_Front" weather="{{weather}}" blinds="{{blinds}}" small-plant="{{ false }}" cup="{{cupOnDesk}}" hint-size="1920px,1080px"></dc-import>
+</div>
+<!-- 3D-Drucker: Variante 3 mit offenem Rahmen – unter dem Fenster statt der kleinen Pflanze. x 58–103, Unterkante auf der Tischplatte. -->
+<div style="position: absolute; left: 348px; top: 432px">
+<dc-import name="Printer3D" variant="open" state="{{printState}}" layer="{{printLayer}}" head-x="{{printHeadX}}" obj="{{printObj}}" hint-size="276px,276px"></dc-import>
+</div>
+<sc-if value="{{personFront}}" hint-placeholder-val="{{ true }}">
+<div style="position: absolute; top: {{personTop}}px; left: {{personX}}px">
+<dc-import name="Person" pose="{{pose}}" view="{{view}}" face="{{face}}" marker="{{marker}}" arm="{{arm}}" arm-dy="{{armDy}}" arm-left="{{armLeft}}" holding="{{holding}}" hint-size="264px,600px"></dc-import>
+</div>
+</sc-if>
+<sc-if value="{{isNight}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; left: 0px; top: 0px; width: 1920px; height: 1080px; background: rgba(12,16,34,0.45); pointer-events: none"></div>
+</sc-if>
+<div style="position: absolute; left: 828px; top: 360px">
+<dc-import name="Computer" state="{{state}}" hint-size="528px,384px"></dc-import>
+</div>
+<!-- NEU: Person ganz vorne (vor Tisch UND Computer) – beim Abhaken am Kalender und beim Jalousie-Gang. Nachts per Filter abgedunkelt, da über dem Nacht-Overlay. -->
+<sc-if value="{{personTopmost}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; top: {{personTop}}px; left: {{personX}}px; filter: {{nightFilter}}">
+<dc-import name="Person" pose="{{pose}}" view="{{view}}" face="{{face}}" marker="{{marker}}" arm="{{arm}}" arm-dy="{{armDy}}" arm-left="{{armLeft}}" holding="{{holding}}" hint-size="264px,600px"></dc-import>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"struck":{"editor":"int","default":3,"min":0,"max":8,"section":"Zustand"},"state":{"editor":"enum","default":"laeuft","options":["laeuft","endspurt","pause","ende"],"section":"Zustand"},"weather":{"editor":"enum","default":"sonnig","options":["sonnig","bewoelkt","regen","schnee","gewitter","nacht"],"section":"Fenster"},"blinds":{"editor":"range","default":40,"min":0,"max":100,"step":10,"unit":"%","section":"Fenster"},"poster":{"editor":"enum","default":"papier","options":["papier","gerahmt","banner","duoton"],"section":"Wand"},"printState":{"editor":"enum","default":"printing","options":["printing","done","empty"],"section":"Drucker"},"printLayer":{"editor":"int","default":5,"min":0,"max":8,"section":"Drucker"},"printHeadX":{"editor":"int","default":0,"min":-4,"max":4,"section":"Drucker"},"printObj":{"editor":"enum","default":"bulb","options":["bulb","cube","rocket","heart"],"section":"Drucker"},"showPerson":{"editor":"boolean","default":true,"section":"Person"},"pose":{"editor":"enum","default":"reach","options":["stand","walkA","walkB","reach","strike","grab","pullA","pullB","stepA","stepB","waveA","waveB","cupLow","cupDrink"],"section":"Person"},"view":{"editor":"enum","default":"back","options":["back","right","left","front"],"section":"Person"},"face":{"editor":"enum","default":"auto","options":["auto","neutral","smile","grin","blink"],"section":"Person"},"armLeft":{"editor":"enum","default":"down","options":["down","greifen","druecken"],"section":"Person"},"holding":{"editor":"enum","default":"none","options":["none","bulb","cube","rocket","heart","cup"],"section":"Person"},"cupOnDesk":{"editor":"boolean","default":true,"section":"Person"},"marker":{"editor":"boolean","default":true,"section":"Person"},"arm":{"editor":"enum","default":"auto","options":["auto","down","up","diag","steil","flach","waagrecht","leichtRunter","runter"],"section":"Person"},"armDy":{"editor":"int","default":0,"min":-4,"max":4,"section":"Person"},"standOn":{"editor":"enum","default":"boden","options":["boden","stufe","bank"],"section":"Person"},"layer":{"editor":"enum","default":"auto","options":["auto","hinten","vorne","ganzVorne"],"section":"Person"},"personX":{"editor":"range","default":1392,"min":0,"max":1968,"step":6,"unit":"px","section":"Person"},"$preview":{"width":1920,"height":1080}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const weather = this.props.weather ?? 'sonnig';
+    const show = this.props.showPerson ?? true;
+    const personX = this.props.personX ?? 1392;
+    // NEU: Ebene der Person. auto = bisherige Regel (ab left 1392 vor dem Tisch).
+    // ganzVorne = vor Tisch und Computer (Abhaken am Kalender, Jalousie-Gang).
+    const layer = this.props.layer ?? 'auto';
+    const front = layer === 'vorne' || (layer === 'auto' && personX >= 1392);
+    const topmost = layer === 'ganzVorne';
+    // NEU: Standhöhe. boden = top 63, stufe = top 54 (stepB), bank = top 45 (Szenenpixel × 6)
+    const TOP = { boden: 378, stufe: 324, bank: 270 };
+    const personTop = TOP[this.props.standOn] || 378;
+    return {
+      arm: this.props.arm ?? 'auto',
+      view: this.props.view ?? 'back',
+      face: this.props.face ?? 'auto',
+      armLeft: this.props.armLeft ?? 'down',
+      holding: this.props.holding ?? 'none',
+      cupOnDesk: this.props.cupOnDesk ?? true,
+      poster: this.props.poster ?? 'papier',
+      printState: this.props.printState ?? 'printing',
+      printLayer: this.props.printLayer ?? 5,
+      printHeadX: this.props.printHeadX ?? 0,
+      printObj: this.props.printObj ?? 'bulb',
+      armDy: this.props.armDy ?? 0,
+      personTop: personTop,
+      personTopmost: show && topmost,
+      nightFilter: weather === 'nacht' ? 'brightness(0.6)' : 'none',
+      struck: this.props.struck ?? 3,
+      state: this.props.state ?? 'laeuft',
+      weather: weather,
+      blinds: this.props.blinds ?? 40,
+      isNight: weather === 'nacht',
+      pose: this.props.pose ?? 'reach',
+      marker: this.props.marker ?? true,
+      personX: personX,
+      personFront: show && front && !topmost,
+      personBehind: show && !front && !topmost
+    };
+  }
+}
+</script>
+</body>
+</html>

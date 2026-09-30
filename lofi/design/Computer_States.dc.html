@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Bildschirm-Zustände</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&amp;family=Pixelify+Sans:wght@400;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1176px; height: 960px; box-sizing: border-box; padding: 40px; background: #4A2E2B; font-family: 'Pixelify Sans', monospace; color: #EDE0C8; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px">
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div style="font-size: 22px; font-weight: 700">laeuft · Phase läuft normal</div>
+<dc-import name="Computer" state="laeuft" hint-size="528px,384px"></dc-import>
+</div>
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div style="font-size: 22px; font-weight: 700">endspurt · letzte 5 Minuten</div>
+<dc-import name="Computer" state="endspurt" hint-size="528px,384px"></dc-import>
+</div>
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div style="font-size: 22px; font-weight: 700">pause · Mittagessen</div>
+<dc-import name="Computer" state="pause" hint-size="528px,384px"></dc-import>
+</div>
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div style="font-size: 22px; font-weight: 700">ende · Tag vorbei</div>
+<dc-import name="Computer" state="ende" hint-size="528px,384px"></dc-import>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1176,"height":960}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

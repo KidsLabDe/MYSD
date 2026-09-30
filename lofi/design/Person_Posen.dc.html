@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Person Key-Posen</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 2652px; height: 1720px; box-sizing: border-box; padding: 40px 60px; background: #4A2E2B; font-family: 'Pixelify Sans', monospace; color: #EDE0C8; display: flex; flex-direction: column; gap: 90px">
+<div style="font-size: 26px; font-weight: 700">Person · Pixel-Sprite, Key-Posen (Raster 6 px)</div>
+<div style="display: flex; gap: 60px; align-items: flex-end">
+<div style="width: 264px; display: flex; flex-direction: column; gap: 20px">
+<dc-import name="Person" pose="stand" hint-size="264px,600px"></dc-import>
+<div style="font-size: 20px; font-weight: 700; text-align: center">stand</div>
+</div>
+<div style="width: 264px; display: flex; flex-direction: column; gap: 20px">
+<dc-import name="Person" pose="walkA" hint-size="264px,600px"></dc-import>
+<div style="font-size: 20px; font-weight: 700; text-align: center">walkA</div>
+</div>
+<div style="width: 264px; display: flex; flex-direction: column; gap: 20px">
+<dc-import name="Person" pose="walkB" hint-size="264px,600px"></dc-import>
+<div style="font-size: 20px; font-weight: 700; text-align: center">walkB</div>
+</div>
+<div style="width: 264px; display: flex; flex-direction: column; gap: 20px">
+<dc-import name="Person" pose="reach" hint-size="264px,600px"></dc-import>
+<div style="font-size: 20px; font-weight: 700; text-align: center">reach</div>
+</div>
+<div style="width: 264px; display: flex; flex-direction: column; gap: 20px">
+<dc-import name="Person" pose="strike" hint-size="264px,600px"></dc-import>
+<div style="font-size: 20px; font-weight: 700; text-align: center">strike</div>
+</div>
+<div style="width: 264px; display: flex; flex-direction: column; gap: 20px">
+<dc-import name="Person" pose="grab" hint-size="264px,600px"></dc-import>
+<div style="font-size: 20px; font-weight: 700; text-align: center">grab (Schnur)</div>
+</div>
+<div style="width: 264px; display: flex; flex-direction: column; gap: 20px">
+<dc-import name="Person" pose="pullA" hint-size="264px,600px"></dc-import>
+<div style="font-size: 20px; font-weight: 700; text-align: center">pullA</div>
+</div>
+<div style="width: 264px; display: flex; flex-direction: column; gap: 20px">
+<dc-import name="Person" pose="pullB" hint-size="264px,600px"></dc-import>
+<div style="font-size: 20px; font-weight: 700; text-align: center">pullB</div>
+</div>
+</div>
+<div style="font-size: 26px; font-weight: 700">NEU · Aufsteigen und Schreib-Arme (Prop arm)</div>
+<div style="display: flex; gap: 100px; align-items: flex-end">
+<div style="width: 264px; display: flex; flex-direction: column; gap: 20px">
+<dc-import name="Person" pose="stepA" hint-size="264px,600px"></dc-import>
+<div style="font-size: 20px; font-weight: 700; text-align: center">stepA</div>
+</div>
+<div style="width: 264px; display: flex; flex-direction: column; gap: 20px">
+<dc-import name="Person" pose="stepB" hint-size="264px,600px"></dc-import>
+<div style="font-size: 20px; font-weight: 700; text-align: center">stepB</div>
+</div>
+<div style="width: 264px; display: flex; flex-direction: column; gap: 20px">
+<dc-import name="Person" pose="stand" arm="steil" hint-size="264px,600px"></dc-import>
+<div style="font-size: 20px; font-weight: 700; text-align: center">arm steil</div>
+</div>
+<div style="width: 264px; display: flex; flex-direction: column; gap: 20px">
+<dc-import name="Person" pose="stand" arm="flach" hint-size="264px,600px"></dc-import>
+<div style="font-size: 20px; font-weight: 700; text-align: center">arm flach</div>
+</div>
+<div style="width: 264px; display: flex; flex-direction: column; gap: 20px">
+<dc-import name="Person" pose="stand" arm="waagrecht" hint-size="264px,600px"></dc-import>
+<div style="font-size: 20px; font-weight: 700; text-align: center">arm waagrecht</div>
+</div>
+<div style="width: 264px; display: flex; flex-direction: column; gap: 20px">
+<dc-import name="Person" pose="stand" arm="leichtRunter" hint-size="264px,600px"></dc-import>
+<div style="font-size: 20px; font-weight: 700; text-align: center">arm leichtRunter</div>
+</div>
+<div style="width: 264px; display: flex; flex-direction: column; gap: 20px">
+<dc-import name="Person" pose="stand" arm="runter" hint-size="264px,600px"></dc-import>
+<div style="font-size: 20px; font-weight: 700; text-align: center">arm runter</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":2652,"height":1720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

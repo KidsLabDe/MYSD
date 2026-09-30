@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>KidsLab-Poster, Pixel</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 378px; height: 288px; position: relative; font-family: monospace; color: #2A1A18">
+<sc-if value="{{isPapier}}" hint-placeholder-val="{{ true }}">
+<img src="./assets/kidslab-poster.png" alt="KidsLab-Poster, schräg aufgeklebt" width="375" height="285" style="position: absolute; left: 0px; top: 0px; width: 375px; height: 285px; image-rendering: pixelated; display: block">
+</sc-if>
+<sc-if value="{{notPapier}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; left: 9px; top: 6px; width: 360px; height: 276px">
+<svg width="360" height="276" viewBox="0 0 60 46" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" style="position: absolute; left: 0px; top: 0px; display: block">
+<sc-if value="{{isGerahmt}}" hint-placeholder-val="{{ false }}">
+<g>
+<rect x="1" y="2" width="59" height="44" fill="#1A0F0D" opacity="0.35"></rect>
+<rect x="0" y="0" width="60" height="45" fill="#5E3320"></rect>
+<rect x="1" y="1" width="58" height="43" fill="#8A4E30"></rect>
+<rect x="1" y="1" width="58" height="1" fill="#A8683E"></rect>
+<rect x="3" y="3" width="54" height="39" fill="#1E2436"></rect>
+</g>
+</sc-if>
+<sc-if value="{{isBanner}}" hint-placeholder-val="{{ false }}">
+<g>
+<rect x="4" y="5" width="54" height="39" fill="#1A0F0D" opacity="0.35"></rect>
+<rect x="3" y="3" width="54" height="40" fill="#2F5530"></rect>
+<rect x="0" y="1" width="60" height="3" fill="#6E3A22"></rect>
+<rect x="0" y="1" width="60" height="1" fill="#8A4E30"></rect>
+<rect x="0" y="42" width="60" height="3" fill="#6E3A22"></rect>
+<rect x="0" y="42" width="60" height="1" fill="#8A4E30"></rect>
+</g>
+</sc-if>
+<sc-if value="{{isDuoton}}" hint-placeholder-val="{{ false }}">
+<g>
+<rect x="3" y="3" width="56" height="42" fill="#1A0F0D" opacity="0.35"></rect>
+<rect x="2" y="2" width="56" height="42" fill="#B8583A"></rect>
+<rect x="2" y="2" width="56" height="1" fill="#CC6A48"></rect>
+<rect x="29" y="1" width="2" height="2" fill="#EDE0C8"></rect>
+<rect x="29" y="3" width="2" height="1" fill="#8E3F2A"></rect>
+</g>
+</sc-if>
+</svg>
+<img src="{{logo}}" alt="KidsLab Logo" width="312" height="210" style="position: absolute; left: 24px; top: 36px; width: 312px; height: 210px; image-rendering: pixelated; display: block">
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"variant":{"editor":"enum","default":"papier","options":["papier","gerahmt","banner","duoton"]},"$preview":{"width":378,"height":288}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const L = {
+      papier: './assets/kidslab-logo-52.png',
+      gerahmt: './assets/kidslab-logo-52-dunkel.png',
+      banner: './assets/kidslab-logo-52.png',
+      duoton: './assets/kidslab-logo-52-duoton.png'
+    };
+    const v = L[this.props.variant] ? this.props.variant : 'papier';
+    return { logo: L[v], isPapier: v === 'papier', notPapier: v !== 'papier', isGerahmt: v === 'gerahmt', isBanner: v === 'banner', isDuoton: v === 'duoton' };
+  }
+}
+</script>
+</body>
+</html>

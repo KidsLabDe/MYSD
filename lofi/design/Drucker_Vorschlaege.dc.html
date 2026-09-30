@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>3D-Drucker auf dem Tisch – drei Vorschläge</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&amp;family=Pixelify+Sans:wght@400;700&amp;family=Press+Start+2P&amp;family=Space+Mono:wght@400;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 3040px; height: 1380px; box-sizing: border-box; padding: 40px; background: #2A1A18; font-family: 'Pixelify Sans', monospace; color: #EDE0C8; display: flex; flex-direction: column; gap: 28px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<div style="font-size: 36px; font-weight: 700">3D-Drucker auf dem Tisch · drei Vorschläge</div>
+<div style="font-size: 18px; color: #C8B89A">Gesamtszene 50 %. Bedingungen: Drucker steht auf dem Tisch, Fenster bleibt sichtbar, Bildschirm bleibt 348×240 px (unverändert lesbar). Sichtbarkeit des Fensterglases grob geschätzt.</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px">
+<sc-for list="{{props3}}" as="v" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div style="width: 960px; height: 540px; position: relative; overflow: hidden; border: 3px solid #5E3320; box-sizing: content-box">
+<div style="position: absolute; left: 0px; top: 0px; width: 1920px; height: 1080px; transform: scale(0.5); transform-origin: 0px 0px">
+<div style="position: absolute; left: 0px; top: 0px"><dc-import name="Room_Back" weather="sonnig" blinds="{{ 40 }}" hint-size="1920px,1080px"></dc-import></div>
+<div style="position: absolute; left: 1476px; top: 36px"><dc-import name="Calendar" struck="{{ 3 }}" hint-size="432px,660px"></dc-import></div>
+<div style="position: absolute; left: 0px; top: 0px"><dc-import name="Room_Front" weather="sonnig" blinds="{{ 40 }}" tall-plant="{{v.tall}}" small-plant="{{v.small}}" fern="{{v.fern}}" hint-size="1920px,1080px"></dc-import></div>
+<div style="position: absolute; left: {{v.prX}}px; top: {{v.prY}}px"><dc-import name="Printer3D" variant="{{v.variant}}" printing="{{ true }}" hint-size="276px,276px"></dc-import></div>
+<div style="position: absolute; left: {{v.pcX}}px; top: 360px"><dc-import name="Computer" state="laeuft" hint-size="528px,384px"></dc-import></div>
+</div>
+</div>
+<div style="font-size: 28px; font-weight: 700">{{v.title}}</div>
+<div style="font-family: 'Space Mono', monospace; font-size: 16px; line-height: 1.55; white-space: pre-line; color: #EDE0C8">{{v.change}}</div>
+<div style="font-family: 'Space Mono', monospace; font-size: 16px; line-height: 1.55; white-space: pre-line; color: #9FD08A">{{v.pro}}</div>
+<div style="font-family: 'Space Mono', monospace; font-size: 16px; line-height: 1.55; white-space: pre-line; color: #F0A08A">{{v.con}}</div>
+</div>
+</sc-for>
+</div>
+<div style="display: flex; gap: 60px; align-items: flex-end; margin-top: 8px">
+<div style="display: flex; flex-direction: column; gap: 10px"><dc-import name="Printer3D" variant="box" hint-size="276px,276px"></dc-import><div style="font-size: 18px; font-weight: 700">Printer3D · box (32×40 px)</div></div>
+<div style="display: flex; flex-direction: column; gap: 10px"><dc-import name="Printer3D" variant="open" hint-size="276px,276px"></dc-import><div style="font-size: 18px; font-weight: 700">Printer3D · open (46×46 px)</div></div>
+<div style="display: flex; flex-direction: column; gap: 10px"><dc-import name="Printer3D" variant="box" printing="{{ false }}" hint-size="276px,276px"></dc-import><div style="font-size: 18px; font-weight: 700">box · aus (printing false)</div></div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":3040,"height":1380}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      props3: [
+        {
+          title: '1 · Rechts statt Farn (geschlossener Drucker)',
+          variant: 'box', prX: 1272, prY: 456, pcX: 732, tall: true, small: true, fern: false,
+          change: 'Farn entfällt. Computer rückt 96 px nach links (left 732).\nDrucker „box“ rechts auf dem Tisch: left 1272 / top 456 (x 212–243).',
+          pro: '+ Fenster 100 % frei, Jalousie-Gang unverändert\n+ Drucker direkt neben dem Kalender, gut sichtbar\n+ Bildschirm unverändert groß',
+          con: '− Farn (das Pflanzen-Highlight rechts) fällt weg\n− Computer verdeckt den Henkel der Tasse\n− rechte Tischhälfte wird voll'
+        },
+        {
+          title: '2 · Links statt hoher Pflanze (offener Rahmen)',
+          variant: 'open', prX: 84, prY: 450, pcX: 828, tall: false, small: true, fern: true,
+          change: 'Hohe Pflanze links entfällt.\nDrucker „open“ (i3-Rahmen) links: left 84 / top 450 (x 14–59), vor dem unteren linken Fensterrand.',
+          pro: '+ Fenster scheint durch den offenen Rahmen, ca. 95 % sichtbar\n+ Computer und Farn bleiben, keine Positionsänderung\n+ technisch „ehrlichster“ Maker-Look',
+          con: '− hohe Pflanze fällt weg (weniger Lo-Fi-Grün links)\n− Drucker liegt im Lichtstreifen, wirkt dort weniger kontrastreich'
+        },
+        {
+          title: '3 · Unter dem Fenster statt kleiner Pflanze',
+          variant: 'box', prX: 384, prY: 456, pcX: 828, tall: true, small: false, fern: true,
+          change: 'Kleine Pflanze entfällt.\nDrucker „box“ mittig unter dem Fenster: left 384 / top 456 (x 64–95).',
+          pro: '+ alle großen Elemente bleiben, auch Farn und hohe Pflanze\n+ Computer unverändert\n+ Drucker sitzt im Sonnenlicht, gut erkennbar',
+          con: '− verdeckt den unteren Fensterrand (ca. 93 % sichtbar)\n− Figur steht beim Jalousie-Gang (left 462) direkt davor'
+        }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

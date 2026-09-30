@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Ablauf der Animationen</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&amp;family=Space+Mono:wght@400;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1600px; height: 1300px; box-sizing: border-box; padding: 48px; background: #F5ECDC; font-family: 'Space Mono', monospace; color: #3A2A22; display: flex; flex-direction: column; gap: 28px">
+
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="font-family: 'Pixelify Sans', monospace; font-size: 40px; font-weight: 700; line-height: 1">A · Phase wird abgehakt</div>
+<div style="font-size: 15px; color: #6E4A36">Trigger: Countdown erreicht 00:00:00 · ca. 6–7 s · Person am Kalender in Ebene „ganzVorne“ (vor Tisch und Computer) · Referenz: Tafel „Kalender abhaken“</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px">
+<div style="background: #FFFFFF; border: 2px solid #E0CFB2; border-radius: 10px; padding: 18px; display: flex; flex-direction: column; gap: 8px"><div style="font-size: 13px; font-weight: 700; color: #B03D30">01 · 0,0–0,6 s</div><div style="font-family: 'Pixelify Sans', monospace; font-size: 24px; font-weight: 700">Phase endet</div><div style="font-size: 13px; line-height: 1.5">Countdown und LED blinken 3×.</div></div>
+<div style="background: #FFFFFF; border: 2px solid #E0CFB2; border-radius: 10px; padding: 18px; display: flex; flex-direction: column; gap: 8px"><div style="font-size: 13px; font-weight: 700; color: #B03D30">02 · 0,6–2,0 s</div><div style="font-family: 'Pixelify Sans', monospace; font-size: 24px; font-weight: 700">Reinlaufen</div><div style="font-size: 13px; line-height: 1.5">Von rechts (left 1968) bis left ≈ 1392, in 6-px-Schritten. walkA/walkB alle 180 ms. Ab left ≥ 1392 liegt die Person VOR Tisch und Pflanze. NEU: Laufen in Seitenansicht (view left), am Ziel über ein Zwischenbild zu view back drehen. Rauslaufen: view right.</div></div>
+<div style="background: #FFFFFF; border: 2px solid #E0CFB2; border-radius: 10px; padding: 18px; display: flex; flex-direction: column; gap: 8px"><div style="font-size: 13px; font-weight: 700; color: #B03D30">03 · 2,0–2,6 s</div><div style="font-family: 'Pixelify Sans', monospace; font-size: 24px; font-weight: 700">Hochsteigen + Arm</div><div style="font-size: 13px; line-height: 1.5">Zeilen 0–1: erst auf die Bank (stand → stepA → stepB → stand, je 150 ms, top 378 → 378 → 324 → 270). Dann Armvariante der Zeile: 0 up · 1 steil · 2 up · 3 diag · 4 flach · 5 waagrecht · 6 leichtRunter · 7 runter.</div></div>
+<div style="background: #FFFFFF; border: 2px solid #E0CFB2; border-radius: 10px; padding: 18px; display: flex; flex-direction: column; gap: 8px"><div style="font-size: 13px; font-weight: 700; color: #B03D30">04 · 2,6–4,6 s (+0,6 s Abstieg)</div><div style="font-family: 'Pixelify Sans', monospace; font-size: 24px; font-weight: 700">Durchstreichen</div><div style="font-size: 13px; line-height: 1.5">Strich wächst in 1-Pixel-Schritten (≈ 32 ms/px, 62 px ≈ 2 s). Figur trippelt mit: Beine walkA/walkB (Wechsel alle 3 px), Arm hält die Pose. left = Linienende − Spitze-x. Stufen y5/y4 der Linie: armDy folgt um 1 px. Danach von der Bank steigen (stepB → stepA → stand), Zeile 45 %, Haken, „JETZT“ springt weiter.</div></div>
+<div style="background: #FFFFFF; border: 2px solid #E0CFB2; border-radius: 10px; padding: 18px; display: flex; flex-direction: column; gap: 8px"><div style="font-size: 13px; font-weight: 700; color: #B03D30">05 · 3,2–4,8 s</div><div style="font-family: 'Pixelify Sans', monospace; font-size: 24px; font-weight: 700">Weiter oder raus</div><div style="font-size: 13px; line-height: 1.5">Ändert sich die Jalousie in der neuen Phase: direkt weiter zu B. Sonst rechts raus.</div></div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="font-family: 'Pixelify Sans', monospace; font-size: 40px; font-weight: 700; line-height: 1">B · Jalousie je Phase</div>
+<div style="font-size: 15px; color: #6E4A36">Person läuft VOR Tisch und Computer (Ebene „ganzVorne“) nach links zur Schnur (left ≈ 462), ohne Stift, in Seitenansicht (view left/right), an der Schnur view back. Frames grab → pullA → pullB (siehe Tafel Jalousie-Animation), Jalousie fährt in 3-Pixel-Lamellen</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px">
+<div style="background: #FFFFFF; border: 2px solid #E0CFB2; border-radius: 10px; padding: 18px; display: flex; flex-direction: column; gap: 8px"><div style="font-family: 'Pixelify Sans', monospace; font-size: 22px; font-weight: 700">Check-in, Kick-off</div><div style="font-size: 13px; line-height: 1.5">Jalousie 0 % · offen, volles Licht</div></div>
+<div style="background: #FFFFFF; border: 2px solid #E0CFB2; border-radius: 10px; padding: 18px; display: flex; flex-direction: column; gap: 8px"><div style="font-family: 'Pixelify Sans', monospace; font-size: 22px; font-weight: 700">Ideen, Hacking</div><div style="font-size: 13px; line-height: 1.5">Jalousie 40 % · Streifenlicht, Fokus</div></div>
+<div style="background: #FFFFFF; border: 2px solid #E0CFB2; border-radius: 10px; padding: 18px; display: flex; flex-direction: column; gap: 8px"><div style="font-family: 'Pixelify Sans', monospace; font-size: 22px; font-weight: 700">Mittagessen</div><div style="font-size: 13px; line-height: 1.5">Jalousie 0 % · Pause, rausschauen</div></div>
+<div style="background: #FFFFFF; border: 2px solid #E0CFB2; border-radius: 10px; padding: 18px; display: flex; flex-direction: column; gap: 8px"><div style="font-family: 'Pixelify Sans', monospace; font-size: 22px; font-weight: 700">Pitches</div><div style="font-size: 13px; line-height: 1.5">Jalousie 100 % · zu, „Beamer-Modus“</div></div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="font-family: 'Pixelify Sans', monospace; font-size: 40px; font-weight: 700; line-height: 1">C · Live-Wetter</div>
+<div style="font-size: 15px; color: #6E4A36">Vorschlag: Open-Meteo (kein API-Key), alle 15 min · current=weather_code,is_day · Koordinaten des Veranstaltungsorts</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px">
+<div style="background: #FFFFFF; border: 2px solid #E0CFB2; border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 6px"><div style="font-family: 'Pixelify Sans', monospace; font-size: 22px; font-weight: 700">sonnig</div><div style="font-size: 13px">Code 0–1</div></div>
+<div style="background: #FFFFFF; border: 2px solid #E0CFB2; border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 6px"><div style="font-family: 'Pixelify Sans', monospace; font-size: 22px; font-weight: 700">bewoelkt</div><div style="font-size: 13px">Code 2–3, 45, 48</div></div>
+<div style="background: #FFFFFF; border: 2px solid #E0CFB2; border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 6px"><div style="font-family: 'Pixelify Sans', monospace; font-size: 22px; font-weight: 700">regen</div><div style="font-size: 13px">Code 51–67, 80–82</div></div>
+<div style="background: #FFFFFF; border: 2px solid #E0CFB2; border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 6px"><div style="font-family: 'Pixelify Sans', monospace; font-size: 22px; font-weight: 700">schnee</div><div style="font-size: 13px">Code 71–77, 85–86</div></div>
+<div style="background: #FFFFFF; border: 2px solid #E0CFB2; border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 6px"><div style="font-family: 'Pixelify Sans', monospace; font-size: 22px; font-weight: 700">gewitter</div><div style="font-size: 13px">Code 95–99</div></div>
+<div style="background: #FFFFFF; border: 2px solid #E0CFB2; border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 6px"><div style="font-family: 'Pixelify Sans', monospace; font-size: 22px; font-weight: 700">nacht</div><div style="font-size: 13px">is_day = 0 (vor Wetter)</div></div>
+</div>
+<div style="font-size: 13px; color: #6E4A36">Regen, Schnee und Blitz sind hier Standbilder: im Code Tropfen/Flocken in 1-Pixel-Schritten nach unten verschieben, Blitz 2× kurz einblenden.</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1600,"height":1300}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>
