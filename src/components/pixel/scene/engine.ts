@@ -14,11 +14,11 @@ import { Printer, printerTimings } from './printer';
 import { pickIdle, nextWave, nextCoffee, type IdleKind } from './idle';
 import { ArcadeSession } from './arcade/session';
 import { GameSequence, dashboardAction } from './arcade/keys';
-import type { Screen } from './arcade/screens';
 import { strikeVariants } from './strikes';
 import { TEAR_START, isTearKey, stepTear, tearPage, type TearState } from './tear';
 import { K_BLINK_MS, K_SPOT, kollegeAt, nextBlink, type KollegeState } from './kollege';
-import { KOLLEGE_FACES, KOLLEGE_POSES, KOLLEGE_VIEWS, type KollegeFace, type KollegePose, type KollegeView } from './components/kollege';
+import { buildKollegeDebug, type KollegeDebug } from './debugPanel';
+import { KOLLEGE_FACES, KOLLEGE_POSES, KOLLEGE_VIEWS } from './components/kollege';
 import type { PixelPhase } from '../../../lib/pixelPhase';
 
 export interface SceneItem {
@@ -48,6 +48,8 @@ export interface SceneOptions {
   /** Testparameter: ?weather=, ?print=, ?wave=, ?coffee=, ?arcade[=screen]&demo, ?debug, ?kollege=pose&kview=&kface=&kleft= */
   readonly params: URLSearchParams;
 }
+
+const LS_IDLE = 'hackday:idle';
 
 // ---------- Text an Bildschirmbreite anpassen (VT323) ----------
 const SCREEN_W = 348 - 40;
@@ -152,7 +154,7 @@ export class PixelScene {
   private talk: { start: number; leaveAt: number | null } | null = null;
   private blinkAt = 0; private blinkUntil = -1;
   /** ?debug / ?kollege=…: Kollege fest anzeigen (übersteuert den Vortrag) */
-  private readonly kDebug: { on: boolean; pose: KollegePose; view: KollegeView; face: KollegeFace; left: number };
+  private readonly kDebug: KollegeDebug;
 
   constructor(host: HTMLElement, private readonly opts: SceneOptions) {
     const q = opts.params;
@@ -178,8 +180,8 @@ export class PixelScene {
     this.cleanups.push(() => this.arcadeSession?.dispose());
     if (q.has('arcade')) {
       this.arcadeRequested = true; this.arcadeInstant = true;
-      const scr = q.get('arcade') as Screen;
-      if (q.has('demo') && ['title', 'play', 'name', 'board'].includes(scr)) { this.arcade.demo = scr; this.arcade.demoCanvas = q.get('demo') === 'canvas'; }
+      const scr = q.get('arcade');
+      if (q.has('demo') && (scr === 'title' || scr === 'play' || scr === 'name' || scr === 'board')) { this.arcade.demo = scr; this.arcade.demoCanvas = q.get('demo') === 'canvas'; }
     }
 
     this.waveTest = Number(q.get('wave')) || null;
@@ -192,7 +194,7 @@ export class PixelScene {
       on: q.has('kollege'), pose: pick(KOLLEGE_POSES, q.get('kollege'), 'stand'), view: pick(KOLLEGE_VIEWS, q.get('kview'), 'front'),
       face: pick(KOLLEGE_FACES, q.get('kface'), 'auto'), left: Number(q.get('kleft')) || K_SPOT,
     };
-    if (q.has('debug')) this.cleanups.push(this.buildDebug());
+    if (q.has('debug')) this.cleanups.push(buildKollegeDebug(this.kDebug));
 
     // Capture-Phase: läuft vor usePresenterKeys, damit die Pfeile im Spiel nicht die Phase wechseln
     // und PageDown/PageUp nur den Abreißkalender bedienen
@@ -316,14 +318,14 @@ export class PixelScene {
         const k = this.talk ? null : pickIdle({ enabled: this.idleOn, queueEmpty: true, phaseChangePending: false, remainingMs: L.ende ? Infinity : L.remainingMs, due, last: this.lastIdle });
         if (k) this.runIdle(k);
       }
-    } else if (L.idx === a.idx + 1 && this.dayKeyStable()) {
+    } else if (L.idx === a.idx + 1 && this.sameDayAsShown()) {
       const prev = a.idx;
       anim.run('phase', () => anim.phaseDone(prev, () => { const now = this.resolved(); return now.idx === prev + 1 ? now.blinds : a.blinds; }, calOffset(prev, L.n), this.strikes[prev] ?? 0));
     } else this.snap(L); // Sprung (←, neuer Tag, Laptop geschlafen, Stau): Endzustand direkt
   }
 
-  /** Ein neuer Tag (anderer Plan) wird nie abgehakt, sondern gesetzt. */
-  private dayKeyStable() {
+  /** Ein neuer Tag (anderer Plan) wird nie abgehakt, sondern gesetzt. Merkt sich dabei den neuen Tag. */
+  private sameDayAsShown() {
     const k = dayKey(this.input!);
     if (k === this.key) return true;
     this.key = k;
@@ -390,29 +392,6 @@ export class PixelScene {
     }
   }
 
-  /** ?debug: Kollege sichtbar schalten, Pose/Ansicht/Mimik/Standplatz wählen */
-  private buildDebug(): () => void {
-    const d = this.kDebug;
-    const box = document.createElement('div');
-    box.style.cssText = 'position: fixed; left: 8px; bottom: 8px; z-index: 1000; width: 250px; background: rgba(20,12,10,0.92); color: #EDE0C8; font: 12px/1.4 system-ui, sans-serif; padding: 10px; border-radius: 6px';
-    const row = (label: string, el: HTMLElement) => { const l = document.createElement('label'); l.style.cssText = 'display: flex; justify-content: space-between; align-items: center; gap: 8px; margin: 4px 0'; l.append(label, el); box.appendChild(l); };
-    const sel = (opts: readonly string[], v: string, on: (v: string) => void) => { const s = document.createElement('select'); for (const o of opts) s.add(new Option(o, o)); s.value = v; s.onchange = () => on(s.value); return s; };
-    const h = document.createElement('div'); h.textContent = 'Debug · Kollege Fabi'; h.style.cssText = 'font-weight: 700; margin-bottom: 6px'; box.appendChild(h);
-    const chk = document.createElement('input'); chk.type = 'checkbox'; chk.checked = d.on; chk.onchange = () => (d.on = chk.checked);
-    row('sichtbar (fest)', chk);
-    row('pose', sel(KOLLEGE_POSES, d.pose, (v) => (d.pose = v as KollegePose)));
-    row('view', sel(KOLLEGE_VIEWS, d.view, (v) => (d.view = v as KollegeView)));
-    row('face', sel(KOLLEGE_FACES, d.face, (v) => (d.face = v as KollegeFace)));
-    const left = document.createElement('input');
-    Object.assign(left, { type: 'number', step: '6', min: '-264', max: '1920', value: String(d.left) }); left.style.width = '70px';
-    left.oninput = () => { const v = Number(left.value); if (Number.isFinite(v)) d.left = v; };
-    row('left (px)', left);
-    // Tasten im Panel gehören dem Panel, nicht der Szene
-    box.addEventListener('keydown', (e) => e.stopPropagation(), true);
-    document.body.appendChild(box);
-    return () => box.remove();
-  }
-
   // ---- Tastenkürzel ----
   private onKey = (e: KeyboardEvent) => {
     if (e.metaKey || e.ctrlKey || e.altKey) return;
@@ -464,5 +443,3 @@ export class PixelScene {
     e.preventDefault();
   };
 }
-
-const LS_IDLE = 'hackday:idle';

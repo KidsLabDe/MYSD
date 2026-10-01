@@ -3,7 +3,7 @@
  *
  * Primary color is a vivid blue `hsl(204 100% 50%)`; the display typeface is
  * "Pixelify Sans" and body copy is "Inter". These are mirrored as CSS custom
- * properties in `index.css` — keep the two in sync.
+ * properties in `styles/base.css` — keep the two in sync.
  */
 
 import type { AgendaKind } from "../types";

@@ -157,7 +157,7 @@ zu bearbeiten geht natürlich auch; danach `npm test` ausführen.
 ## Theming
 
 The entire color system is driven by a **single `--brand-hue` variable** in
-[`src/index.css`](src/index.css) (currently `204`). Change that one value to re-tint the whole
+[`src/styles/base.css`](src/styles/base.css) (currently `204`). Change that one value to re-tint the whole
 dashboard. Semantic tokens (`--bg`, `--surface`, `--text`, tone colors…) are defined for the light
 theme on `:root` and overridden under `:root[data-theme="dark"]`. Components reference these
 variables and `tone-*` classes rather than hard-coded colors.
@@ -177,7 +177,7 @@ src/
   hooks/                # clock, theme, board scale, presenter keys, pixel-mouse click
   components/           # Header, NowPanel, Timeline, Ticker, PixelCursor, Confetti, …
   App.tsx               # state + composition
-  index.css             # design system (brand tokens, light/dark)
+  index.css             # imports src/styles/*.css (design system: brand tokens, light/dark)
 ```
 
 Data flows one direction: **`hackday.json` + clock → pure functions in `lib/` → React → UI**. Business logic is

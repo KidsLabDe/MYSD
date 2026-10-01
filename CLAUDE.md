@@ -101,7 +101,7 @@ Data flows one direction: **`hackday.json` + clock → pure functions → React 
 ## Theming (the important convention)
 
 The entire color system is driven by **one CSS variable, `--brand-hue`** (currently `204`), in
-`src/index.css`. Change that single value to re-tint the whole app. Semantic tokens (`--bg`,
+`src/styles/base.css`. Change that single value to re-tint the whole app. Semantic tokens (`--bg`,
 `--surface`, `--text`, tone colors…) are defined for light theme on `:root` and overridden under
 `:root[data-theme="dark"]`. `useTheme.ts` stamps `data-theme` on `<html>` and persists the choice to
 `localStorage`. Never hard-code colors in components; use the CSS variables and `tone-*` classes.

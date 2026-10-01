@@ -98,6 +98,40 @@ describe("PixelBoard", () => {
     await waitFor(() => expect(padFill(container)).toBe("#3D8FD1"));
   });
 
+  describe("scene shortcuts", () => {
+    it("should open and close the help overlay with ? and Escape", () => {
+      const { container } = render(<Harness now={MID_PHASE} />);
+      const help = () => container.textContent ?? "";
+      fireEvent.keyDown(window, { key: "?" });
+      expect(help()).toContain("TASTENKÜRZEL");
+      fireEvent.keyDown(window, { key: "Escape" });
+      const overlay = Array.from(container.querySelectorAll<HTMLElement>("div")).find((d) =>
+        d.textContent?.startsWith("TASTENKÜRZEL"),
+      );
+      expect(overlay?.style.display).toBe("none");
+    });
+
+    it("should close the blinds on J and announce it", () => {
+      const { container } = render(<Harness now={MID_PHASE} />);
+      fireEvent.keyDown(window, { key: "j" });
+      expect(container.textContent).toContain("Jalousie zu");
+    });
+
+    it("should start and end the colleague's talk on V", () => {
+      const { container } = render(<Harness now={MID_PHASE} />);
+      fireEvent.keyDown(window, { key: "v" });
+      expect(container.textContent).toContain("Vortrag");
+      fireEvent.keyDown(window, { key: "v" });
+      expect(container.textContent).toContain("Vortrag beendet");
+    });
+
+    it("should ignore shortcuts with a modifier key", () => {
+      const { container } = render(<Harness now={MID_PHASE} />);
+      fireEvent.keyDown(window, { key: "j", ctrlKey: true });
+      expect(container.textContent).not.toContain("Jalousie zu");
+    });
+  });
+
   it("should offer the switch back to the Modern UI", () => {
     const { getByRole } = render(<Harness now={MID_PHASE} />);
     expect(getByRole("button", { name: "Zur Modern-Ansicht wechseln" })).toBeInTheDocument();

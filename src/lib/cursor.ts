@@ -14,11 +14,11 @@ export interface Size {
   readonly height: number;
 }
 
-/** Length of the whole glide → click → leave trip (keep in sync with index.css). */
+/** Length of the whole glide → click → leave trip (keep in sync with styles/cursor.css). */
 export const CURSOR_DURATION_MS = 4800;
 
 /**
- * When in the trip the click lands (keep in sync with index.css). The mouse
+ * When in the trip the click lands (keep in sync with styles/cursor.css). The mouse
  * sets off this long before the next item starts, so the click and the switch
  * happen together. A whole number of seconds, to match the clock ticks.
  */

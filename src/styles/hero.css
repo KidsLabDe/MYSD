@@ -1,0 +1,336 @@
+/* ------------------------------------------------------------------- hero */
+.hero {
+  /* State colour for the eyebrow, dot and arc; overridden per state. */
+  --state: var(--brand);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  padding: var(--hero-pad);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow);
+}
+
+.hero--urgent { --state: var(--tone-orange); }
+.hero--gap { --state: var(--text-muted); }
+.hero--after { --state: var(--tone-green); }
+
+.hero__top,
+.hero__bottom {
+  position: relative;
+  z-index: 1;
+  animation: fadeUp 0.9s var(--ease-out) both;
+}
+
+.hero__top {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hero-gap);
+}
+
+.hero__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 24px;
+  animation-delay: 0.15s;
+}
+
+.hero__spacer {
+  flex: 1;
+  min-height: 28px;
+}
+
+.hero__eyebrow-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+}
+
+.hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: var(--eyebrow-size);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--state);
+  transition: color 0.6s ease;
+}
+
+.hero__dot {
+  position: relative;
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--state);
+  transition: background-color 0.6s ease;
+}
+
+.hero__dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--state);
+  opacity: 0;
+}
+
+.hero--running .hero__dot::after {
+  animation: pulse 1.8s ease-out infinite;
+}
+
+.hero--before .hero__dot {
+  animation: breathe 2.4s ease-in-out infinite;
+}
+
+.hero__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--title-size);
+  line-height: 1.02;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+.hero__title--lg {
+  font-size: var(--title-size-lg);
+}
+
+.hero__title--md {
+  font-size: var(--title-size-md);
+}
+
+.hero__lead {
+  margin: 0;
+  font-size: var(--lead-size);
+  color: var(--text-muted);
+}
+
+.hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 32px;
+  font-size: var(--meta-size);
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.hero__meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hero__meta svg {
+  width: 1em;
+  height: 1em;
+}
+
+.hero__note {
+  margin: 0;
+  max-width: 900px;
+  font-size: var(--note-size);
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+/* ------------------------------------------------------------- ring timer */
+.ring {
+  position: relative;
+  flex: none;
+  width: var(--ring-size);
+  height: var(--ring-size);
+}
+
+.hero--before .ring {
+  animation: ringBreathe 4s ease-in-out infinite;
+}
+
+.ring__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.ring__track {
+  stroke: var(--track);
+  transition: stroke 0.6s ease;
+}
+
+.hero--gap .ring__track {
+  stroke-dasharray: 2 12;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: spin 40s linear infinite;
+}
+
+.ring__arc {
+  stroke: var(--brand);
+  transition: stroke-dashoffset 1s linear, stroke 0.6s ease;
+}
+
+.hero--urgent .ring__arc {
+  stroke: var(--tone-orange);
+  animation: breathe 1.4s ease-in-out infinite;
+}
+
+.hero--gap .ring__arc {
+  stroke: var(--text-faint);
+}
+
+.ring__center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.ring__label {
+  font-size: var(--ring-label);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.ring__count {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--count-size);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  transition: color 0.6s ease;
+}
+
+.ring__count--long {
+  font-size: var(--count-size-long);
+}
+
+.hero--urgent .ring__count {
+  color: var(--tone-orange);
+}
+
+.ring__sub {
+  font-size: var(--ring-sub);
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* -------------------------------------------------------------- next card */
+.next {
+  flex: 1 1 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  padding: var(--next-pad);
+  border-radius: 22px;
+  background: var(--surface-2);
+}
+
+.next__eyebrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--next-eyebrow);
+  color: var(--text-muted);
+}
+
+.next__label {
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.next__when {
+  color: var(--brand);
+  font-weight: 500;
+}
+
+.next__title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--next-title);
+  line-height: 1.1;
+}
+
+.next__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  font-size: var(--next-meta);
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* -------------------------------------------------------- after: stats */
+.hero__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px 64px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stat__value {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--stat-size);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--brand);
+}
+
+.stat__label {
+  font-size: var(--stat-label);
+  color: var(--text-muted);
+}
+
+/* ---------------------------------------------------- after: confetti */
+.confetti {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.confetti__piece {
+  position: absolute;
+  top: -20px;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 2px;
+  opacity: 0;
+  animation-name: fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.confetti__piece--brand { background: var(--brand); }
+.confetti__piece--blue { background: var(--tone-blue); }
+.confetti__piece--purple { background: var(--tone-purple); }
+.confetti__piece--orange { background: var(--tone-orange); }
+.confetti__piece--green { background: var(--tone-green); }
+

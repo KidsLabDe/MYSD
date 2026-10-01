@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import type { Step } from "../lib/presenter";
 import { presenterStep } from "../lib/presenter";
 
@@ -6,7 +6,9 @@ import { presenterStep } from "../lib/presenter";
 export function usePresenterKeys(onStep: (step: Step) => void): void {
   // Latest callback without re-subscribing on every clock tick.
   const handler = useRef(onStep);
-  handler.current = onStep;
+  useLayoutEffect(() => {
+    handler.current = onStep;
+  });
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {

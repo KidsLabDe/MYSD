@@ -1,0 +1,94 @@
+/* ------------------------------------------------------------- animations */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  from { transform: scale(1); opacity: 0.6; }
+  to { transform: scale(3.2); opacity: 0; }
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+@keyframes ringBreathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes halo {
+  from { box-shadow: 0 0 0 0 var(--halo); }
+  to { box-shadow: 0 0 0 14px transparent; }
+}
+
+@keyframes sheen {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+}
+
+@keyframes ticker {
+  to { transform: translateX(-50%); }
+}
+
+@keyframes fall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+  8% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translateY(900px) rotate(450deg); opacity: 0; }
+}
+
+/* 4.8s trip (CURSOR_DURATION_MS): glide in → press bottoms out at 2s = 41.667%
+   (CURSOR_CLICK_MS, the moment the next item starts) → release → pause → leave. */
+@keyframes cursorTrip {
+  0% {
+    transform: translate(var(--enter-x), var(--enter-y));
+    animation-timing-function: cubic-bezier(0.45, 0, 0.25, 1);
+  }
+  36% { transform: translate(var(--click-x), var(--click-y)) scale(1); }
+  41.667% { transform: translate(var(--click-x), var(--click-y)) scale(0.82); }
+  47% { transform: translate(var(--click-x), var(--click-y)) scale(1); }
+  60% {
+    transform: translate(var(--click-x), var(--click-y));
+    animation-timing-function: cubic-bezier(0.5, 0, 0.9, 0.5);
+  }
+  100% { transform: translate(var(--exit-x), var(--exit-y)); }
+}
+
+@keyframes cursorClick {
+  0%, 41.6% { opacity: 0; transform: scale(0.4); }
+  41.667% { opacity: 1; transform: scale(0.6); }
+  60% { opacity: 0; transform: scale(3); }
+  100% { opacity: 0; transform: scale(3); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .confetti,
+  .pixel-cursor-layer {
+    display: none;
+  }
+
+  /* No marquee: show each message once, statically. */
+  .ticker__half--copy,
+  .ticker__item--repeat {
+    display: none;
+  }
+
+  .ticker__track {
+    width: auto;
+  }
+}
+
