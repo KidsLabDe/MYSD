@@ -1,0 +1,232 @@
+/* ---------------------------------------------- phase change: pixel mouse */
+.pixel-cursor-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.pixel-cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+  filter: drop-shadow(4px 4px 0 var(--cursor-shadow));
+  animation: cursorTrip var(--cursor-ms) var(--cursor-late) both;
+}
+
+.pixel-cursor__outline { fill: var(--cursor-outline); }
+.pixel-cursor__body { fill: var(--cursor-body); }
+
+/* Pixel "click" burst around the tip, timed to the press in cursorTrip. */
+.pixel-cursor__click {
+  position: absolute;
+  top: var(--click-y);
+  left: var(--click-x);
+  width: 24px;
+  height: 24px;
+  margin: -12px 0 0 -12px;
+  border: 5px solid var(--brand);
+  border-radius: 2px;
+  opacity: 0;
+  animation: cursorClick var(--cursor-ms) linear var(--cursor-late) both;
+}
+
+
+.plan {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+  min-height: 0;
+}
+
+.plan__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 20px 0 12px;
+}
+
+.plan__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--plan-title);
+}
+
+.plan__day {
+  margin-left: 14px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: var(--plan-count);
+  font-weight: 600;
+  vertical-align: middle;
+  white-space: nowrap;
+  transition: background-color 0.6s ease, color 0.6s ease;
+}
+
+.plan__count {
+  font-size: var(--plan-count);
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tl {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--tl-time-w) var(--tl-tile) minmax(0, 1fr);
+  align-items: center;
+  column-gap: 16px;
+  min-height: var(--tl-min-h);
+  padding: 12px 20px 12px 12px;
+  border-radius: 18px;
+}
+
+/* Rail through the tile centres: each row draws its own segment (plus half
+   the 6px gap on either side), clipped to start/end at the first/last tile. */
+.tl::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  left: calc(12px + var(--tl-time-w) + 16px + var(--tl-tile) / 2 - 1px);
+  width: 2px;
+  background: var(--border);
+}
+
+.tl:first-child::before { top: 50%; }
+.tl:last-child::before { bottom: 50%; }
+.tl:only-child::before { display: none; }
+
+.tl--past::before {
+  background: color-mix(in srgb, var(--brand) 50%, transparent);
+}
+
+.tl--current {
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.tl__time {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: var(--tl-time-size);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+
+.tl--past .tl__time { color: var(--text-faint); }
+.tl--current .tl__time { color: var(--brand); }
+
+.tl__tile {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: var(--tl-tile);
+  height: var(--tl-tile);
+  border-radius: 13px;
+  background: var(--tone-bg);
+  color: var(--tone);
+}
+
+.tl--past .tl__tile {
+  background: var(--surface-2);
+  color: var(--text-faint);
+}
+
+.tl--current .tl__tile {
+  background: var(--tone);
+  color: var(--surface);
+  animation: halo 2s ease-out infinite;
+}
+
+.tl__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.tl__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.tl__title {
+  font-weight: 600;
+  font-size: var(--tl-title-size);
+  line-height: 1.25;
+  min-width: 0;
+}
+
+.tl--past .tl__title { color: var(--text-muted); }
+
+.tl__badge {
+  flex: none;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--brand);
+  color: var(--on-brand);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tl__meta {
+  font-size: var(--tl-meta-size);
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.tl__progress {
+  height: 6px;
+  margin-top: 8px;
+  border-radius: 999px;
+  background: var(--track);
+  overflow: hidden;
+}
+
+.tl__progress-fill {
+  position: relative;
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--brand);
+  overflow: hidden;
+  transition: width 1s linear;
+}
+
+.tl__progress-fill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 30%,
+    hsl(0 0% 100% / 0.5) 50%,
+    transparent 70%
+  );
+  animation: sheen 2.8s ease-in-out infinite;
+}
+
+

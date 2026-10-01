@@ -1,0 +1,209 @@
+/* =========================================================================
+   MYS Hackday — agenda board design system
+   KidsLab branding: one hue (--brand-hue) tints everything, Pixelify Sans
+   display, Inter body, light + dark themes.
+
+   Two layouts share one visual language:
+   - stacked (default): a single scrolling column for phones / small screens
+   - board mode (≥1280×720): a fixed 1920×1080 stage, scaled to the screen
+   Component sizes are custom properties on `.board`, so board mode mostly
+   just swaps values.
+   ========================================================================= */
+
+:root {
+  /* Brand hue drives the whole blue scale (matches kidslab.de). */
+  --brand-hue: 204;
+  --brand-50: hsl(var(--brand-hue) 100% 96%);
+  --brand-100: hsl(var(--brand-hue) 100% 92%);
+  --brand-200: hsl(var(--brand-hue) 100% 85%);
+  --brand-300: hsl(var(--brand-hue) 95% 72%);
+  --brand-400: hsl(var(--brand-hue) 95% 60%);
+  --brand-500: hsl(var(--brand-hue) 100% 50%);
+  --brand-600: hsl(var(--brand-hue) 90% 44%);
+  --brand-700: hsl(var(--brand-hue) 85% 36%);
+  /* Solid brand fill for text, arcs and pills (AA on --surface). */
+  --brand: hsl(var(--brand-hue) 85% 38%);
+
+  /* Categorical palette (kind badges + tiles). Orange doubles as urgency. */
+  --tone-blue: hsl(214 72% 42%);
+  --tone-blue-bg: hsl(214 80% 95%);
+  --tone-purple: hsl(268 46% 48%);
+  --tone-purple-bg: hsl(268 60% 96%);
+  --tone-orange: hsl(24 88% 36%);
+  --tone-orange-bg: hsl(28 95% 94%);
+  --tone-green: hsl(152 60% 28%);
+  --tone-green-bg: hsl(150 50% 93%);
+  --tone-pink: hsl(330 70% 42%);
+  --tone-pink-bg: hsl(330 80% 96%);
+
+  /* Semantic surfaces — light theme defaults. */
+  --bg: hsl(var(--brand-hue) 38% 96%);
+  --surface: #ffffff;
+  --surface-2: hsl(var(--brand-hue) 40% 94%);
+  --surface-hover: hsl(var(--brand-hue) 40% 92%);
+  --text: hsl(var(--brand-hue) 45% 11%);
+  --text-muted: hsl(var(--brand-hue) 14% 34%);
+  --text-faint: hsl(var(--brand-hue) 10% 41%);
+  --border: hsl(var(--brand-hue) 25% 88%);
+  --border-strong: hsl(var(--brand-hue) 22% 80%);
+  --shadow: 0 1px 2px hsl(var(--brand-hue) 30% 20% / 0.06),
+    0 12px 32px hsl(var(--brand-hue) 30% 20% / 0.08);
+  --shadow-lg: 0 16px 48px hsl(var(--brand-hue) 40% 20% / 0.14);
+
+  --track: hsl(var(--brand-hue) 30% 92%);
+  --on-brand: #ffffff;
+  --halo: hsl(var(--brand-hue) 85% 45% / 0.35);
+
+  /* Pixel mouse: a classic light arrow with a dark outline in both themes. */
+  --cursor-body: #ffffff;
+  --cursor-outline: hsl(var(--brand-hue) 45% 11%);
+  --cursor-shadow: hsl(var(--brand-hue) 45% 11% / 0.3);
+
+  --radius-sm: 8px;
+  --radius: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+
+  --font-display: "Pixelify Sans", "Inter", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, sans-serif;
+
+  --maxw: 1180px;
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+:root[data-theme="dark"] {
+  --brand-500: hsl(var(--brand-hue) 100% 60%);
+  --brand-600: hsl(var(--brand-hue) 95% 55%);
+  --brand-50: hsl(var(--brand-hue) 60% 16%);
+  --brand-100: hsl(var(--brand-hue) 55% 20%);
+  --brand: hsl(var(--brand-hue) 90% 62%);
+
+  --tone-blue: hsl(214 90% 72%);
+  --tone-blue-bg: hsl(214 45% 19%);
+  --tone-purple: hsl(268 80% 78%);
+  --tone-purple-bg: hsl(268 32% 21%);
+  --tone-orange: hsl(28 95% 64%);
+  --tone-orange-bg: hsl(28 45% 18%);
+  --tone-green: hsl(150 55% 60%);
+  --tone-green-bg: hsl(150 38% 16%);
+  --tone-pink: hsl(330 80% 74%);
+  --tone-pink-bg: hsl(330 45% 20%);
+
+  --bg: hsl(var(--brand-hue) 32% 7%);
+  --surface: hsl(var(--brand-hue) 26% 11%);
+  --surface-2: hsl(var(--brand-hue) 22% 15%);
+  --surface-hover: hsl(var(--brand-hue) 22% 18%);
+  --text: hsl(var(--brand-hue) 30% 95%);
+  --text-muted: hsl(var(--brand-hue) 14% 72%);
+  --text-faint: hsl(var(--brand-hue) 10% 58%);
+  --border: hsl(var(--brand-hue) 20% 19%);
+  --border-strong: hsl(var(--brand-hue) 20% 27%);
+  --shadow: 0 1px 2px hsl(0 0% 0% / 0.3), 0 12px 32px hsl(0 0% 0% / 0.35);
+  --shadow-lg: 0 16px 50px hsl(0 0% 0% / 0.55);
+
+  --track: hsl(var(--brand-hue) 20% 18%);
+  --on-brand: hsl(var(--brand-hue) 40% 8%);
+  --halo: hsl(var(--brand-hue) 90% 62% / 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100vh;
+  transition: background-color 0.6s ease, color 0.6s ease;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+::selection {
+  background: var(--brand-200);
+  color: var(--text);
+}
+
+/* Theme switch: everything that paints a surface fades with the page. */
+.hero,
+.next,
+.tl,
+.tl__tile,
+.badge,
+.icon-btn {
+  transition: background-color 0.6s ease, color 0.6s ease, border-color 0.6s ease,
+    box-shadow 0.6s ease;
+}
+
+/* ------------------------------------------------------------------ layout */
+.board {
+  /* Stacked (phone) sizes. Board mode overrides these below. */
+  --logo-h: 36px;
+  --logo-title: 20px;
+  --clock-size: 30px;
+  --toggle: 44px;
+
+  --hero-pad: 28px 24px;
+  --hero-gap: 16px;
+  --eyebrow-size: 14px;
+  --badge-size: 14px;
+  --title-size: 40px;
+  --title-size-lg: 34px;
+  --title-size-md: 30px;
+  --lead-size: 18px;
+  --meta-size: 16px;
+  --note-size: 16px;
+
+  --ring-size: 220px;
+  --ring-label: 13px;
+  --count-size: 58px;
+  --count-size-long: 40px;
+  --ring-sub: 13px;
+
+  --next-pad: 20px 22px;
+  --next-eyebrow: 14px;
+  --next-title: 26px;
+  --next-meta: 15px;
+  --badge-sm-size: 13px;
+
+  --stat-size: 44px;
+  --stat-label: 15px;
+
+  --tl-time-w: 56px;
+  --tl-tile: 40px;
+  --tl-time-size: 18px;
+  --tl-title-size: 16px;
+  --tl-meta-size: 14px;
+  --tl-min-h: 60px;
+  --plan-title: 22px;
+  --plan-count: 14px;
+
+  --ticker-h: 52px;
+  --ticker-size: 16px;
+  --ticker-label: 13px;
+
+  position: relative;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 16px 48px;
+}
+
+.board__main {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin-top: 20px;
+}
+

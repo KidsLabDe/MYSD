@@ -4,21 +4,17 @@
  * ticking from the chosen moment.
  */
 
+import { parseIsoDate } from "./isoDate";
+
 export type DebugTime = { readonly offsetMs: number } | { readonly error: string };
 
 type Triple = readonly [number, number, number];
 
-const DATE_RE = /^(\d{4})-(\d{2})-(\d{2})$/;
 const TIME_RE = /^(\d{1,2}):(\d{2})(?::(\d{2}))?$/;
 
 function parseDate(raw: string): Triple | null {
-  const m = DATE_RE.exec(raw);
-  if (m === null) return null;
-  const [y, mo, d] = [Number(m[1]), Number(m[2]) - 1, Number(m[3])];
-  const probe = new Date(y, mo, d);
-  // Rejects rollovers such as 2026-02-30 → 2 March.
-  const valid = probe.getFullYear() === y && probe.getMonth() === mo && probe.getDate() === d;
-  return valid ? [y, mo, d] : null;
+  const date = parseIsoDate(raw);
+  return date === null ? null : [date.getFullYear(), date.getMonth(), date.getDate()];
 }
 
 function parseClock(raw: string): Triple | null {

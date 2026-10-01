@@ -4,6 +4,7 @@
  */
 
 import type { HackdayDay } from "../types";
+import { parseIsoDate } from "./isoDate";
 import { parseTime, secondsOfDay } from "./schedule";
 
 const DAY_SECONDS = 24 * 3600;
@@ -25,19 +26,17 @@ export function toIsoDate(date: Date): string {
   return `${date.getFullYear()}-${mm}-${dd}`;
 }
 
-function parseIsoDate(iso: string): Date {
-  const [y, m, d] = iso.split("-").map(Number);
-  if (y === undefined || m === undefined || d === undefined || [y, m, d].some(Number.isNaN)) {
-    throw new Error(`Ungültiges Datum: "${iso}" (erwartet YYYY-MM-DD)`);
-  }
-  return new Date(y, m - 1, d);
+function dateOf(iso: string): Date {
+  const date = parseIsoDate(iso);
+  if (date === null) throw new Error(`Ungültiges Datum: "${iso}" (erwartet YYYY-MM-DD)`);
+  return date;
 }
 
 /** Whole calendar days from `now`'s date to `iso` (negative when in the past). */
 export function dayOffset(iso: string, now: Date): number {
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   // Rounding absorbs the ±1 h of a DST switch in between.
-  return Math.round((parseIsoDate(iso).getTime() - today.getTime()) / DAY_MS);
+  return Math.round((dateOf(iso).getTime() - today.getTime()) / DAY_MS);
 }
 
 function sortedDays(days: readonly HackdayDay[]): HackdayDay[] {
@@ -72,7 +71,7 @@ export function followingDay(days: readonly HackdayDay[], index: number): Select
 
 /** "Morgen" when `iso` is tomorrow, else its weekday, e.g. "Donnerstag". */
 export function dayWhen(iso: string, now: Date): string {
-  return dayOffset(iso, now) === 1 ? "Morgen" : weekdayFmt.format(parseIsoDate(iso));
+  return dayOffset(iso, now) === 1 ? "Morgen" : weekdayFmt.format(dateOf(iso));
 }
 
 /** "Morgen geht’s um 08:00 weiter." for the day after `index`, or null on the last day. */

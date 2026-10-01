@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import type { HackdayDay } from "../types";
 import type { UiChoice, UiVariant } from "../lib/uiChoice";
 import { activeUi, makeChoice, parseChoice, parseUiParam } from "../lib/uiChoice";
@@ -24,10 +24,15 @@ export function useUiChoice(
 ): { ui: UiVariant | null; choose: (ui: UiVariant) => void; toggle: () => void } {
   const [forced, setForced] = useState(() => parseUiParam(window.location.search));
   const [choice, setChoice] = useState(storedChoice);
+  // Read at call time, so the callbacks keep their identity across clock ticks.
+  const latest = useRef({ days, now });
+  useLayoutEffect(() => {
+    latest.current = { days, now };
+  });
 
   const choose = useCallback(
     (ui: UiVariant) => {
-      const next = makeChoice(ui, days, now);
+      const next = makeChoice(ui, latest.current.days, latest.current.now);
       if (next === null) return;
       setForced(null);
       setChoice(next);
@@ -37,7 +42,7 @@ export function useUiChoice(
         // Storage can be unavailable (private mode); the choice then lasts until reload.
       }
     },
-    [days, now],
+    [],
   );
 
   const ui = forced ?? activeUi(choice, days, now);

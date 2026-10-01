@@ -1,0 +1,132 @@
+/* ============================================================ board mode */
+@media (min-width: 1280px) and (min-height: 720px) {
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  /* A fixed 1920×1080 stage, uniformly scaled (see useBoardScale). */
+  .board {
+    --logo-h: 56px;
+    --logo-title: 30px;
+    --clock-size: 56px;
+    --toggle: 52px;
+
+    --hero-pad: 44px 64px;
+    --hero-gap: 24px;
+    --eyebrow-size: 20px;
+    --badge-size: 18px;
+    --title-size: 112px;
+    --title-size-lg: 92px;
+    --title-size-md: 76px;
+    --lead-size: 30px;
+    --meta-size: 26px;
+    --note-size: 24px;
+
+    --ring-size: 320px;
+    --ring-label: 18px;
+    --count-size: 84px;
+    --count-size-long: 58px;
+    --ring-sub: 18px;
+
+    --next-pad: 32px 36px;
+    --next-eyebrow: 20px;
+    --next-title: 44px;
+    --next-meta: 20px;
+    --badge-sm-size: 17px;
+
+    --stat-size: 72px;
+    --stat-label: 20px;
+
+    --tl-time-w: 84px;
+    --tl-tile: 44px;
+    --tl-time-size: 26px;
+    --tl-title-size: 23px;
+    --tl-meta-size: 17px;
+    --tl-min-h: 70px;
+    --plan-title: 30px;
+    --plan-count: 18px;
+
+    --ticker-h: 56px;
+    --ticker-size: 24px;
+    --ticker-label: 17px;
+
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 1920px;
+    height: 1080px;
+    max-width: none;
+    margin: 0;
+    padding: 40px 64px;
+    transform: translate(-50%, -50%) scale(var(--board-scale, 1));
+  }
+
+  .header {
+    position: static;
+    height: 64px;
+    padding: 0;
+    gap: 24px;
+    background: transparent;
+  }
+
+  .board__main {
+    flex: 1;
+    min-height: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 640px;
+    gap: 56px;
+  }
+
+  .badge {
+    padding: 8px 16px 8px 12px;
+  }
+
+  /* A 2-line 112px title plus a note leaves little room; let the gap shrink. */
+  .hero__spacer {
+    min-height: 8px;
+  }
+
+  .hero__bottom {
+    flex-wrap: nowrap;
+    align-items: flex-end;
+    gap: 48px;
+  }
+
+  .next {
+    gap: 16px;
+  }
+
+  /* Slightly tighter rows so a 10-item day still fits the board. */
+  .tl {
+    padding-top: 9px;
+    padding-bottom: 9px;
+  }
+
+  .tl__head {
+    gap: 14px;
+  }
+
+  .tl__title {
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .plan {
+    gap: 14px;
+    overflow: hidden;
+  }
+
+  .ticker {
+    flex: none;
+    margin-top: 0;
+  }
+}
+

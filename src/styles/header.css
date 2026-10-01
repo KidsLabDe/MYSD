@@ -1,0 +1,128 @@
+/* ------------------------------------------------------------------ header */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 0;
+  background: var(--bg);
+  transition: background-color 0.6s ease;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--text);
+  min-width: 0;
+}
+
+/* KidsLab wordmark (2206×503), shown as-is in both themes. */
+.logo__img {
+  display: block;
+  flex: none;
+  height: var(--logo-h);
+  width: auto;
+}
+
+.logo__title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--logo-title);
+  line-height: 1.1;
+  white-space: nowrap;
+  /* A long boardTitle gives way to the clock on narrow screens. */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header__spacer {
+  flex: 1;
+}
+
+/* Phones: the wide wordmark, clock and toggle already fill the row. */
+@media (max-width: 520px) {
+  .board {
+    --logo-h: 28px;
+    --clock-size: 24px;
+  }
+
+  .logo__title {
+    display: none;
+  }
+}
+
+/* Shown while the clock runs from ?date= / ?time=, so a debug board is obvious. */
+.test-badge {
+  flex: none;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--tone-orange-bg);
+  color: var(--tone-orange);
+  font-size: var(--plan-count);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.clock {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: var(--clock-size);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.clock__sec {
+  color: var(--text-faint);
+}
+
+.icon-btn {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: var(--toggle);
+  height: var(--toggle);
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.icon-btn:focus-visible {
+  outline: 3px solid var(--brand);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------- tones & badges */
+/* Each tone exposes --tone / --tone-bg so a component can pick fill vs. tint. */
+.tone-blue { --tone: var(--tone-blue); --tone-bg: var(--tone-blue-bg); }
+.tone-purple { --tone: var(--tone-purple); --tone-bg: var(--tone-purple-bg); }
+.tone-orange { --tone: var(--tone-orange); --tone-bg: var(--tone-orange-bg); }
+.tone-green { --tone: var(--tone-green); --tone-bg: var(--tone-green-bg); }
+.tone-pink { --tone: var(--tone-pink); --tone-bg: var(--tone-pink-bg); }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px 6px 10px;
+  border-radius: 999px;
+  background: var(--tone-bg);
+  color: var(--tone);
+  font-size: var(--badge-size);
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.badge--sm {
+  gap: 6px;
+  padding: 4px 12px 4px 8px;
+  font-size: var(--badge-sm-size);
+}
+

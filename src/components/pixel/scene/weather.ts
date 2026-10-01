@@ -30,6 +30,7 @@ export class WeatherService {
   get current(): Weather { return this.forced ?? this.manual ?? this.live; }
 
   private timer = 0;
+  private inflight: AbortController | null = null;
   private onOnline = () => void this.fetchNow();
 
   start() {
@@ -40,6 +41,7 @@ export class WeatherService {
   }
 
   stop() {
+    this.inflight?.abort();
     clearInterval(this.timer);
     window.removeEventListener('online', this.onOnline);
   }
@@ -47,6 +49,7 @@ export class WeatherService {
   async fetchNow() {
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${this.lat}&longitude=${this.lon}&current=weather_code,is_day`;
     const ctl = new AbortController();
+    this.inflight = ctl;
     const to = setTimeout(() => ctl.abort(), 10_000);
     try {
       const r = await fetch(url, { signal: ctl.signal, cache: 'no-store' });

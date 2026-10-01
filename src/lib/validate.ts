@@ -7,6 +7,7 @@
  */
 
 import { AGENDA_KINDS } from "../types";
+import { parseIsoDate } from "./isoDate";
 
 export const DAY_COUNT = 3;
 /** Day 1 of St. Ursula (10 items) is the most that was measured to fit. */
@@ -18,7 +19,6 @@ export const MAX_BOARD_TITLE_CHARS = 30;
 /** Longest single word that fits on one hero line at 76px ("Abschlusspräsentation"). */
 export const MAX_WORD_CHARS = 21;
 
-const DATE_RE = /^(\d{4})-(\d{2})-(\d{2})$/;
 const TIME_RE = /^([01]\d|2[0-3]):([0-5]\d)$/;
 
 type Obj = Record<string, unknown>;
@@ -26,13 +26,7 @@ type Obj = Record<string, unknown>;
 const isObj = (v: unknown): v is Obj => typeof v === "object" && v !== null && !Array.isArray(v);
 const isText = (v: unknown): v is string => typeof v === "string" && v.trim().length > 0;
 
-function validDate(raw: string): boolean {
-  const m = DATE_RE.exec(raw);
-  if (m === null) return false;
-  const [y, mo, d] = [Number(m[1]), Number(m[2]) - 1, Number(m[3])];
-  const probe = new Date(y, mo, d);
-  return probe.getFullYear() === y && probe.getMonth() === mo && probe.getDate() === d;
-}
+const validDate = (raw: string) => parseIsoDate(raw) !== null;
 
 const minutes = (hhmm: string) => Number(hhmm.slice(0, 2)) * 60 + Number(hhmm.slice(3, 5));
 
