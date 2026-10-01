@@ -121,7 +121,8 @@ den nächsten Punkt sofort, `←` bzw. `PageUp` springt zurück. Das gilt nur bi
 der Plan selbst bleibt unverändert. In der Pixel-Ansicht reißt der Presenter-Klick (`PageDown`/`PageUp`)
 stattdessen ein Blatt vom Abreißkalender ab; dort wechseln nur `→`/`←` die Phase.
 Mit `V` hält unser Kollege Fabi dort einen kurzen Vortrag neben dem Monitor; nochmal `V` beendet ihn.
-`?` zeigt in der Pixel-Ansicht alle Tasten.
+`?` zeigt in der Pixel-Ansicht alle Tasten. Alle Tasten, Klicks und URL-Parameter beider Ansichten
+stehen in [docs/inputs.md](docs/inputs.md).
 
 ### Vorschau: einen anderen Tag oder eine andere Uhrzeit ansehen
 
