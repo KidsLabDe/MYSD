@@ -1,3 +1,5 @@
+> **Historical:** original brief for the first desktop layout; it no longer matches the code. See `CLAUDE.md` for the current architecture.
+
 # Handoff for Claude Code: Desktop board redesign ("Whiteboard-Modus")
 
 > **Task:** Build the new desktop layout for the MYS Hackday agenda board so it

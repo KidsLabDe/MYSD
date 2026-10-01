@@ -1,3 +1,5 @@
+> **Historical:** design briefing from before the Pixel UI; it no longer matches the code. See `CLAUDE.md` for the current architecture.
+
 # Design Handoff — MYS Hackday Agenda Board
 
 > A briefing for a design pass (human or Claude). It describes **what the app is**,

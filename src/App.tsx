@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import rawData from "./data/hackday.json";
 import type { HackdayData } from "./types";
 import { parseDebugTime } from "./lib/debugTime";
+import { validateHackday } from "./lib/validate";
 import { useBoardModel } from "./hooks/useBoardModel";
 import { useBoardScale } from "./hooks/useBoardScale";
 import { useClock } from "./hooks/useClock";
@@ -11,7 +12,19 @@ import { UiPicker } from "./components/UiPicker";
 import { ModernBoard } from "./components/modern/ModernBoard";
 import { PixelBoard } from "./components/pixel/PixelBoard";
 
-const data = rawData as HackdayData;
+/** Shown instead of the board when the plan breaks the rules in `lib/validate.ts`. */
+function PlanError({ problems }: { problems: readonly string[] }) {
+  return (
+    <main role="alert" style={{ padding: 32, fontFamily: "system-ui, sans-serif" }}>
+      <h1>Der Plan (hackday.json) ist ungültig</h1>
+      <ul>
+        {problems.map((p) => (
+          <li key={p}>{p}</li>
+        ))}
+      </ul>
+    </main>
+  );
+}
 
 /** Reads the `?date=&time=` debug params once; invalid values fall back to real time. */
 function initialDebugOffset(): number | null {
@@ -24,7 +37,13 @@ function initialDebugOffset(): number | null {
   return debug.offsetMs;
 }
 
-export default function App() {
+export default function App({ plan = rawData }: { plan?: unknown } = {}) {
+  const problems = validateHackday(plan);
+  if (problems.length > 0) return <PlanError problems={problems} />;
+  return <Board data={plan as HackdayData} />;
+}
+
+function Board({ data }: { data: HackdayData }) {
   const { theme, toggleTheme } = useTheme();
   const [debugOffset] = useState(initialDebugOffset);
   const now = useClock(debugOffset ?? 0);

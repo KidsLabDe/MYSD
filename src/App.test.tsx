@@ -326,3 +326,10 @@ describe("NowPanel", () => {
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Präsentation");
   });
 });
+
+describe("App with an invalid plan", () => {
+  it("should show the plan problems instead of crashing", () => {
+    render(<App plan={{ ...(rawData as HackdayData), days: [] }} />);
+    expect(screen.getByRole("alert")).toHaveTextContent("Es müssen genau 3 Tage sein");
+  });
+});
